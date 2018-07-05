@@ -21,7 +21,20 @@ body{
 .pull-right{
   float: right;
 }
-
+.cut-4 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+  overflow: hidden;
+}
+/* 四本书的布局*/
+.style1.aui-row-padded {
+  margin-left: -0.3rem;
+  margin-right: -0.3rem;
+}
+.style1.aui-row-padded [class*=aui-col-] {
+  padding: 0.3rem;
+}
 /*模块有左侧线条标题*/
 .book-channel {
     margin: 10px;

@@ -56,10 +56,10 @@
     </header>
     <section class="book-channel">
       <div class="aui-bar aui-bar-btn" id="ranks">
-            <div class="aui-bar-btn-item">热销榜</div>
-            <div class="aui-bar-btn-item"  >点击榜</div>
-            <div class="aui-bar-btn-item"  >新书榜</div>
-            <div class="aui-bar-btn-item"  >完本榜</div>
+            <div class="aui-bar-btn-item" id="rexiao">热销榜</div>
+            <div class="aui-bar-btn-item" id="dianji">点击榜</div>
+            <div class="aui-bar-btn-item" id="xinshu">新书榜</div>
+            <div class="aui-bar-btn-item" id="wanben">完本榜</div>
       </div>
       <div class="have-line-block">
         <div class="aui-row-padded">
@@ -115,23 +115,26 @@
   <script type="text/javascript" src="../../script/aui-tab.js"></script>
   <script type="text/javascript">
       apiready = function(){
-
+        var pageParam=api.pageParam;
+        initTab(pageParam.type);
       };
-      var tab = new auiTab({
-        element:document.getElementById("ranks"),
-        index:1,
-        repeatClick:false
-      },function(ret){
-        switch (ret.index) {
-            case 1:
-                break;
-            case 2:
-                break;
-            case 3:
-                break;
-            case 4:
-                break;
-        }
-      });
+      function initTab(type){
+        var tab = new auiTab({
+          element:document.getElementById("ranks"),
+          index:type,
+          repeatClick:false
+        },function(ret){
+          switch (ret.index) {
+              case 1:
+                  break;
+              case 2:
+                  break;
+              case 3:
+                  break;
+              case 4:
+                  break;
+          }
+        });
+      }
   </script>
   </html>

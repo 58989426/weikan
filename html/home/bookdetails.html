@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+  <html>
+  <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+      <title>title</title>
+      <link rel="stylesheet" type="text/css" href="../../css/api.css"/>
+      <link rel="stylesheet" type="text/css" href="../../css/common.css"/>
+      <link rel="stylesheet" type="text/css" href="../../css/aui.css"/>
+      <style>
+        body{
+          background: #fff
+        }
+        .aui-bar-nav {
+            background-color: #ff3955;
+        }
+        .space{
+          height: 1rem;
+        }
+       .bg {
+           background: url('https://www.luoshenread.com/imagedata/2018/03/08/5aa0b568b507e781870629.jpg');
+           height:145px;
+           position: relative;
+           top: -5px
+       }
+       .bg-blur {
+           width: 104%;
+           left: -2%;
+           background-size:150% 150%;
+           background-repeat: no-repeat;
+           background-position: center;
+           -webkit-filter: blur(15px) contrast(30%);
+           -moz-filter: blur(15px) contrast(30%);
+           -o-filter: blur(15px) contrast(30%);
+           -ms-filter: blur(15px) contrast(30%);
+           filter: blur(15px) contrast(30%);
+       }
+       .book-detail {
+         position: absolute;
+         top: 55px;
+         left: 15px;
+         color: white;
+         clear: both;
+       }
+       .book-detail div{
+         color: white;
+       }
+       .book-detail p{
+         color: white;
+         margin: 0.3rem 0;
+       }
+       .book-intro{
+         font-size: 14px;
+         padding: 0 15px;
+         color: #4c4c4c;
+         overflow: hidden;
+       }
+       .chapter{
+         padding: 0 15px;
+         overflow: hidden;
+       }
+       .chapter p{
+         margin: 0.2rem 0;
+       }
+       .new{
+         background: #ff3955;
+         border-radius: 20px;
+         padding: 1px 8px;
+         color: white;
+         font-size: 12px;
+       }
+       .to-more{
+         text-align: center;
+         color: grey;
+         height: 50px;
+         line-height: 50px;
+         font-size: 0.7rem;
+       }
+       .head-img{
+         width: 2.5rem;
+         height: 2.5rem;
+         border-radius: 50%;
+       }
+       .chapter .have-line-block {
+          margin: 0;
+          height: auto;
+          border-bottom: 1px solid #f1f1f1;
+          overflow: hidden;
+        }
+      </style>
+  </head>
+  <body>
+    <div id="book-detail">
+      <header class="aui-bar aui-bar-nav" id="header">
+          <a class="aui-pull-left aui-btn" tapmode onclick="back()">
+              <span class="aui-iconfont aui-icon-left"></span>
+          </a>
+          <div class="aui-title" id="title">书籍详情</div>
+          <a class="aui-pull-right aui-btn" tapmode onclick="openSharebox()">
+              <span class="aui-iconfont aui-icon-share"></span>
+          </a>
+      </header>
+      <div style="height:135px;overflow:hidden">
+        <div class="bg bg-blur"></div>
+        <div class="book-detail">
+          <div class="aui-row-padded">
+            <div class="aui-col-xs-3">
+              <img :src='bookInfo.img' class='book-img'></img>
+            </div>
+            <div class="aui-col-xs-9">
+              <div class="book-name">{{bookInfo.name}}</div>
+              <p>{{bookInfo.autor}}</p>
+              <p>{{bookInfo.cate}}</p>
+              <p>{{bookInfo.words}} | {{bookInfo.status}}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- 简介 -->
+      <div class="book-intro">
+        <div :class="showAll?'':'cut-4'">{{bookInfo.intro}}</div>
+        <p class="pull-right" @click="showAll=!showAll">{{showAll?'收起':'展开'}} <i class="aui-iconfont" :class="showAll?'aui-icon-top':'aui-icon-down'"></i></p>
+      </div>
+      <div class="space"></div>
+        <!-- 目录 -->
+      <div class="chapter">
+        <div class="channel__header">
+            <div class="header__left">目录</div>
+        </div>
+        <p class=""><span class="new">最近更新</span> {{chapter.new.name}} <span class="pull-right">{{chapter.new.date}}</span></p>
+        <p v-for="item in chapter.lists">{{item.name}}</p>
+        <div class="to-more">查看更多<i class="aui-iconfont aui-icon-down"></i></div>
+      </div>
+      <div class="space"></div>
+      <!-- 同类精品 -->
+      <div class="chapter">
+        <div class="channel__header">
+            <div class="header__left">同类精品</div>
+        </div>
+        <div class="aui-row-padded style1">
+          <div class="aui-col-xs-3" tapmode @click="toDetails(i.id)" v-for="i in dataLists">
+            <img :src='i.img' class='book-img'></img>
+            <div class="item-book-name aui-ellipsis-2">{{i.name}}</div>
+            <div class="item-book-intro aui-ellipsis-1">{{i.intro}}</div>
+          </div>
+        </div>
+      </div>
+      <div class="space"></div>
+      <!-- 评论 -->
+      <div class="chapter">
+        <div class="channel__header">
+            <div class="header__left">评论区</div>
+            <div class="header__right" style="color: #f56c6c">我要评论 <i class="aui-iconfont aui-icon-pencil"></i></div>
+        </div>
+        <div class="have-line-block" v-for="i in rewardList">
+          <div class="aui-row-padded">
+            <div class="aui-col-xs-2">
+              <img :src='i.headimg' class="head-img"></img>
+            </div>
+            <div class="aui-col-xs-10">
+              <p>{{i.name}}<p>
+              <p>{{i.date}}<p>
+              <p class="aui-ellipsis-2">{{i.content}}</p>
+            </div>
+          </div>
+        </div>
+        <div class="to-more">查看更多<i class="aui-iconfont aui-icon-down"></i></div>
+      </div>
+    </div>
+  </body>
+  <script type="text/javascript" src="../../script/api.js"></script>
+  <script type="text/javascript" src="../../script/aui-tab.js"></script>
+  <script type="text/javascript" src="../../script/vue.min.js"></script>
+
+  <script type="text/javascript">
+      apiready = function(){
+
+      };
+
+      var vm=new Vue({
+          el:"#book-detail",
+          data:{
+            bookInfo:{
+              id:1,
+              name:"毒辣小娇妻",
+              img:"https://www.luoshenread.com/imagedata/2018/03/08/5aa0b568b507e781870629.jpg",
+              autor:"笑烟寒",
+              intro:"继《盛世嫡妃》、《盛世谋臣》之后，盛世三部曲之三。南宫墨，名震亚洲的“千面妖女”，一时走背运被个菜鸟引爆炸药，死得轰轰烈烈。再睁开眼，成为了大夏皇朝楚国公府嫡女。《盛世医妃》继《盛世继《盛世嫡妃》、《盛世谋臣》之后，盛世三部曲之三——《盛世医妃》",
+              cate:"古代言情",
+              words:"23.5万字 ",
+              status:"连载中"
+            },
+            chapter:{
+              new:{
+                name:"大结局：今天你要嫁给我",
+                date:"2018-05-20"
+              },
+              lists:[{
+                name:"第一章：重生之幸福来敲门"
+              },
+              {
+                name:"第二章：我们是不是见过"
+              },
+              {
+                name:"第三章：你好啊"
+              }]
+            },
+            dataLists: [
+              {
+                id: 1,
+                img: "https://www.luoshenread.com/imagedata/2018/03/08/5aa0b1fc25db6083195196.jpg",
+                name: "毒辣小娇妻",
+                author: "杀生丸",
+                cate: "现代言情",
+                intro: "毒辣！小娇妻速度士大夫速的“说法是发顺丰石帆胜丰石帆胜丰士大夫方式发”射点发射点度",
+              },
+              {
+                id: 2,
+                img: "https://www.luoshenread.com/imagedata/2018/03/08/5aa0b568b507e781870629.jpg",
+                name: "腹黑总裁不好惹",
+                author: "杀生丸",
+                cate: "现代言情",
+                intro: "毒辣！小娇妻速度士大夫速的“说法是发顺丰石帆胜丰石帆胜丰士大夫方式发”射点发射点度",
+              },
+              {
+                id: 3,
+                img: "https://www.luoshenread.com/imagedata/2018/03/30/5abdf72cbc688411422990.jpg",
+                name: "恶魔的千日情人",
+                author: "杀生丸",
+                cate: "现代言情",
+                intro: "毒辣！小娇妻速度士大夫速的“说法是发顺丰石帆胜丰石帆胜丰士大夫方式发”射点发射点度",
+              },
+              {
+                id: 4,
+                img: "https://www.luoshenread.com/imagedata/2018/04/17/5ad56d18343c0671096362.jpg",
+                name: "毒辣小娇妻",
+                author: "杀生丸",
+                cate: "现代言情",
+                intro: "毒辣！小娇妻速度士大夫速的“说法是发顺丰石帆胜丰石帆胜丰士大夫方式发”射点发射点度",
+              }
+            ],
+            showAll:false,
+            rewardList:[{
+              headimg:"../../image/liulangnan.png",
+              name:"微笑天使",
+              date:"2018-07-05",
+              content:"这本书真的太棒了！！！超乎我的想象！你值得拥有！"
+            },
+            {
+              headimg:"../../image/liulangnan.png",
+              name:"微笑天使",
+              date:"2018-07-05",
+              content:"哇卡卡卡卡卡卡卡是的富士康"
+            },
+            {
+              headimg:"../../image/liulangnan.png",
+              name:"微笑天使",
+              date:"2018-07-05",
+              content:"嘻嘻嘻嘻嘻嘻，太阳当空照，花儿对我笑，小鸟说，这书好，真的真的非常好~"
+            }]
+          },
+          mounted: function () {
+
+          },
+          methods:{
+
+          },
+      });
+
+  </script>
+  </html>
