@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+  <html>
+  <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+      <title>title</title>
+      <link rel="stylesheet" type="text/css" href="../../css/api.css"/>
+      <link rel="stylesheet" type="text/css" href="../../css/common.css"/>
+      <link rel="stylesheet" type="text/css" href="../../css/aui.css"/>
+      <style>
+        body{
+          background: #fff
+        }
+        .aui-grid .aui-iconfont {
+          color: #ff3955;
+        }
+        .aui-grid [class*=aui-col-] {
+          padding: 0.5rem 0;
+        }
+        .aui-grid .aui-iconfont {
+          font-size: 1.2rem;
+        }
+        .style1.aui-row-padded {
+          margin-left: -0.3rem;
+          margin-right: -0.3rem;
+        }
+        .style1.aui-row-padded [class*=aui-col-] {
+          padding: 0.3rem;
+        }
+        .aui-bar-btn {
+          min-height: 1.4rem;
+        }
+        .aui-bar-btn-item.aui-active {
+          background-color: #ff3955;
+          color: #ffffff;
+        }
+        .aui-bar-btn-item {
+            line-height: 1.4rem;
+            border-color: #ff3955;
+            font-size: 12px;
+        }
+        .aui-bar-nav {
+            background-color: #ff3955;
+        }
+      </style>
+  </head>
+  <body>
+    <header class="aui-bar aui-bar-nav">
+      <a class="aui-pull-left aui-btn" tapmode onclick="back()">
+          <span class="aui-iconfont aui-icon-left"></span>
+      </a>
+      <div class="aui-title">排行榜</div>
+      <div class="aui-pull-right aui-btn aui-btn-outlined">
+        <span class="aui-iconfont aui-icon-search"></span>
+      </div>
+    </header>
+    <section class="book-channel">
+      <div class="aui-bar aui-bar-btn" id="ranks">
+            <div class="aui-bar-btn-item">热销榜</div>
+            <div class="aui-bar-btn-item"  >点击榜</div>
+            <div class="aui-bar-btn-item"  >新书榜</div>
+            <div class="aui-bar-btn-item"  >完本榜</div>
+      </div>
+      <div class="have-line-block">
+        <div class="aui-row-padded">
+          <div class="aui-col-xs-3">
+            <image src='https://www.luoshenread.com/imagedata/2018/03/08/5aa0b568b507e781870629.jpg' class='book-img'></image>
+          </div>
+          <div class="aui-col-xs-9">
+            <div class="book-name">毒辣小娇妻</div>
+            <div class="book-intro aui-ellipsis-2">毒辣！小娇妻速度士大夫速的“说法是发顺丰石帆胜丰石帆胜丰士大夫方式发”射点发射点度</div>
+            <div class="book-author"><i class="aui-iconfont aui-icon-my"></i> 然小糖
+              <span class="book-tag book-wordnum pull-right">39.4万字</span>
+              <span class="book-tag book-state pull-right">连载中</span>
+              <span class="book-tag book-cate pull-right">现代言情</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="have-line-block">
+        <div class="aui-row-padded">
+          <div class="aui-col-xs-3">
+            <image src='https://www.luoshenread.com/imagedata/2018/03/08/5aa0b2e6bcc0a386608779.jpg' class='book-img'></image>
+          </div>
+          <div class="aui-col-xs-9">
+            <div class="book-name">腹黑总裁不好惹</div>
+            <div class="book-intro aui-ellipsis-2">毒辣！小娇妻速度士大夫速的“说法是发顺丰石帆胜丰石帆胜丰士大夫方式发”射点发射点度</div>
+            <div class="book-author"><i class="aui-iconfont aui-icon-my"></i> 然小糖
+              <span class="book-tag book-wordnum pull-right">39.4万字</span>
+              <span class="book-tag book-state pull-right">已完结</span>
+              <span class="book-tag book-cate pull-right">玄幻言情</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="have-line-block">
+        <div class="aui-row-padded">
+          <div class="aui-col-xs-3">
+            <image src='https://www.luoshenread.com/imagedata/2018/03/08/5aa0b531e73c2314218691.jpg' class='book-img'></image>
+          </div>
+          <div class="aui-col-xs-9">
+            <div class="book-name">恶魔的千日情人</div>
+            <div class="book-intro aui-ellipsis-2">毒辣！小娇妻速度士大夫速的“说法是发顺丰石帆胜丰石帆胜丰士大夫方式发”射点发射点度</div>
+            <div class="book-author"><i class="aui-iconfont aui-icon-my"></i> 然小糖
+              <span class="book-tag book-wordnum pull-right">39.4万字</span>
+              <span class="book-tag book-state pull-right">连载中</span>
+              <span class="book-tag book-cate pull-right">古代言情</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </body>
+  <script type="text/javascript" src="../../script/api.js"></script>
+  <script type="text/javascript" src="../../script/aui-tab.js"></script>
+  <script type="text/javascript">
+      apiready = function(){
+
+      };
+      var tab = new auiTab({
+        element:document.getElementById("ranks"),
+        index:1,
+        repeatClick:false
+      },function(ret){
+        switch (ret.index) {
+            case 1:
+                break;
+            case 2:
+                break;
+            case 3:
+                break;
+            case 4:
+                break;
+        }
+      });
+  </script>
+  </html>
