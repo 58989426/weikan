@@ -637,6 +637,10 @@ function openFrame(name, url, pageParam,isBounces) {
 	var header =document.querySelector('header');
 	$api.fixStatusBar(header);
 	var headerPos = $api.offset(header);
+
+  var footer = $api.dom('footer'); // 获取 footer 标签元素
+  var footerH = $api.fixTabBar(footer);
+
 	api.openFrame({
 		name: name,
 		url: url,
@@ -647,7 +651,8 @@ function openFrame(name, url, pageParam,isBounces) {
 			x: 0,
 			y: headerPos.h,
 			w: 'auto',
-			h: 'auto'
+			h: 'auto',
+      marginBottom:footerH
 		}
 	})
 }

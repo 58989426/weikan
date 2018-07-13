@@ -9,30 +9,36 @@
       <link rel="stylesheet" type="text/css" href="../../css/aui.css"/>
       <style>
         body{
-          background: #fff
+          background: #fff;
+          overflow-x: hidden;
         }
         .aui-bar-nav {
-            background-color: #ff3955;
+          background-color: #ff3955;
+        }
+        .aui-pull-right , .icon-order-left{
+          font-size: 14px;
         }
       </style>
   </head>
   <body>
-    <header class="aui-bar aui-bar-nav">
-      <a class="aui-pull-left aui-btn" tapmode onclick="back()">
-          <span class="aui-iconfont aui-icon-left"></span>
-      </a>
-      <div class="aui-title">排行榜</div>
-      <div class="aui-pull-right aui-btn aui-btn-outlined">
-        <span class="aui-iconfont aui-icon-search"></span>
-      </div>
-    </header>
+    <div id="book-detail">
+      <header class="aui-bar aui-bar-nav" id="header">
+          <a class="aui-pull-left aui-btn" tapmode onclick="back()">
+              <span class="aui-iconfont aui-icon-left"></span>
+          </a>
+          <div class="aui-title" id="title">目录</div>
+          <a class="aui-pull-right">
+            <i class="iconfont icon-order-left"></i> 正序
+          </a>
+      </header>
+
+    </div>
   </body>
   <script type="text/javascript" src="../../script/api.js"></script>
   <script type="text/javascript">
       apiready = function(){
         var pageParam=api.pageParam;
-        openFrame("ranks_frame",'ranks_frame.html',pageParam);
+        openFrame("chapterMenu_frame",'chapterMenu_frame.html',pageParam);
       };
-
   </script>
   </html>

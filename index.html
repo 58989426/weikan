@@ -131,7 +131,7 @@
             },
             bgColor: "#ffffff",
             reload: false,
-            bounces: false,
+            bounces: true,
             vScrollBarEnabled: false,
             hScrollBarEnabled: false,
             animation: {
@@ -151,9 +151,12 @@
         }, function(ret) {
             switch (ret.index) {
                 case 1:
+                    
+                    $api.text($api.dom(".aui-title"), "我的书架");
                     openframe('store');
                     break;
                 case 2:
+                    $api.text($api.dom(".aui-title"), "首页书城");
                     openframe('index');
                     break;
                 case 3:

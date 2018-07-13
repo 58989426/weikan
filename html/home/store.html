@@ -7,76 +7,136 @@
       <link rel="stylesheet" type="text/css" href="../../css/api.css"/>
       <link rel="stylesheet" type="text/css" href="../../css/common.css"/>
       <link rel="stylesheet" type="text/css" href="../../css/aui.css"/>
-      <link rel="stylesheet" type="text/css" href="../../css/aui-slide.css"/>
-      <link rel="stylesheet" type="text/css" href="//at.alicdn.com/t/font_732321_1k42trp3h96.css"/>
       <style>
         body{
           background: #fff
         }
-        .aui-grid .aui-iconfont {
+        .book-channel{
+          padding: 0 0.5rem;
+        }
+        .book-img {
+          height: 6.5rem;
+        }
+        .list_bg_content{
+          position: relative;
+        }
+        .list_bg{
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0px;
+            right: 0;
+            background: rgba(0,0,0,.5);
+        }
+        .icon-gouquan{
+            font-size: 18px;
+            margin-top: 2px;
+            margin-right: 1px;
+        }
+        .book-add{
+          width: 100%;
+          height: 6.5rem;
+          border: 0.5px dashed #ff3955;
+          text-align: center;
+        }
+        .aui-icon-plus{
+          font-size: 30px;
           color: #ff3955;
-        }
-        .aui-grid [class*=aui-col-] {
-          padding: 0.5rem 0;
-        }
-        .aui-grid .aui-iconfont {
-          font-size: 1.2rem;
-        }
-        .style1.aui-row-padded {
-          margin-left: -0.5rem;
-          margin-right: -0.5rem;
-        }
-        .style1.aui-row-padded [class*=aui-col-] {
-          padding: 0.5rem;
-        }
-        .aui-bar-btn {
-          min-height: 1.4rem;
-        }
-        .aui-bar-btn-item.aui-active {
-          background-color: #ff3955;
-          color: #ffffff;
-        }
-        .aui-bar-btn-item {
-            line-height: 1.4rem;
-            border-color: #ff3955;
-            font-size: 12px;
-        }
-        .aui-slide-page-active{
-            background: #ff3955;
+          margin-top: 2rem;
+          display: block;
         }
       </style>
   </head>
   <body>
     <section class="book-channel">
+      <!-- <header class="aui-bar aui-bar-nav">
+        <div class="aui-title">我的书架</div>
+        <div class="aui-pull-right aui-btn aui-btn-outlined">
+          <span class="aui-iconfont aui-icon-edit" @click="edit=!edit"></span>
+        </div>
+      </header> -->
       <div class="aui-row-padded style1">
-        <div class="aui-col-xs-4">
-          <image src='https://www.luoshenread.com/imagedata/2018/03/08/5aa0b568b507e781870629.jpg' class='book-img'></image>
-          <div class="item-book-name aui-ellipsis-2">娇蛮弃妃：毒辣小娇妻</div>
-          <div class="item-book-intro aui-ellipsis-1">毒辣小娇妻水电费防守打法</div>
+        <div class="aui-col-xs-4" v-for="item in dataLists">
+          <div class="list_bg_content" >
+            <img :src='item.img' class='book-img'></img>
+            <div class="list_bg" @click.stop="check(item)" v-show="edit">
+                <i class="iconfont  icon_check" :class="item.check?'icon-gouquan':'icon-iconheji_huabanfuben-'"></i>
+            </div>
+          </div>
+          <div class="item-book-name aui-ellipsis-2">{{item.name}}</div>
+          <div class="item-book-intro aui-ellipsis-1">{{item.intro}}</div>
         </div>
         <div class="aui-col-xs-4">
-          <image src='https://www.luoshenread.com/imagedata/2018/03/08/5aa0b2e6bcc0a386608779.jpg' class='book-img'></image>
-          <div class="item-book-name aui-ellipsis-2">腹黑：腹黑总裁不好惹</div>
-          <div class="item-book-intro aui-ellipsis-1">毒辣小娇胜多负少的 妻</div>
-        </div>
-        <div class="aui-col-xs-4">
-          <image src='https://www.luoshenread.com/imagedata/2018/03/08/5aa0b531e73c2314218691.jpg' class='book-img'></image>
-          <div class="item-book-name aui-ellipsis-2">言情之恶魔的千日情人</div>
-          <div class="item-book-intro aui-ellipsis-1">毒地方斯蒂芬辣小娇妻</div>
-        </div>
-        <div class="aui-col-xs-4">
-          <image src='https://www.luoshenread.com/imagedata/2018/04/04/5ac498d5c69f5051550610.jpg' class='book-img'></image>
-          <div class="item-book-name aui-ellipsis-2">重生：首长大热夜夜宠</div>
-          <div class="item-book-intro aui-ellipsis-1">毒辣东方闪电胜多负少小娇妻</div>
+          <div class="book-add" >
+            <i class="aui-iconfont aui-icon-plus"></i>
+            <div class="item-book-name" style="text-align:center;color: #ff3955;">添加小说</div>
+          </div>
         </div>
       </div>
     </section>
-
   </body>
   <script type="text/javascript" src="../../script/api.js"></script>
+  <script type="text/javascript" src="../../script/vue.min.js"></script>
+
+
   <script type="text/javascript">
       apiready = function(){
 
       };
+      var vm=new Vue({
+          el:".book-channel",
+          data:{
+            edit:false,
+            dataLists: [{
+                id: 1,
+                img: "https://www.luoshenread.com/imagedata/2018/03/08/5aa0b1fc25db6083195196.jpg",
+                name: "毒辣小娇妻",
+                author: "杀生丸",
+                cate: "现代言情",
+                intro: "毒辣！小娇妻速度士大夫速的“说法是发顺丰石帆胜丰石帆胜丰士大夫方式发”射点发射点度",
+                check: false
+              },
+              {
+                id: 2,
+                img: "https://www.luoshenread.com/imagedata/2018/03/08/5aa0b568b507e781870629.jpg",
+                name: "腹黑总裁不好惹",
+                author: "杀生丸",
+                cate: "现代言情",
+                intro: "毒辣！小娇妻速度士大夫速的“说法是发顺丰石帆胜丰石帆胜丰士大夫方式发”射点发射点度",
+                check: false
+              },
+              {
+                id: 3,
+                img: "https://www.luoshenread.com/imagedata/2018/03/30/5abdf72cbc688411422990.jpg",
+                name: "恶魔的千日情人",
+                author: "杀生丸",
+                cate: "现代言情",
+                intro: "毒辣！小娇妻速度士大夫速的“说法是发顺丰石帆胜丰石帆胜丰士大夫方式发”射点发射点度",
+                check: false
+              },
+              {
+                id: 4,
+                img: "https://www.luoshenread.com/imagedata/2018/04/17/5ad56d18343c0671096362.jpg",
+                name: "毒辣小娇妻",
+                author: "杀生丸",
+                cate: "现代言情",
+                intro: "毒辣！小娇妻速度士大夫速的“说法是发顺丰石帆胜丰石帆胜丰士大夫方式发”射点发射点度",
+                check: false
+              }
+            ]
+          },
+          mounted: function () {
+
+          },
+          methods:{
+            toDetails:function(item){
+              api.openWin({
+                  name: 'bookdetails',
+                  url: 'bookdetails.html',
+                  pageParam: {type: item}
+                });
+            },
+          },
+      });
   </script>
   </html>

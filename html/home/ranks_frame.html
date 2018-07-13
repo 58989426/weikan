@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+  <html>
+  <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+      <title>title</title>
+      <link rel="stylesheet" type="text/css" href="../../css/api.css"/>
+      <link rel="stylesheet" type="text/css" href="../../css/common.css"/>
+      <link rel="stylesheet" type="text/css" href="../../css/aui.css"/>
+      <style>
+        body{
+          background: #fff
+        }
+        .aui-grid .aui-iconfont {
+          color: #ff3955;
+        }
+        .aui-grid [class*=aui-col-] {
+          padding: 0.5rem 0;
+        }
+        .aui-grid .aui-iconfont {
+          font-size: 1.2rem;
+        }
+        .style1.aui-row-padded {
+          margin-left: -0.3rem;
+          margin-right: -0.3rem;
+        }
+        .style1.aui-row-padded [class*=aui-col-] {
+          padding: 0.3rem;
+        }
+        .aui-bar-btn {
+          min-height: 1.4rem;
+        }
+        .aui-bar-btn-item.aui-active {
+          background-color: #ff3955;
+          color: #ffffff;
+        }
+        .aui-bar-btn-item {
+            line-height: 1.4rem;
+            border-color: #ff3955;
+            font-size: 12px;
+        }
+      </style>
+  </head>
+  <body>
+    <section class="book-channel">
+      <div class="aui-bar aui-bar-btn" id="ranks">
+            <div class="aui-bar-btn-item" id="rexiao">热销榜</div>
+            <div class="aui-bar-btn-item" id="dianji">点击榜</div>
+            <div class="aui-bar-btn-item" id="xinshu">新书榜</div>
+            <div class="aui-bar-btn-item" id="wanben">完本榜</div>
+      </div>
+      <div class="have-line-block" v-for="i in dataLists" >
+        <div class="aui-row-padded" @click="toDetails(i.id)">
+          <div class="aui-col-xs-3">
+            <img :src='i.img' class='book-img'></image>
+          </div>
+          <div class="aui-col-xs-9">
+            <div class="book-name">{{i.name}}</div>
+            <div class="book-intro aui-ellipsis-2">{{i.intro}}</div>
+            <div class="book-author"><i class="aui-iconfont aui-icon-my"></i> {{i.author}}
+              <span class="book-tag book-wordnum pull-right">{{i.words}}</span>
+              <span class="book-tag book-state pull-right">{{i.status}}</span>
+              <span class="book-tag book-cate pull-right">{{i.cate}}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </body>
+  <script type="text/javascript" src="../../script/api.js"></script>
+  <script type="text/javascript" src="../../script/aui-tab.js"></script>
+  <script type="text/javascript" src="../../script/vue.min.js"></script>
+
+  <script type="text/javascript">
+      apiready = function(){
+        var pageParam=api.pageParam;
+        initTab(pageParam.type);
+      };
+      var vm=new Vue({
+          el:".book-channel",
+          data:{
+            dataLists: [
+              {
+                id: 1, //id
+                img: "https://www.luoshenread.com/imagedata/2018/03/08/5aa0b568b507e781870629.jpg", //图片
+                name: "毒辣小娇妻", //名字
+                author: "杀生丸",
+                cate: "现代言情",
+                intro: "毒辣！小娇妻速度士大夫速的“说法是发顺丰石帆胜丰石帆胜丰士大夫方式发”射点发射点度",
+                status:"连载中",
+                words:"23.7万字"
+              },
+              {
+                id: 2,
+                img: "https://www.luoshenread.com/imagedata/2018/03/08/5aa0b2e6bcc0a386608779.jpg",
+                name: "腹黑总裁不好惹",
+                author: "杀生丸",
+                cate: "现代言情",
+                intro: "毒辣！小娇妻速度士大夫速的“说法是发顺丰石帆胜丰石帆胜丰士大夫方式发”射点发射点度",
+                status:"连载中",
+                words:"23.7万字"
+              },
+              {
+                id: 3,
+                img: "https://www.luoshenread.com/imagedata/2018/03/08/5aa0b531e73c2314218691.jpg",
+                name: "恶魔的千日情人",
+                author: "杀生丸",
+                cate: "现代言情",
+                intro: "毒辣！小娇妻速度士大夫速的“说法是发顺丰石帆胜丰石帆胜丰士大夫方式发”射点发射点度",
+                status:"连载中",
+                words:"23.7万字"
+              },
+              {
+                id: 4,
+                img: "https://www.luoshenread.com/imagedata/2018/04/04/5ac498d5c69f5051550610.jpg",
+                name: "毒辣小娇妻",
+                author: "杀生丸",
+                cate: "现代言情",
+                intro: "毒辣！小娇妻速度士大夫速的“说法是发顺丰石帆胜丰石帆胜丰士大夫方式发”射点发射点度",
+                status:"连载中",
+                words:"23.7万字"
+              },
+              {
+                id: 5,
+                img: "https://www.luoshenread.com/imagedata/2018/03/08/5aa0a653e338d698205473.jpg",
+                name: "毒辣小娇妻",
+                author: "杀生丸",
+                cate: "现代言情",
+                intro: "毒辣！小娇妻速度士大夫速的“说法是发顺丰石帆胜丰石帆胜丰士大夫方式发”射点发射点度",
+                status:"连载中",
+                words:"23.7万字"
+              },
+              {
+                id: 6,
+                img: "https://www.luoshenread.com/imagedata/2018/03/08/5aa0ad6ec7c27095433727.jpg",
+                name: "毒辣小娇妻",
+                author: "杀生丸",
+                cate: "现代言情",
+                intro: "毒辣！小娇妻速度士大夫速的“说法是发顺丰石帆胜丰石帆胜丰士大夫方式发”射点发射点度",
+                status:"连载中",
+                words:"23.7万字"
+              },
+            ]
+          },
+          mounted: function () {
+
+          },
+          methods:{
+            toDetails:function(item){
+              api.openWin({
+                  name: 'bookdetails',
+                  url: 'bookdetails.html',
+                  pageParam: {type: item}
+                });
+            },
+          },
+      });
+
+      function initTab(type){
+        var tab = new auiTab({
+          element:document.getElementById("ranks"),
+          index:type,
+          repeatClick:false
+        },function(ret){
+          switch (ret.index) {
+              case 1:
+                  break;
+              case 2:
+                  break;
+              case 3:
+                  break;
+              case 4:
+                  break;
+          }
+        });
+      }
+  </script>
+  </html>

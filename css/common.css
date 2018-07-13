@@ -27,6 +27,9 @@ body{
   -webkit-line-clamp: 4;
   overflow: hidden;
 }
+.aui-icon-left{
+  font-weight: bold;
+}
 /* 四本书的布局*/
 .style1.aui-row-padded {
   margin-left: -0.3rem;
