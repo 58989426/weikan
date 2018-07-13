@@ -1,0 +1,30 @@
+.aui-list .aui-list-item-media {
+    width: 3rem;
+}
+textarea {
+    height: 8rem;
+    background-color: #ffffff;
+    padding: 0.5rem;
+}
+.aui-btn-info {
+  background-color: #ff3955 !important;
+}
+.tags{
+  display: flex;
+  flex-wrap: wrap;
+}
+.tag{
+  display: inline-block;
+  padding: 0.1rem 0.8rem;
+  margin: 0.3rem;
+  font-size: 12px;
+  color: grey;
+  border-radius: 15px;
+  background: #dddddd;
+}
+.tag_choose{
+  border: 1px solid #ff3955;
+  border-radius: 15px;
+  background:#ff3955;
+  color: white;
+}

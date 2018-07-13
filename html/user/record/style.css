@@ -1,0 +1,21 @@
+body{
+  background: #fff
+}
+.aui-bar-btn {
+  min-height: 1.4rem;
+}
+.aui-bar-btn-item.aui-active {
+  background-color: #ff3955;
+  color: #ffffff;
+}
+.aui-bar-btn-item {
+  line-height: 1.4rem;
+  border-color: #ff3955;
+  font-size: 12px;
+}
+.aui-card-list{
+  box-shadow: 0 1px 5px 1px #f1f1f1;
+}
+p{
+  margin: 0.5rem 0;
+}

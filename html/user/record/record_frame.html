@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+  <html>
+  <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+      <title>title</title>
+      <link rel="stylesheet" type="text/css" href="../../../css/api.css"/>
+      <script type="text/javascript" src="../../../script/common.js"></script>
+      <link rel="stylesheet" type="text/css" href="../../../css/common.css"/>
+      <link rel="stylesheet" type="text/css" href="../../../css/aui.css"/>
+      <link rel="stylesheet" type="text/css" href="style.css"/>
+  </head>
+  <body>
+    <section class="book-channel">
+      <div class="aui-bar aui-bar-btn" id="record">
+            <div class="aui-bar-btn-item" id="rexiao">充值记录</div>
+            <div class="aui-bar-btn-item" id="dianji">消费记录</div>
+            <div class="aui-bar-btn-item" id="xinshu">打赏记录</div>
+      </div>
+      <section class="aui-content-padded" v-show="showtype==1">
+        <div class="aui-card-list">
+            <div class="aui-card-list-content-padded">
+                <p><span class="gray-word">订单编号：</span> 111</p>
+                <p><span class="gray-word">充值金额：</span> 100</p>
+                <p><span class="gray-word">充值内容：</span> 1000书币</p>
+                <p>2018-05-21 11:30</p>
+            </div>
+        </div>
+      </section>
+      <section class="aui-content-padded" v-show="showtype==2">
+        <div class="aui-card-list">
+            <div class="aui-card-list-content-padded">
+                <p><span class="gray-word">消费编号：</span> 222</p>
+                <p><span class="gray-word">消费金额：</span> 100</p>
+                <p><span class="gray-word">消费类型：</span> 购买《扶摇皇后》</p>
+                <p>2018-05-21 11:30</p>
+            </div>
+        </div>
+      </section>
+      <section class="aui-content-padded" v-show="showtype==3">
+        <div class="aui-card-list">
+            <div class="aui-card-list-content-padded">
+                <p><span class="gray-word">打赏对象：</span>《魔道祖师》</p>
+                <p><span class="gray-word">打赏物资：</span> 游艇1个</p>
+                <p>2018-05-21 11:30</p>
+            </div>
+        </div>
+      </section>
+    </section>
+  </body>
+  <script type="text/javascript" src="../../../script/api.js"></script>
+  <script type="text/javascript" src="../../../script/aui-tab.js"></script>
+  <script type="text/javascript" src="../../../script/vue.min.js"></script>
+  <script type="text/javascript" src="../../../script/aui-toast.js"></script>
+  <script type="text/javascript" src="../../../script/aui-scroll.js"></script>
+  <script type="text/javascript" src="../../../script/aui-dialog.js"></script>
+
+  <script type="text/javascript">
+      apiready = function(){
+        var pageParam=api.pageParam;
+        initTab(pageParam.type);
+        initload();
+      };
+      var vm=new Vue({
+          el:".book-channel",
+          data:{
+            dataLists: [],
+            showtype:1,
+          },
+          mounted: function () {
+
+          },
+          methods:{
+
+          },
+      });
+
+      //  初始化
+      function initload() {
+        var toast = new auiToast({});
+        toast.loading({
+            title:"loading...",
+            duration:2000
+        })
+        // 获取排行数据
+          api.ajax({
+              url: "https://www.luluxs8.com/novel/v2/new-book-recommend.php",
+              method: 'get'
+          }, function(ret, err) {
+              if (ret) {
+                if(ret.code==200){
+                  vm.dataLists=ret.data;
+                }
+                  toast.hide();
+              } else {
+                  toast.fail({
+                      title: err.msg,
+                      duration: 2000
+                  });
+              }
+          });
+      }
+
+      function initTab(type){
+        var tab = new auiTab({
+          element:document.getElementById("record"),
+          index:type,
+          repeatClick:false
+        },function(ret){
+          switch (ret.index) {
+              case 1:
+                  vm.showtype=1;
+                  break;
+              case 2:
+                  vm.showtype=2;
+                  break;
+              case 3:
+                  vm.showtype=3;
+                  break;
+          }
+        });
+      }
+  </script>
+  </html>

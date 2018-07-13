@@ -7,6 +7,9 @@
     <title>个人中心</title>
     <link rel="stylesheet" type="text/css" href="../../css/aui.css" />
     <style type="text/css">
+        body{
+          overflow-x: hidden;
+        }
         .text-white {
             color: #ffffff !important;
         }
@@ -25,42 +28,57 @@
             text-align: center;
             color: #ff3955;
         }
+        .aui-list .aui-list-item:active {
+             background: none;
+        }
+        .user-info {
+            width: 150%;
+            position: relative;
+            left: -25%;
+            padding-left: 25%;
+            border-bottom-left-radius: 50%;
+            border-bottom-right-radius: 50%;
+            padding-bottom: 1.5rem;
+            overflow-x: hidden;
+        }
+        .bg-white {
+            background-color: #ffffff;
+        }
     </style>
 </head>
 <body>
-    <!-- 顶部 -->
-    <section class="aui-content" id="user-info">
-        <div class="aui-list aui-media-list aui-list-noborder aui-bg-info">
-            <div class="aui-list-item aui-list-item-middle">
-                <div class="aui-media-list-item-inner ">
-                    <div class="aui-list-item-media" style="width:3rem;">
-                        <img src="../../image/demo1.png" class="aui-img-round" >
-                    </div>
-                    <div class="aui-list-item-inner aui-list-item-arrow">
-                        <div class="aui-list-item-text text-white aui-font-size-18">38dd4ef6d</div>
-                        <div class="aui-list-item-text text-white">
-                           <div><i class="aui-iconfont aui-icon-mobile aui-font-size-14"></i>152****0989</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    <section class="aui-content aui-grid aui-margin-b-15">
-        <div class="aui-row">
-            <div class="aui-col-xs-6 aui-border-r">
-                <big class="aui-text-warning">52<small> 个</small></big>
-                <div class="aui-gird-lable aui-font-size-12">书币</div>
-            </div>
-            <div class="aui-col-xs-6 aui-border-r">
-                <big class="aui-text-danger">1<small> 张</small></big>
-                <div class="aui-gird-lable aui-font-size-12">书券</div>
-            </div>
-        </div>
+    <section class="bg-white">
+      <div class="aui-list aui-media-list aui-list-noborder aui-bg-info user-info" tapmode onclick="toLogin()">
+          <div class="aui-list-item aui-list-item-middle">
+              <div class="aui-media-list-item-inner ">
+                  <div class="aui-list-item-media" style="width:3rem;">
+                      <img src="../../image/demo1.png" class="aui-img-round" >
+                  </div>
+                  <div class="aui-list-item-inner">
+                      <div class="aui-list-item-text text-white aui-font-size-18">38dd4ef6d</div>
+                      <div class="aui-list-item-text text-white">
+                         <div><i class="aui-iconfont aui-icon-mobile aui-font-size-14"></i>152****0989</div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+      <section class="aui-content aui-grid aui-margin-b-15">
+          <div class="aui-row">
+              <div class="aui-col-xs-6 aui-border-r" tapmode onclick="toRecharge()">
+                  <big class="aui-text-warning">52<small> 个</small></big>
+                  <div class="aui-gird-lable aui-font-size-12">书币</div>
+              </div>
+              <div class="aui-col-xs-6 aui-border-r">
+                  <big class="aui-text-danger">1<small> 张</small></big>
+                  <div class="aui-gird-lable aui-font-size-12">书券</div>
+              </div>
+          </div>
+      </section>
     </section>
     <section class="aui-content">
         <ul class="aui-list aui-list-in aui-margin-b-15">
-            <li class="aui-list-item">
+            <li class="aui-list-item" tapmode onclick="toRecord(1,'充值记录')">
                 <div class="aui-list-item-label-icon">
                     <i class="aui-iconfont aui-icon-location aui-text-info"></i>
                 </div>
@@ -68,7 +86,7 @@
                     <div class="aui-list-item-title">充值记录</div>
                 </div>
             </li>
-            <li class="aui-list-item">
+            <li class="aui-list-item" tapmode onclick="toRecord(2,'消费记录')">
                 <div class="aui-list-item-label-icon">
                     <i class="aui-iconfont aui-icon-like aui-text-danger"></i>
                 </div>
@@ -76,7 +94,7 @@
                     <div class="aui-list-item-title">消费记录</div>
                 </div>
             </li>
-            <li class="aui-list-item">
+            <li class="aui-list-item" tapmode onclick="toRecord(3,'打赏记录')">
                 <div class="aui-list-item-label-icon">
                     <i class="aui-iconfont aui-icon-image aui-text-info"></i>
                 </div>
@@ -86,7 +104,7 @@
             </li>
         </ul>
         <ul class="aui-list aui-list-in aui-margin-b-15">
-            <li class="aui-list-item">
+            <li class="aui-list-item" tapmode onclick="toFeddback()">
                 <div class="aui-list-item-label-icon">
                     <i class="aui-iconfont aui-icon-cart aui-text-info"></i>
                 </div>
@@ -94,7 +112,7 @@
                     <div class="aui-list-item-title">求书反馈</div>
                 </div>
             </li>
-            <li class="aui-list-item">
+            <li class="aui-list-item" tapmode onclick="toFeddback()">
                 <div class="aui-list-item-label-icon">
                     <i class="aui-iconfont aui-icon-cert aui-text-warning"></i>
                 </div>
@@ -115,25 +133,52 @@
 <script type="text/javascript" src="../../script/aui-dialog.js"></script>
 <script type="text/javascript">
     apiready = function () {
-      tixinglogin();
       return false;
     }
-    function tixinglogin() {
-        // 未在登录且绑定状态则进行提醒
-        var dialog = new auiDialog({})
-        dialog.alert({
-            title: '请登录',
-            msg: '未登录请先登录！',
-            buttons: ['取消', '去登录']
-        }, function(ret) {
-            if (ret) {
-                if (ret.buttonIndex == 2) {
-                    openwin('login', {
-                            from: "mine",
-                    })
-                }
-            }
-        })
+
+    function toNextPage(name,type,title){
+      var url="../user/"+name+"/"+name+".html";
+      var pageParam={};
+      if(type){
+        pageParam={type: type,title:title}
+      }
+      api.openWin({
+          name: name,
+          url: url,
+          pageParam: pageParam
+        });
     }
+
+    function toLogin(){
+      api.openWin({
+          name: 'login',
+          url: '../user/login/login.html',
+          pageParam: {}
+        });
+    }
+
+    function toRecord(type,title){
+      api.openWin({
+          name: 'record',
+          url: '../user/record/record.html',
+          pageParam: {type: type,title:title}
+        });
+    }
+    function toFeddback(){
+      api.openWin({
+          name: 'feedback',
+          url: '../user/feedback/feedback.html',
+          pageParam: {}
+        });
+    }
+    function toRecharge(){
+      api.openWin({
+          name: 'recharge',
+          url: '../user/recharge/recharge.html',
+          pageParam: {}
+        });
+    }
+
+
 </script>
 </html>

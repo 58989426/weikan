@@ -1,0 +1,11 @@
+.aui-list .aui-list-item-media {
+    width: 3rem;
+}
+textarea {
+    height: 8rem;
+    background-color: #ffffff;
+    padding: 0.5rem;
+}
+.aui-btn-info {
+  background-color: #ff3955 !important;
+}

@@ -1,0 +1,49 @@
+body{
+  background: #fff
+}
+.recharge_list{
+  padding: .1rem .2rem;
+}
+.recharge_list li:nth-child(odd) {
+    margin-right: 8%;
+}
+.recharge_list li {
+  float: left;
+  margin-bottom: .8rem;
+  position: relative;
+  height: 4.5rem;
+  width: 45%;
+  border: 1px solid #ebebeb;
+  border-radius: 6px;
+  text-align: center;
+}
+.amount{
+  color: #4c4c4c;
+  font-size: 16px;
+  font-weight: bold;
+}
+.recharge_list li .hot {
+  font-size: 12px;
+  color: #fff;
+  background: #e88d54;
+  width: 1rem;
+  height: 1rem;
+  border-radius: 0.5rem;
+  position: absolute;
+  right: -.4rem;
+  top: -.4rem;
+  line-height: 1rem;
+}
+p {
+    margin-top: 0.25rem;
+    font-size: 12px;
+}
+.aui-btn-info {
+  background-color: #ff3955 !important;
+}
+.recharge_list_on {
+    border: 1px solid #e88d54 !important;
+}
+.recharge_list_on p{
+    color: #e88d54 !important;
+}

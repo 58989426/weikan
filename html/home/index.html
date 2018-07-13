@@ -36,6 +36,10 @@
         .aui-slide-page-active{
             background: #ff3955;
         }
+        .menu-img{
+          width: 30px;
+          margin: auto;
+        }
       </style>
   </head>
   <body>
@@ -53,7 +57,8 @@
       <section class="aui-grid">
         <div class="aui-row">
           <div class="aui-col-xs-3" v-for="item in menu"  tapmode  @click="openChat(item.type)">
-            <i class="aui-iconfont " :class="item.icon"></i>
+            <!-- <i class="aui-iconfont " :class="item.icon"></i> -->
+            <img :src="item.img" class="menu-img" />
             <div class="aui-grid-label">{{item.name}}</div>
           </div>
         </div>
@@ -152,21 +157,25 @@
               {
                 type:1,
                 icon:"aui-icon-home",
+                img:"../../image/my-icon/ranks.png",
                 name:"排行榜"
               },
               {
                 type:2,
                 icon:"aui-icon-star",
+                img:"../../image/my-icon/free.png",
                 name:"免费"
               },
               {
                 type:3,
                 icon:" aui-icon-map",
+                img:"../../image/my-icon/new.png",
                 name:"新书"
               },
               {
                 type:4,
                 icon:"aui-icon-calendar",
+                img:"../../image/my-icon/wanben.png",
                 name:"完本"
               }
             ],

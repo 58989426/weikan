@@ -56,7 +56,7 @@
       <div class="chapter">
         <div class="channel__header">
             <div class="header__left">评论区</div>
-            <div class="header__right" style="color: #f56c6c">我要评论 <i class="aui-iconfont aui-icon-pencil"></i></div>
+            <div class="header__right" style="color: #f56c6c" @click="toComment">我要评论 <i class="aui-iconfont aui-icon-pencil"></i></div>
         </div>
         <div class="have-line-block" v-for="i in rewardList">
           <div class="aui-row-padded">
@@ -154,6 +154,13 @@
                 api.openWin({
                     name: 'chapterMenu',
                     url: '../chapter/chapterMenu.html',
+                    pageParam: {bookid: vm.bookInfo.id}
+                  });
+              },
+              toComment:function(){
+                api.openWin({
+                    name: 'comment',
+                    url: '../../user/comment/comment.html',
                     pageParam: {bookid: vm.bookInfo.id}
                   });
               }

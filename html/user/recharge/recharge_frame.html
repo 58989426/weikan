@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+  <html>
+  <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+      <title>title</title>
+      <link rel="stylesheet" type="text/css" href="../../../css/api.css"/>
+      <script type="text/javascript" src="../../../script/common.js"></script>
+      <link rel="stylesheet" type="text/css" href="../../../css/common.css"/>
+      <link rel="stylesheet" type="text/css" href="../../../css/aui.css"/>
+      <link rel="stylesheet" type="text/css" href="style.css"/>
+  </head>
+  <body>
+    <div id="recharge" class="aui-content-padded">
+      <ul class="recharge_list rech_lists">
+          <li v-for="(item,index) in rechargeList" :class="current==index?'recharge_list_on':''">
+            <p class="amount">￥{{item.amount}}</p>
+            <p>{{item.balance}}书币</p>
+            <p>赠送{{item.zs_balance}}书券</p>
+            <span class="hot" v-if="item.hot">热</span>
+          </li>
+     </ul>
+     <section class="aui-padded-10 aui-clearfix">
+         <div class="aui-btn aui-btn-block aui-btn-info aui-btn-sm" tapmode>立即充值</div>
+     </section>
+    </div>
+    <div class="space"></div>
+    <div class="aui-content-padded">
+       <h4>温馨提示</h4>
+       <p>1、书币充值比例 1元=100书币</p>
+       <p>2、充值后书币到账可能有延时，如遇超过10分钟未到账，或遇到其他充值问题，请与客服联系。</p>
+       <p>3、书币属于虚拟产品，购买即默认用户同意<a>《用户协议》</a>。</p>
+   </div>
+  </body>
+  <script type="text/javascript" src="../../../script/api.js"></script>
+  <script type="text/javascript" src="../../../script/aui-tab.js"></script>
+  <script type="text/javascript" src="../../../script/vue.min.js"></script>
+  <script type="text/javascript" src="../../../script/aui-toast.js"></script>
+  <script type="text/javascript" src="../../../script/aui-scroll.js"></script>
+  <script type="text/javascript" src="../../../script/aui-dialog.js"></script>
+
+  <script type="text/javascript">
+      apiready = function(){
+        var pageParam=api.pageParam;
+      };
+      var vm=new Vue({
+          el:"#recharge",
+          data:{
+            current:1,
+            rechargeList: [
+                {
+                  amount:1,
+                  balance:100,
+                  zs_balance:10,
+                  hot:false
+                },
+                {
+                  amount:10,
+                  balance:1000,
+                  zs_balance:100,
+                  hot:true
+                },
+                {
+                  amount:50,
+                  balance:5000,
+                  zs_balance:500,
+                  hot:false
+                },
+                {
+                  amount:100,
+                  balance:10000,
+                  zs_balance:1000,
+                  hot:true
+                }
+            ],
+            showtype:1,
+          },
+          mounted: function () {
+
+          },
+          methods:{
+
+          },
+      });
+  </script>
+  </html>
