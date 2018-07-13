@@ -5,6 +5,8 @@
       <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
       <title>title</title>
       <link rel="stylesheet" type="text/css" href="../../css/api.css"/>
+      <script type="text/javascript" src="../../script/common.js"></script>
+
       <link rel="stylesheet" type="text/css" href="../../css/common.css"/>
       <link rel="stylesheet" type="text/css" href="../../css/aui.css"/>
       <style>
@@ -15,7 +17,12 @@
           width: 100%;
           color: gray;
           background: #f6f7f9;
-          padding:0.3rem 0.8rem;
+          height: 35px;
+          line-height: 35px;
+          padding: 0 0.8rem;
+          position: fixed;
+          top: 0;
+          z-index: 99;
         }
         .chapter{
           border-top: 1px solid #f1f1f1;
@@ -26,207 +33,154 @@
           color: #ff3955;
           font-size: 16px;
         }
+        .toTopImg{
+          position: fixed;
+          bottom: 20px;
+          right: 10px;
+          width: 45px;
+          height: 45px;
+          background: #fff;
+        }
       </style>
   </head>
   <body>
     <div id="chapter-menu">
         <div class="title">
-          共 120 章
+          共 {{chapterinfo.total}} 章
+          <span class="aui-pull-right" @click="orderChange">
+            <i class="iconfont icon-order-left"  ></i> {{orderType==1?'正序':'倒序'}}
+          </span>
         </div>
-        <div class="chapter" v-for="item in lists">
-          第{{item.num}}章 {{item.name}} <span class="pull-right"><i class="aui-iconfont aui-icon-lock" v-if="item.notfree"></i></span>
+        <div style="margin-top: 35px">
+          <div class="chapter" v-for="item in chapterinfo.data">
+          {{item.chapter_name}} <span class="pull-right"><i class="aui-iconfont aui-icon-lock" v-if="item.is_vip==1"></i></span>
+          </div>
+          <div class="chapter" style="text-align:center;color: gainsboro;" v-if="nodata">
+              啊哦~到底了~
+          </div>
         </div>
+        <!-- <div v-show="showTop" class="toTopImg" @click="toTop">
+          <img src="../../image/my-icon/toTop.png"></img>
+        </div> -->
     </div>
   </body>
   <script type="text/javascript" src="../../script/api.js"></script>
-  <script type="text/javascript" src="../../script/aui-tab.js"></script>
   <script type="text/javascript" src="../../script/vue.min.js"></script>
+  <script type="text/javascript" src="../../script/aui-toast.js"></script>
+  <script type="text/javascript" src="../../script/aui-scroll.js"></script>
+  <script type="text/javascript" src="../../script/aui-dialog.js"></script>
+  <script type="text/javascript" src="../../script/aui-scroll.js"></script>
+  <script type="text/javascript" src="../../script/underscore.js"></script>
+
 
   <script type="text/javascript">
-      apiready = function(){
+      var scroll = new auiScroll({
+          listen:true, //是否监听滚动高度，开启后将实时返回滚动高度
+          distance:200 //判断到达底部的距离，isToBottom为true
+      },function(ret){
+         console.log(ret)
+         if(ret.scrollTop>api.frameHeight){
+           vm.showTop=true;
+         }else{
+           vm.showTop=false;
+         }
+      });
+      var toast = new auiToast({});
 
+      apiready = function(){
+        var bookid=api.pageParam.bookid;
+        vm.bookid=bookid;
+        initload();
+        // 下拉刷新
+        api.setRefreshHeaderInfo({
+            visible: true,
+            bgColor: '#ccc',
+            textColor: '#fff',
+            textDown: '下拉刷新...',
+            textUp: '松开刷新...',
+            showTime: true
+        }, function(ret, err) {
+            initload();
+            api.refreshHeaderLoadDone();
+        });
+        // 上拉加载
+        api.addEventListener({
+      		name: 'scrolltobottom',
+      	}, function(ret, err) {
+      		 if(vm.chapterinfo.page<vm.chapterinfo.pageCount){
+             loadMore(bookid,vm.chapterinfo.page+1);
+           }else {
+              vm.nodata=true;
+           }
+      	});
       };
 
       var vm=new Vue({
           el:"#chapter-menu",
           data:{
-              lists:[{
-                id:1,
-                num:1,
-                name:"我是谁？",
-                notfree:false
-              },
-              {
-                id:2,
-                num:2,
-                name:"祖母",
-                notfree:false
-              },
-              {
-                id:3,
-                num:3,
-                name:"阎王不收",
-                notfree:false
-              },
-              {
-                id:4,
-                num:4,
-                name:"出事啦扫把星",
-                notfree:false
-              },
-              {
-                id:1,
-                num:1,
-                name:"我是谁？",
-                notfree:true
-              },
-              {
-                id:2,
-                num:2,
-                name:"祖母",
-                notfree:true
-              },
-              {
-                id:3,
-                num:3,
-                name:"阎王不收",
-                notfree:true
-              },
-              {
-                id:4,
-                num:4,
-                name:"出事啦扫把星",
-                notfree:true
-              },
-            {
-              id:1,
-              num:1,
-              name:"我是谁？",
-              notfree:true
-            },
-            {
-              id:2,
-              num:2,
-              name:"祖母",
-              notfree:true
-            },
-            {
-              id:3,
-              num:3,
-              name:"阎王不收",
-              notfree:true
-            },
-            {
-              id:4,
-              num:4,
-              name:"出事啦扫把星",
-              notfree:true
-            },
-            {
-              id:1,
-              num:1,
-              name:"我是谁？",
-              notfree:true
-            },
-            {
-              id:2,
-              num:2,
-              name:"祖母",
-              notfree:true
-            },
-            {
-              id:3,
-              num:3,
-              name:"阎王不收",
-              notfree:true
-            },
-            {
-              id:4,
-              num:4,
-              name:"出事啦扫把星",
-              notfree:true
-            },
-            {
-              id:1,
-              num:1,
-              name:"我是谁？",
-              notfree:true
-            },
-            {
-              id:2,
-              num:2,
-              name:"祖母",
-              notfree:true
-            },
-            {
-              id:3,
-              num:3,
-              name:"阎王不收",
-              notfree:true
-            },
-            {
-              id:4,
-              num:4,
-              name:"出事啦扫把星",
-              notfree:true
-            },
-            {
-              id:1,
-              num:1,
-              name:"我是谁？",
-              notfree:true
-            },
-            {
-              id:2,
-              num:2,
-              name:"祖母",
-              notfree:true
-            },
-            {
-              id:3,
-              num:3,
-              name:"阎王不收",
-              notfree:true
-            },
-            {
-              id:4,
-              num:4,
-              name:"出事啦扫把星",
-              notfree:true
-            },
-            {
-              id:1,
-              num:1,
-              name:"我是谁？",
-              notfree:true
-            },
-            {
-              id:2,
-              num:2,
-              name:"祖母",
-              notfree:true
-            },
-            {
-              id:3,
-              num:3,
-              name:"阎王不收",
-              notfree:true
-            },
-            {
-              id:4,
-              num:4,
-              name:"出事啦扫把星",
-              notfree:true
-            }
-            ]
+              chapterinfo:{},
+              nodata:false,
+              orderType:0,
+              bookid:0,
+              page:1,
+              showTop:false,
           },
           mounted: function () {
 
           },
           methods:{
-
+            orderChange:function(){
+              vm.orderType=vm.orderType==1?0:1;
+              initload();
+            },
+            toTop:function(){
+              $api.dom("#chapter-menu").scrollTo({toT:0},500);
+            }
           },
       });
 
+      //  初始化
+      function initload() {
+          toast.loading({
+              title:"loading...",
+              duration:2000
+          })
+        // 获取章节信息
+          api.ajax({
+              url: "https://www.luluxs8.com/novel/v2/Chapter/ChapterList.php?bookId="+vm.bookid+"&order="+vm.orderType,
+              method: 'get'
+          }, function(ret, err) {
+              if (ret) {
+                if(ret.code==200){
+                  vm.chapterinfo=ret.data;
+                }
+                  toast.hide();
+              } else {
+                  toast.fail({
+                      title: err.msg,
+                      duration: 2000
+                  });
+              }
+          });
+      }
+
+      function loadMore(bookid,page){
+        api.ajax({
+            url: "https://www.luluxs8.com/novel/v2/Chapter/ChapterList.php?bookId="+vm.bookid+"&order="+vm.orderType+"&page="+page,
+            method: 'get'
+        }, function(ret, err) {
+            if (ret) {
+              if(ret.code==200){
+                vm.chapterinfo.data=vm.chapterinfo.data.concat(ret.data.data)
+                vm.chapterinfo.page=ret.data.page;
+              }
+            } else {
+                toast.fail({
+                    title: err.msg,
+                    duration: 2000
+                });
+            }
+        });
+      }
   </script>
   </html>

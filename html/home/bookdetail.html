@@ -5,6 +5,8 @@
       <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
       <title>title</title>
       <link rel="stylesheet" type="text/css" href="../../css/api.css"/>
+      <script type="text/javascript" src="../../script/common.js"></script>
+
       <link rel="stylesheet" type="text/css" href="../../css/common.css"/>
       <link rel="stylesheet" type="text/css" href="../../css/aui.css"/>
       <style>
@@ -40,7 +42,7 @@
       		<i class="iconfont icon-dashang1"></i>
       		<div class="aui-bar-tab-label">打赏本书</div>
       	</div>
-      	<div class="aui-bar-tab-item" tapmode style="background: #ff3955;color: white;">
+      	<div class="aui-bar-tab-item" tapmode style="background: #ff3955;color: white;" onclick="toRead()">
       		<div class="aui-bar-tab-label read-now">立即阅读</div>
       	</div>
       	<div class="aui-bar-tab-item" tapmode>
@@ -56,5 +58,13 @@
         var pageParam=api.pageParam;
         openFrame("bookdetail_frame",'bookdetail_frame.html',pageParam);
       };
+      function toRead(){
+          var bookinfo=JSON.parse($api.getStorage('book_'+api.pageParam.bookid));
+          api.openWin({
+              name: 'read',
+              url: 'read.html',
+              pageParam: bookinfo
+            });
+      }
   </script>
   </html>

@@ -43,8 +43,8 @@
       <!-- 头部banner -->
       <div id="aui-slide3">
           <div class="aui-slide-wrap" >
-              <div class="aui-slide-node bg-dark" v-for="item in banner">
-                  <img :src="item.img" />
+              <div class="aui-slide-node bg-dark" v-for="item in banner"  tapmode  @click="toDetails(item.book_id)">
+                  <img :src="item.image" />
               </div>
           </div>
           <div class="aui-slide-page-wrap"><!--分页容器--></div>
@@ -132,31 +132,53 @@
     </div>
   </body>
   <script type="text/javascript" src="../../script/api.js"></script>
+  <script type="text/javascript" src="../../script/common.js"></script>
   <script type="text/javascript" src="../../script/aui-slide.js"></script>
   <script type="text/javascript" src="../../script/aui-tab.js"></script>
   <script type="text/javascript" src="../../script/vue.min.js"></script>
+  <script type="text/javascript" src="../../script/aui-toast.js"></script>
+  <script type="text/javascript" src="../../script/aui-scroll.js"></script>
+  <script type="text/javascript" src="../../script/aui-dialog.js"></script>
 
   <script type="text/javascript">
+      // toast.loading({
+      //     title:"loading...",
+      //     duration:2000
+      // })
+      // var indexSetting = $api.getStorage('appinfo');
+      // indexSetting.userinfo = $api.getStorage('userinfo');
+      // indexSetting.loading = false;
+      // indexSetting.current = 1;
+      // indexSetting.total = 2;
+      // indexSetting.startindex = 0;
+      // if ($api.getStorage('localstore')) {
+      //     indexSetting.localstore = $api.getStorage('localstore');
+      // } else {
+      //     // indexSetting.localstore = {
+      //     //     data: []
+      //     // };
+      // }
       apiready = function(){
-
+        // $api.fixStatusBar($api.dom('header'));
+        // api.parseTapmode();
+        // if (api.statusBarAppearance) {
+        //     if (api.systemType == 'android') {
+        //         indexSetting.statbar = 25;
+        //     } else {
+        //         indexSetting.statbar = 20;
+        //     }
+        //     api.setStatusBarStyle({
+        //         style: 'dark'
+        //     });
+        // } else {
+        //     indexSetting.statbar = 0;
+        // }
+        initload();
       };
       var vm=new Vue({
           el:"#book-index",
           data:{
-            banner:[
-                {
-                  id:1,
-                  img:"http://www.vei1.com/Public/Uploads/20180511/5af5534e4bf14.jpg"
-                },
-                {
-                  id:2,
-                  img:"http://www.vei1.com/Public/Uploads/20180509/5af29aaf2216c.jpg"
-                },
-                {
-                  id:3,
-                  img:"http://www.vei1.com/Public/Uploads/20180509/5af29ad38fcb7.jpg"
-                },
-            ],
+            banner:[],
             menu:[
               {
                 type:1,
@@ -300,23 +322,52 @@
                 api.openWin({
                     name: 'bookdetail',
                     url: 'bookdetail.html',
-                    pageParam: {type: item}
+                    pageParam: {bookid: item}
                   });
               },
           },
       });
 
-      var slide = new auiSlide({
-          container:document.getElementById("aui-slide3"), //容器
-          // "width":100, //宽度
-          "height":130, //高度
-          "speed":500, //速度
-          "autoPlay": 3000, //自动播放
-          "loop":true,//是否循环
-          "pageShow":true,//是否显示分页器
-          "pageStyle":'dot', //分页器样式，分dot,line
-          'dotPosition':'center' //当分页器样式为dot时控制分页器位置，left,center,right
-      })
+      //  初始化
+      function initload() {
+          var toast = new auiToast({});
+        toast.loading({
+            title:"loading...",
+            duration:2000
+        })
+        // 获取banner数据
+          api.ajax({
+              url: "https://www.luluxs8.com/novel/v2/Slide.php",
+              method: 'get'
+          }, function(ret, err) {
+              if (ret) {
+                if(ret.code==200){
+                  vm.banner=ret.data;
+                  setTimeout(function(){
+                    //初始化轮播
+                    var slide = new auiSlide({
+                        container:document.getElementById("aui-slide3"), //容器
+                        // "width":100, //宽度
+                        "height":130, //高度
+                        "speed":500, //速度
+                        "autoPlay": 3000, //自动播放
+                        "loop":true,//是否循环
+                        "pageShow":true,//是否显示分页器
+                        "pageStyle":'dot', //分页器样式，分dot,line
+                        'dotPosition':'center' //当分页器样式为dot时控制分页器位置，left,center,right
+                    })
+                  },0)
+                }
+                  toast.hide();
+              } else {
+                  toast.fail({
+                      title: err.msg,
+                      duration: 2000
+                  });
+              }
+          });
+      }
+
       var tab = new auiTab({
         element:document.getElementById("ranks"),
         index:1,

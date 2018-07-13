@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+  <html>
+  <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+      <title>title</title>
+      <link rel="stylesheet" type="text/css" href="../../css/api.css"/>
+      <link rel="stylesheet" type="text/css" href="../../css/common.css"/>
+      <link rel="stylesheet" type="text/css" href="../../css/aui.css"/>
+      <style>
+        body{
+          background: #fff;
+        }
+
+      </style>
+  </head>
+  <body>
+    <div id="read">
+        <p style="background:#FCEFFF;color:#424242;">{{chapterInfo.chapter_name}}</p>
+    </div>
+  </body>
+  <script type="text/javascript" src="../../script/api.js"></script>
+  <script type="text/javascript" src="../../script/common.js"></script>
+  <script type="text/javascript" src="../../script/vue.min.js"></script>
+  <script type="text/javascript" src="../../script/aui-toast.js"></script>
+
+  <script type="text/javascript">
+      var toast = new auiToast({});
+
+      var vm=new Vue({
+          el:"#read",
+          data:{
+            bookinfo:{},
+            chapterInfo:{},
+            xx:null,
+            filepath:null,
+          },
+          mounted: function () {
+            apiready = function(){
+              vm.bookinfo=api.pageParam;
+              vm.filepath = 'fs://' + vm.bookinfo.id + '_' + vm.bookinfo.read_chapter_id + '.txt';
+              initload();
+            };
+          },
+          methods:{
+
+          },
+      });
+
+      //  初始化
+      function initload() {
+        var filepath=vm.filepath;
+
+        var fs = api.require('fs');
+        //判断文件是否存在
+        fs.exist({
+            path: filepath
+        }, function(retes, erres) {
+          	if(!retes.exist) {
+                alert("文件不存在");
+                //如果不存在就获取数据然后创建文件
+                getData();
+            }else{
+                alert("文件存在");
+              //   fs.remove({
+              //     path: filepath
+              // }, function(ret, err) {
+              //     if (ret.status) {
+              //         alert(JSON.stringify(ret));
+              //     } else {
+              //         alert(JSON.stringify(err));
+              //     }
+              // });
+                openbook(filepath);
+            }
+        }
+      );
+    }
+
+    //请求接口获取数据
+    function getData(){
+        api.ajax({
+             url: "https://www.luluxs8.com/novel/v2/Chapter/ChapterInfo.php?bookId="+vm.bookinfo.id+"&chapterId="+vm.bookinfo.read_chapter_id,
+             method: 'get',
+            //  dataType:"text",
+         }, function(ret, err) {
+              // var content=JSON.parse(ret).data.content;
+              if(ret.code==200){
+                createBookFile(ret.data.content);
+                vm.chapterInfo=ret.data;
+              }
+         }
+       );
+    }
+    //创建文件
+    function createBookFile(data){
+      var fs = api.require('fs');
+      fs.createFile({
+          path: vm.filepath
+        }, function(ret, err) {
+          //如果创建成功就打开该文件
+          if (ret.status) {
+              alert("创建成功");
+              openBookFile(data);
+          }else{
+              alert("创建失败");
+          }
+        }
+      )
+    }
+    //打开文件
+    function openBookFile(data){
+      var fs = api.require('fs');
+      fs.open({
+          path: vm.filepath,
+          flags: 'read_write'
+        }, function(ret, err) {
+          //如果创建成功就将数据写入文件
+          if (ret.status) {
+            alert("打开成功");
+            writeBookFile(ret,data);
+          }else{
+              alert("打开失败");
+          }
+        }
+      )
+    }
+    //写入文件
+    function writeBookFile(ret,data){
+      var fs = api.require('fs');
+      fs.write({
+            fd: ret.fd,
+            data:data
+        }, function(ret, err) {
+          //如果写入成功 就打开文件
+          if (ret.status) {
+              alert("写入成功");
+              openbook(vm.filepath);
+          }else{
+              //写入失败
+              alert("写入失败");
+          }
+        }
+      )
+    }
+
+    //打开阅读器
+    function openbook(filepath){
+      toast.loading({
+        title:"loading..."
+      });
+      //加载阅读器
+      var config = {
+          filePath: vm.filepath,
+          codingType: "utf8",
+          bg: "#FCEFFF",
+          h: api.winHeight,
+          y: 0,
+          animType: '',
+          progress:0,
+          textStyle: {
+              size: 14,
+              color: "#424242"
+          }
+      };
+        var bookReader = api.require('bookReader');
+        bookReader.open(config, function(ret, err) {
+            if (ret) {
+                toast.hide();
+                switch (ret.eventType) {
+                    case 'click':
+                        //点击打开设置
+                        // toggleset();
+                        break;
+                    case 'page_begin':
+
+                        break;
+                    case 'page_end':
+
+                        break;
+                    default:
+                        break;
+                }
+            } else {
+                alert(JSON.stringify(err));
+            }
+        })
+    }
+
+    //转码
+    function decodeUnicode(str) {
+      str = str.replace(/\\/g, "%");
+      return unescape(str);
+    }
+
+  </script>
+  </html>

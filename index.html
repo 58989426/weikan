@@ -31,20 +31,16 @@
 
     </style>
 </head>
-
 <body class="wrap">
-  <header class="aui-bar aui-bar-nav">
-  <!-- <div class="aui-pull-left aui-btn aui-btn-outlined">
-    <span class="aui-iconfont aui-icon-menu"></span>
-  </div> -->
-  <div class="aui-title">微看小说</div>
-  <div class="aui-pull-right aui-btn aui-btn-outlined">
-    <span class="aui-iconfont aui-icon-search"></span>
-  </div>
-  </header>
-  <section class="flex-1">
-
-    </section>
+    <header class="aui-bar aui-bar-nav">
+    <!-- <div class="aui-pull-left aui-btn aui-btn-outlined">
+      <span class="aui-iconfont aui-icon-menu"></span>
+    </div> -->
+    <div class="aui-title">微看小说</div>
+    <div class="aui-pull-right aui-btn aui-btn-outlined">
+      <span class="aui-iconfont aui-icon-search"></span>
+    </div>
+    </header>
     <footer class="aui-bar aui-bar-tab" id="footer">
     	<div class="aui-bar-tab-item aui-active" tapmode id="tabbookstore">
     		<i class="aui-iconfont aui-icon-star"></i>
@@ -65,25 +61,18 @@
     </footer>
 </body>
 <script type="text/javascript" src="./script/api.js"></script>
+<script type="text/javascript" src="./script/common.js"></script>
 <script type="text/javascript" src="./script/aui-tab.js"></script>
 
 <script type="text/javascript">
     apiready = function() {
+
+
         fix_android_ios('#ff3955');
-
-        var header = $api.dom('header'); // 获取 header 标签元素
-        var footer = $api.dom('footer'); // 获取 footer 标签元素
-
-        // 1.修复开启沉浸式效果带来的顶部Header与手机状态栏重合的问题，最新api.js方法已支持适配iPhoneX；
-        // 2.默认已开启了沉浸式效果 config.xml中 <preference name="statusBarAppearance" value="true"/>
-        // 3.沉浸式效果适配支持iOS7+，Android4.4+以上版本
-        var headerH = $api.fixStatusBar(header);
-        // 最新api.js为了适配iPhoneX增加的方法，修复底部Footer部分与iPhoneX的底部虚拟横条键重叠的问题；
-        var footerH = $api.fixTabBar(footer);
 
         $api.setStorage('nvtabbar', 'jingxuan');
 
-        // openframe('jingxuan');
+        openframe('index');
         navbottom();
 
         api.addEventListener({
@@ -98,29 +87,24 @@
 
 
 
-        api.openFrame({
-            name: 'main',
-            url: 'html/home/index.html',
-            bounces: true,
-            rect: { // 推荐使用Margin布局，用于适配屏幕的动态变化
-                marginTop: headerH, // main页面距离win顶部的高度
-                marginBottom: footerH, // main页面距离win底部的高度
-                w: 'auto' // main页面的宽度 自适应屏幕宽度
-            }
-        });
     };
 
     function openframe(name) {
       var header = $api.dom('header'); // 获取 header 标签元素
       var footer = $api.dom('footer'); // 获取 footer 标签元素
+
+      // 1.修复开启沉浸式效果带来的顶部Header与手机状态栏重合的问题，最新api.js方法已支持适配iPhoneX；
+      // 2.默认已开启了沉浸式效果 config.xml中 <preference name="statusBarAppearance" value="true"/>
+      // 3.沉浸式效果适配支持iOS7+，Android4.4+以上版本
       var headerH = $api.fixStatusBar(header);
+      // 最新api.js为了适配iPhoneX增加的方法，修复底部Footer部分与iPhoneX的底部虚拟横条键重叠的问题；
       var footerH = $api.fixTabBar(footer);
         api.openFrame({
             name: name,
             url: 'html/home/' + name + '.html',
             rect: {
-              marginTop: headerH, // main页面距离win顶部的高度
-              marginBottom: footerH, // main页面距离win底部的高度
+                marginTop: headerH, // main页面距离win顶部的高度
+                marginBottom: footerH, // main页面距离win底部的高度
                 x: 0,
                 y: 0,
                 w: api.winWidth,
@@ -151,12 +135,11 @@
         }, function(ret) {
             switch (ret.index) {
                 case 1:
-                    
                     $api.text($api.dom(".aui-title"), "我的书架");
                     openframe('store');
                     break;
                 case 2:
-                    $api.text($api.dom(".aui-title"), "首页书城");
+                    $api.text($api.dom(".aui-title"), "微看小说");
                     openframe('index');
                     break;
                 case 3:

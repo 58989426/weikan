@@ -5,6 +5,8 @@
       <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
       <title>title</title>
       <link rel="stylesheet" type="text/css" href="../../css/api.css"/>
+      <script type="text/javascript" src="../../script/common.js"></script>
+
       <link rel="stylesheet" type="text/css" href="../../css/common.css"/>
       <link rel="stylesheet" type="text/css" href="../../css/aui.css"/>
       <style>
@@ -102,7 +104,7 @@
       </style>
   </head>
   <body>
-    <div id="book-detail">
+    <div id="book-detail" v-if="bookInfo">
       <div style="height:135px;overflow:hidden">
         <div class="bg bg-blur" :style="'background: url('+bookInfo.img+')'"></div>
         <div class="book-detail">
@@ -112,20 +114,20 @@
             </div>
             <div class="aui-col-xs-9">
               <div class="book-name">{{bookInfo.name}}</div>
-              <p>{{bookInfo.autor}}</p>
-              <p>{{bookInfo.cate}}</p>
-              <p>{{bookInfo.words}} | {{bookInfo.status}}</p>
+              <p>{{bookInfo.author}}</p>
+              <p>{{bookInfo.label}}</p>
+              <p>{{bookInfo.wordNum}}字 | {{bookInfo.status==1?'连载中':'已完结'}}</p>
             </div>
           </div>
         </div>
       </div>
       <!-- 简介 -->
       <div class="book-intro">
-        <div :class="showAll?'':'cut-4'">{{bookInfo.intro}}</div>
+        <div :class="showAll?'':'cut-4'">{{bookInfo.shortIntro}}</div>
         <p class="pull-right" @click="showAll=!showAll">{{showAll?'收起':'展开'}} <i class="aui-iconfont" :class="showAll?'aui-icon-top':'aui-icon-down'"></i></p>
       </div>
       <div class="chapter-menu" @click="toChapter()">
-        <span class="title">目录</span><span class="pull-right"><span style="font-size: 0.6rem;">2016-05-20:12:00</span> 更新至:大结局<i class="aui-iconfont aui-icon-right"></i></span>
+        <span class="title">目录</span><span class="pull-right">更新至{{bookInfo.last_chapter_name}}<i class="aui-iconfont aui-icon-right"></i></span>
       </div>
       <div class="space"></div>
       <!-- 同类精品 -->
@@ -167,40 +169,21 @@
   <script type="text/javascript" src="../../script/api.js"></script>
   <script type="text/javascript" src="../../script/aui-tab.js"></script>
   <script type="text/javascript" src="../../script/vue.min.js"></script>
+  <script type="text/javascript" src="../../script/aui-toast.js"></script>
+  <script type="text/javascript" src="../../script/aui-scroll.js"></script>
+  <script type="text/javascript" src="../../script/aui-dialog.js"></script>
 
   <script type="text/javascript">
-      apiready = function(){
 
+      apiready = function(){
+         var bookid=api.pageParam.bookid;
+         initload(bookid);
       };
 
       var vm=new Vue({
           el:"#book-detail",
           data:{
-            bookInfo:{
-              id:1,
-              name:"毒辣小娇妻",
-              img:"https://www.luoshenread.com/imagedata/2018/03/08/5aa0b568b507e781870629.jpg",
-              autor:"笑烟寒",
-              intro:"继《盛世嫡妃》、《盛世谋臣》之后，盛世三部曲之三。南宫墨，名震亚洲的“千面妖女”，一时走背运被个菜鸟引爆炸药，死得轰轰烈烈。再睁开眼，成为了大夏皇朝楚国公府嫡女。《盛世医妃》继《盛世继《盛世嫡妃》、《盛世谋臣》之后，盛世三部曲之三——《盛世医妃》",
-              cate:"古代言情",
-              words:"23.5万字 ",
-              status:"连载中"
-            },
-            chapter:{
-              new:{
-                name:"大结局：今天你要嫁给我",
-                date:"2018-05-20"
-              },
-              lists:[{
-                name:"第一章：重生之幸福来敲门"
-              },
-              {
-                name:"第二章：我们是不是见过"
-              },
-              {
-                name:"第三章：你好啊"
-              }]
-            },
+            bookInfo:null,
             dataLists: [
               {
                 id: 1,
@@ -263,11 +246,38 @@
                 api.openWin({
                     name: 'chapterMenu',
                     url: 'chapterMenu.html',
-                    pageParam: {bookid: 1}
+                    pageParam: {bookid: vm.bookInfo.id}
                   });
               }
           },
       });
 
+      //  初始化
+      function initload(bookid) {
+          var toast = new auiToast({});
+        toast.loading({
+            title:"loading...",
+            duration:2000
+        })
+        // 获取书籍信息
+          api.ajax({
+              url: "https://www.luluxs8.com/novel/v2/BookInfo.php?bookId="+bookid,
+              method: 'get'
+          }, function(ret, err) {
+              if (ret) {
+                if(ret.code==200){
+                  vm.bookInfo=ret.data;
+                }
+                $api.setStorage('book_'+bookid, JSON.stringify(vm.bookInfo));
+
+                toast.hide();
+              } else {
+                  toast.fail({
+                      title: err.msg,
+                      duration: 2000
+                  });
+              }
+          });
+      }
   </script>
   </html>
