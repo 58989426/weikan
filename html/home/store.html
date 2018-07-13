@@ -17,7 +17,7 @@
           padding: 0 0.5rem;
         }
         .book-img {
-          height: 6.5rem;
+          height: 5.5rem;
         }
         .list_bg_content{
           position: relative;
@@ -30,34 +30,43 @@
             right: 0;
             background: rgba(0,0,0,.5);
         }
+        .icon_check {
+            position: absolute;
+            right: 5px;
+            font-size: 20px;
+            color: white;
+        }
         .icon-gouquan{
             font-size: 18px;
             margin-top: 2px;
             margin-right: 1px;
         }
+        .icon-gouquan:before {
+            content: "\e602";
+            background: #f56c6c;
+            border-radius: 20px;
+        }
         .book-add{
           width: 100%;
-          height: 6.5rem;
+          height: 5.5rem;
           border: 0.5px dashed #ff3955;
           text-align: center;
         }
         .aui-icon-plus{
           font-size: 30px;
           color: #ff3955;
-          margin-top: 2rem;
+          margin-top: 1.2rem;
           display: block;
         }
       </style>
   </head>
   <body>
     <section class="book-channel">
-      <!-- <header class="aui-bar aui-bar-nav">
-        <div class="aui-title">我的书架</div>
-        <div class="aui-pull-right aui-btn aui-btn-outlined">
-          <span class="aui-iconfont aui-icon-edit" @click="edit=!edit"></span>
-        </div>
-      </header> -->
-      <div class="aui-row-padded style1">
+      <div>
+        <div @click="editChange" class="aui-pull-left"><span class="aui-iconfont aui-icon-edit"></span> {{edit?'取消':'编辑'}}</div>
+        <div v-show="edit" @click="deleteCollection" class="aui-pull-right"><span class="aui-iconfont aui-icon-trash"></span> 删除</div>
+      </div>
+      <div class="aui-row-padded style1 aui-clearfix">
         <div class="aui-col-xs-4" v-for="item in dataLists">
           <div class="list_bg_content" >
             <img :src='item.img' class='book-img'></img>
@@ -66,7 +75,7 @@
             </div>
           </div>
           <div class="item-book-name aui-ellipsis-2">{{item.name}}</div>
-          <div class="item-book-intro aui-ellipsis-1">{{item.intro}}</div>
+          <div class="item-book-intro aui-ellipsis-1">{{item.shortIntro}}</div>
         </div>
         <div class="aui-col-xs-4">
           <div class="book-add" >
@@ -79,9 +88,18 @@
   </body>
   <script type="text/javascript" src="../../script/api.js"></script>
   <script type="text/javascript" src="../../script/vue.min.js"></script>
-
-
+  <script type="text/javascript" src="../../script/underscore.js"></script>
   <script type="text/javascript">
+      var indexSetting = {};
+
+      if ($api.getStorage('localstore')) {
+          indexSetting.localstore = $api.getStorage('localstore');
+
+      } else {
+          indexSetting.localstore = {
+              data: []
+          };
+      }
       apiready = function(){
 
       };
@@ -89,48 +107,55 @@
           el:".book-channel",
           data:{
             edit:false,
-            dataLists: [{
-                id: 1,
-                img: "https://www.luoshenread.com/imagedata/2018/03/08/5aa0b1fc25db6083195196.jpg",
-                name: "毒辣小娇妻",
-                author: "杀生丸",
-                cate: "现代言情",
-                intro: "毒辣！小娇妻速度士大夫速的“说法是发顺丰石帆胜丰石帆胜丰士大夫方式发”射点发射点度",
-                check: false
-              },
-              {
-                id: 2,
-                img: "https://www.luoshenread.com/imagedata/2018/03/08/5aa0b568b507e781870629.jpg",
-                name: "腹黑总裁不好惹",
-                author: "杀生丸",
-                cate: "现代言情",
-                intro: "毒辣！小娇妻速度士大夫速的“说法是发顺丰石帆胜丰石帆胜丰士大夫方式发”射点发射点度",
-                check: false
-              },
-              {
-                id: 3,
-                img: "https://www.luoshenread.com/imagedata/2018/03/30/5abdf72cbc688411422990.jpg",
-                name: "恶魔的千日情人",
-                author: "杀生丸",
-                cate: "现代言情",
-                intro: "毒辣！小娇妻速度士大夫速的“说法是发顺丰石帆胜丰石帆胜丰士大夫方式发”射点发射点度",
-                check: false
-              },
-              {
-                id: 4,
-                img: "https://www.luoshenread.com/imagedata/2018/04/17/5ad56d18343c0671096362.jpg",
-                name: "毒辣小娇妻",
-                author: "杀生丸",
-                cate: "现代言情",
-                intro: "毒辣！小娇妻速度士大夫速的“说法是发顺丰石帆胜丰石帆胜丰士大夫方式发”射点发射点度",
-                check: false
-              }
-            ]
+            dataLists:indexSetting.localstore.data,
+            deleteList:[]
           },
           mounted: function () {
 
           },
           methods:{
+            //编辑或取消
+            editChange:function () {
+              vm.edit = !vm.edit;
+              //如果取消编辑  清空选中的数据
+              if(!vm.edit){
+                  _.each(vm.dataLists, function(item){
+                      item.check=false;
+                    });
+              }
+            },
+            //选中或取消
+            check:function (item) {
+                item.check=!item.check;
+            },
+            // 删除
+            deleteCollection:function () {
+      				//得到选择要删除的数据集合
+      				vm.deleteList = _.map(
+      					_.filter(vm.dataLists, function(item){
+      							return item.check;
+      						}),
+      					function (i) {
+      						return i.id;
+      					});
+
+      				if(vm.deleteList.length>0){
+      					//调用删除接口
+      					var parmes={id:vm.deleteList};
+
+                // //还原初始值
+                // vm.edit=false;
+                // vm.deleteList=[];
+                // //去掉已被删除的数据
+                // vm.dataLists=_.filter(vm.dataLists,
+                //   function(item){
+                //     return !item.check;
+                //   })
+
+      				}else{
+      					alert('您还未选中小说！');
+      				}
+            },
             toDetails:function(item){
               api.openWin({
                   name: 'bookdetails',

@@ -38,7 +38,7 @@
     </div> -->
     <div class="aui-title">微看小说</div>
     <div class="aui-pull-right aui-btn aui-btn-outlined">
-      <span class="aui-iconfont aui-icon-search"></span>
+      <span class="aui-iconfont aui-icon-search" tapmode onclick="openSearch()"></span>
     </div>
     </header>
     <footer class="aui-bar aui-bar-tab" id="footer">
@@ -63,6 +63,7 @@
 <script type="text/javascript" src="./script/api.js"></script>
 <script type="text/javascript" src="./script/common.js"></script>
 <script type="text/javascript" src="./script/aui-tab.js"></script>
+<script type="text/javascript" src="./script/aui-dialog.js"></script>
 
 <script type="text/javascript">
     apiready = function() {
@@ -89,7 +90,7 @@
 
     };
 
-    function openframe(name) {
+    function openframe(name,ifbounces) {
       var header = $api.dom('header'); // 获取 header 标签元素
       var footer = $api.dom('footer'); // 获取 footer 标签元素
 
@@ -115,7 +116,7 @@
             },
             bgColor: "#ffffff",
             reload: false,
-            bounces: true,
+            bounces: ifbounces?ifbounces:true,
             vScrollBarEnabled: false,
             hScrollBarEnabled: false,
             animation: {
@@ -143,14 +144,25 @@
                     openframe('index');
                     break;
                 case 3:
-                    openframe('bookcates');
+                    $api.text($api.dom(".aui-title"), "分类");
+                    openframe('category');
                     break;
                 case 4:
-                    openframe('mine');
+                    $api.text($api.dom(".aui-title"), "个人中心");
+                    openframe('mine',false);
                     break;
             }
         });
     }
+
+    function openSearch(){
+      api.openWin({
+          name: 'search',
+          url: './html/home/search/search.html',
+          pageParam: {}
+        });
+    }
+
 </script>
 
 </html>

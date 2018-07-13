@@ -1,0 +1,59 @@
+//阅读页设置
+indexSetting = {
+  ba:"", //背景
+  color:"", //字体颜色
+  fontsize:"", //字体大小
+  bookReader:{}, //阅读器
+  fs:{} //文件读写器
+}
+
+//是否是夜间模式 1是 0否
+yejianmoshi:0
+
+//打开的书的信息
+book_bookid = {
+  "id": 31,
+  "kind": 1,
+  "name": "你要的不是我",
+  "author": "笑语",
+  "charge_mode": "3",
+  "price": "588",
+  "shortIntro": "我以为我生来便是风尘女子，从来不知道我曾被最爱的人，毁了容貌，改了记忆，挖走了心……",
+  "status": 1,
+  "keyword": "现代言情,虐心",
+  "img": "https:\/\/www.luluxs8.com\/imagedata\/2018\/06\/19\/5b2881fb080e6881647238.jpg",
+  "label": "总裁豪门",
+  "isVip": 1,
+  "wordNum": "53551",
+  "allChapter": 48,
+  "start_chapter_id": "83",
+  "start_chapter_name": "第1章：我只是一个妓.女",
+  "last_chapter_id": "130",
+  "last_chapter_name": "第48章：大结局",
+  "read_status": 0,
+  "read_chapter_id": "83",
+  "bookself": 1
+}
+
+
+//本章章节信息
+chapterInfo = {
+  "chapter_id": "83",
+	"chapter_name": "第1章：我只是一个妓.女",
+	"book_id": "31",
+	"word_count": "1134",
+	"order_num": "1",
+	"update_time": "2018-06-19 12:15:04",
+	"is_vip": 0,
+	"price": "0",
+	"nextChapter": "84",
+	"prevChapter": "",
+	"UserLogin": 0,
+	"Buy": 0,
+	"content": "<p>我将自己脱得精光，卖力的，用所有顾修年喜欢的方式去讨好他，希望他会因此放弃娶另一个女人。<\/p>"
+}
+
+//打开的书的历史记录
+history = {
+
+}

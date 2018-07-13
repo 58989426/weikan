@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+  <html>
+  <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+      <title>title</title>
+      <link rel="stylesheet" type="text/css" href="../../../css/api.css"/>
+      <link rel="stylesheet" type="text/css" href="../../../css/common.css"/>
+      <link rel="stylesheet" type="text/css" href="../../../css/aui.css"/>
+      <link rel="stylesheet" type="text/css" href="style.css"/>
+      <style>
+      .aui-btn-danger {
+          width: 150px;
+          color: #ffffff !important;
+          background-color: #ff3955 !important;
+          border-radius: 25px;
+          margin: auto;
+      }
+      </style>
+  </head>
+  <body>
+    <div id="book-cate">
+      <!-- 首页样式 -->
+      <div class="aui-margin-10">
+        <div class="tags">
+            <span class="tag tag_choose">人气</span>
+            <span class="tag">字数</span>
+            <span class="tag">时间</span>
+            <span class="tag">点击</span>
+        </div>
+        <div class="shanxuan" @click="showAll=true">
+          <img src="../../../image/my-icon/shanxuan.png" style="width:25px"></img>
+          <span class="shanxuan-word">筛选</span>
+        </div>
+        <div class="aui-padded-t-10">
+          <div class="have-line-block" v-for="i in dataLists">
+            <div class="aui-row-padded" @click="toDetails(i.id)">
+              <div class="aui-col-xs-3">
+                <img :src='i.img' class='book-img'></image>
+              </div>
+              <div class="aui-col-xs-9">
+                <div class="book-name">{{i.name}}</div>
+                <div class="book-intro aui-ellipsis-2">{{i.intro}}</div>
+                <div class="book-author"><i class="aui-iconfont aui-icon-my"></i> {{i.author}}
+                  <span class="book-tag book-wordnum pull-right">{{i.words}}</span>
+                  <span class="book-tag book-state pull-right">{{i.status}}</span>
+                  <span class="book-tag book-cate pull-right">{{i.cate}}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div v-show="showAll">
+        <div class="aui-mask aui-mask-in"></div>
+        <div class="all-words">
+          <div style="text-align: center;padding: 10px;font-size:14px;">筛选</div>
+          <div class="aui-padded-l-10 aui-margin-b-15-2 aui-margin-t-15">
+            <div class="all-title ">状态</div>
+            <div class="tags" class="aui-padded-t-10">
+                <span class="tag  tag_choose">人气</span>
+                <span class="tag">连载</span>
+                <span class="tag">完本</span>
+            </div>
+          </div>
+          <div class="aui-padded-l-10 aui-margin-b-15-2 aui-margin-t-15" >
+            <div class="all-title ">属性</div>
+            <div class="tags" class="aui-padded-t-10">
+              <span class="tag  tag_choose">全部</span>
+              <span class="tag">免费</span>
+              <span class="tag">VIP</span>
+            </div>
+          </div>
+          <div class="aui-padded-l-10 aui-margin-b-15-2 aui-margin-t-15">
+            <div class="all-title ">字数</div>
+            <div class="tags" class="aui-padded-t-10">
+              <span class="tag  tag_choose">全部</span>
+              <span class="tag">30万以下</span>
+              <span class="tag">30~50万</span>
+              <span class="tag">50~100万</span>
+              <span class="tag">100~200万</span>
+              <span class="tag">200万以上</span>
+            </div>
+          </div>
+          <div class="aui-padded-l-10 aui-margin-b-15-2 aui-margin-t-15">
+            <div class="all-title ">更新时间</div>
+            <div class="tags" class="aui-padded-t-10">
+              <span class="tag  tag_choose">全部</span>
+              <span class="tag">三日内</span>
+              <span class="tag">七日内</span>
+              <span class="tag">半月内</span>
+              <span class="tag">一月内</span>
+            </div>
+          </div>
+          <div class="aui-text-center" style="margin-top:2rem;"><div class="aui-btn aui-btn-danger" @click="showAll=false">确定</div></div>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script type="text/javascript" src="../../../script/api.js"></script>
+  <script type="text/javascript" src="../../../script/common.js"></script>
+  <script type="text/javascript" src="../../../script/vue.min.js"></script>
+  <script type="text/javascript" src="../../../script/aui-toast.js"></script>
+  <script type="text/javascript" src="../../../script/aui-scroll.js"></script>
+  <script type="text/javascript" src="../../../script/aui-dialog.js"></script>
+
+  <script type="text/javascript">
+      apiready = function(){
+          var pageParam=api.pageParam;
+        //   api.openDrawerLayout({
+        //     name: 'test',
+        //     url: 'category0.html',
+        //     animation: {
+        //         type: 'none'
+        //     },
+        //     leftPane: {
+        //         name: 'leftPane',
+        //         url: 'leftPane.html'
+        //     }
+        // });
+      };
+      var vm=new Vue({
+          el:"#book-cate",
+          data:{
+            showAll:false,
+
+            dataLists: [
+              {
+                id: 1, //id
+                img: "https://www.luoshenread.com/imagedata/2018/03/08/5aa0b568b507e781870629.jpg", //图片
+                name: "毒辣小娇妻", //名字
+                author: "杀生丸",
+                cate: "现代言情",
+                intro: "毒辣！小娇妻速度士大夫速的“说法是发顺丰石帆胜丰石帆胜丰士大夫方式发”射点发射点度",
+                status:"连载中",
+                words:"23.7万字"
+              },
+              {
+                id: 2,
+                img: "https://www.luoshenread.com/imagedata/2018/03/08/5aa0b2e6bcc0a386608779.jpg",
+                name: "腹黑总裁不好惹",
+                author: "杀生丸",
+                cate: "现代言情",
+                intro: "毒辣！小娇妻速度士大夫速的“说法是发顺丰石帆胜丰石帆胜丰士大夫方式发”射点发射点度",
+                status:"连载中",
+                words:"23.7万字"
+              },
+              {
+                id: 3,
+                img: "https://www.luoshenread.com/imagedata/2018/03/08/5aa0b531e73c2314218691.jpg",
+                name: "恶魔的千日情人",
+                author: "杀生丸",
+                cate: "现代言情",
+                intro: "毒辣！小娇妻速度士大夫速的“说法是发顺丰石帆胜丰石帆胜丰士大夫方式发”射点发射点度",
+                status:"连载中",
+                words:"23.7万字"
+              },
+              {
+                id: 4,
+                img: "https://www.luoshenread.com/imagedata/2018/04/04/5ac498d5c69f5051550610.jpg",
+                name: "毒辣小娇妻",
+                author: "杀生丸",
+                cate: "现代言情",
+                intro: "毒辣！小娇妻速度士大夫速的“说法是发顺丰石帆胜丰石帆胜丰士大夫方式发”射点发射点度",
+                status:"连载中",
+                words:"23.7万字"
+              },
+              {
+                id: 5,
+                img: "https://www.luoshenread.com/imagedata/2018/03/08/5aa0a653e338d698205473.jpg",
+                name: "毒辣小娇妻",
+                author: "杀生丸",
+                cate: "现代言情",
+                intro: "毒辣！小娇妻速度士大夫速的“说法是发顺丰石帆胜丰石帆胜丰士大夫方式发”射点发射点度",
+                status:"连载中",
+                words:"23.7万字"
+              },
+              {
+                id: 6,
+                img: "https://www.luoshenread.com/imagedata/2018/03/08/5aa0ad6ec7c27095433727.jpg",
+                name: "毒辣小娇妻",
+                author: "杀生丸",
+                cate: "现代言情",
+                intro: "毒辣！小娇妻速度士大夫速的“说法是发顺丰石帆胜丰石帆胜丰士大夫方式发”射点发射点度",
+                status:"连载中",
+                words:"23.7万字"
+              },
+            ]
+          },
+          mounted: function () {
+
+          },
+          methods:{
+              toDetails:function(item){
+                api.openWin({
+                    name: 'bookdetail',
+                    url: '../../book/detail/bookdetail.html',
+                    pageParam: {bookid: item}
+                  });
+              },
+          },
+      });
+  </script>
+  </html>

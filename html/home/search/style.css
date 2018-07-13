@@ -1,0 +1,37 @@
+body{
+  background: #fff;
+}
+.tags{
+  text-align: center;
+}
+.tag{
+  display: inline-block;
+  padding: 0.1rem 0.7rem;
+  margin: 0.5rem 0.1rem 0rem;
+  font-size: 12px;
+  color: grey;
+  border: 1px solid gainsboro;
+  border-radius: 15px;
+}
+.title{
+  color: #4c4c4c;
+  border-bottom: 1px solid #f1f1f1;
+  height: 1.5rem;
+  line-height: 1.5rem;
+}
+.history p{
+  color: #8b8b8b;
+  margin: 0.25remf;
+  font-size: 12px;
+}
+.search_tip{
+    text-align: center;
+    height: 60px;
+    line-height: 60px;
+    box-shadow: 0 8px 15px 0 #f1f1f1;;
+    color: gray;
+    font-size: 14px;
+}
+.recommand{
+
+}

@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+  <html>
+  <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+      <title>title</title>
+      <link rel="stylesheet" type="text/css" href="../../../css/api.css"/>
+      <link rel="stylesheet" type="text/css" href="../../../css/common.css"/>
+      <link rel="stylesheet" type="text/css" href="../../../css/aui.css"/>
+      <style>
+        body{background: #fff;}
+        body {
+            background: #FFFfee;
+        }
+        #metainfo {position:fixed;bottom:0;left:0;right:0;clear:both;height: 20px}
+        #metainfo > span{
+          display: inline-block;
+          width:48%;
+          overflow:hidden;
+          white-space:nowrap;
+          font-size:14px;
+          color:#333;
+          text-overflow: ellipsis;
+        }
+        #metainfo .z{float:left;margin-left: 3px;}
+        #metainfo .y {float:right;text-align: right;margin-right: 3px;}
+      </style>
+  </head>
+  <body>
+    <div id="read">
+      <div id="metainfo">
+        <span id="bookname" class="z">dd</span>
+        <span id="subject" class="y"></span>
+      </div>
+    </div>
+  </body>
+  <script type="text/javascript" src="../../../script/api.js"></script>
+  <script type="text/javascript" src="../../../script/common.js"></script>
+  <script type="text/javascript" src="../../../script/vue.min.js"></script>
+  <script type="text/javascript" src="../../../script/aui-toast.js"></script>
+  <script type="text/javascript">
+      var toast = new auiToast({});
+      var indexSetting; //阅读页设置
+
+      var vm=new Vue({
+          el:"#read",
+          data:{
+            bookinfo:{},
+            chapterInfo:{},
+            filepath:null,
+          },
+          mounted: function () {
+                  apiready = function(){
+                    api.setFullScreen({
+                        fullScreen: true
+                    });
+                    vm.bookinfo=api.pageParam;
+                    //判断localstorage里是否有阅读页设置  若没有则设置初始值
+                    // $api.rmStorage('indexSetting');
+                    // $api.rmStorage('yejianmoshi');
+                    $api.rmStorage('history');
+                    if($api.getStorage('indexSetting') == undefined){
+                      indexSetting = {};
+                      indexSetting.fontsize = 16;
+                      indexSetting.bg = "#f7e3c2";
+                      indexSetting.color = "#333";
+                      $api.setStorage('yejianmoshi',0);
+                      $api.setStorage('indexSetting',indexSetting);
+                    }else{
+                      indexSetting = $api.getStorage('indexSetting');
+                      indexSetting.bg = ($api.getStorage('yejianmoshi') > 0) ? '#212121' : indexSetting.bg;
+                      indexSetting.color = ($api.getStorage('yejianmoshi') > 0) ? '#eee' : indexSetting.color ;
+                    }
+                    indexSetting.bookReader = api.require('bookReader');
+                    indexSetting.fs = api.require('fs');
+                    indexSetting.book_id = vm.bookinfo.id;
+
+                    // $api.text($api.byId("bookname"),' ['+vm.bookinfo.name+']');
+                    // $api.css($api.byId("metainfo"),'background:'+indexSetting.bg);
+
+                    //初始请求数据
+                    // ajaxhistory(vm.bookinfo.id,vm.bookinfo.read_chapter_id);
+
+                    vm.filepath = 'fs://' + vm.bookinfo.id + '_' + vm.bookinfo.read_chapter_id + '.txt';
+                    initload(vm.bookinfo.id,vm.bookinfo.read_chapter_id);
+                  };
+          },
+          methods:{
+
+          },
+      });
+
+      // 初始化判断文件
+      function initload(bookid,chapterid) {
+        var filepath=vm.filepath;
+        //判断文件是否存在
+        indexSetting.fs.exist({
+            path: filepath
+        }, function(retes, erres) {
+          	if(!retes.exist) {
+                //如果不存在就获取数据然后创建文件
+                getData(bookid,chapterid);
+            }else{
+                openbook(filepath,0);
+            }
+            // ajaxhistory(bookid,chapterid)
+        }
+      );
+    }
+
+    //请求接口获取数据
+    function getData(bookid,chapterid){
+        api.ajax({
+             url: "https://www.luluxs8.com/novel/v2/Chapter/ChapterInfo.php?bookId="+bookid+"&chapterId="+chapterid,
+             method: 'get',
+         }, function(ret, err) {
+              if(ret.code==200){
+                createBookFile(ret.data.content);
+                $api.setStorage('history', ret.data);
+              }
+         }
+       );
+    }
+    //创建文件
+    function createBookFile(data){
+      indexSetting.fs.createFile({
+          path: vm.filepath
+        }, function(ret, err) {
+          if (ret.status) {
+              openBookFile(data);
+          }else{
+              alert(JSON.stringify(err));
+          }
+        }
+      )
+    }
+    //打开文件
+    function openBookFile(data){
+      indexSetting.fs.open({
+          path: vm.filepath,
+          flags: 'read_write'
+        }, function(ret, err) {
+          if (ret.status) {
+            writeBookFile(ret,data);
+          }else{
+              alert(JSON.stringify(err));
+          }
+        }
+      )
+    }
+    //写入文件
+    function writeBookFile(ret,data){
+      indexSetting.fs.write({
+            fd: ret.fd,
+            data:data
+        }, function(ret, err) {
+          if (ret.status) {
+              openbook(vm.filepath,0);
+          }else{
+              alert(JSON.stringify(err));
+          }
+        }
+      )
+    }
+
+    //打开阅读器
+    function openbook(filepath,progress){
+      toast.loading({
+        title:"loading..."
+      });
+      //加载阅读器
+      var config = {
+          filePath: vm.filepath,
+          codingType: "utf8",
+          bg: indexSetting.bg,
+          h: api.winHeight,
+          y: 0,
+          animType: '',
+          progress:progress>0?progress:0,
+          textStyle: {
+              size: indexSetting.fontsize,
+              color: indexSetting.color
+          }
+      };
+      //给阅读器绑定事件
+      indexSetting.bookReader.open(config, function(ret, err) {
+          if (ret) {
+              toast.hide();
+              switch (ret.eventType) {
+                  case 'click':
+                      //点击打开设置
+                      toggleset();
+                      break;
+                  case 'page_begin':
+                      //上一章
+                      getPrev();
+                      break;
+                  case 'page_end':
+                      //下一章
+                      getNext();
+                      break;
+                  default:
+                      break;
+              }
+          } else {
+              alert(JSON.stringify(err));
+          }
+      })
+  }
+    //打开阅读页设置
+    function toggleset() {
+        api.openFrame({
+            name: 'readset',
+            url: './readset.html',
+            rect: {
+                x: 0,
+                y: 0,
+                w: api.winWidth,
+                h: api.winHeight
+            },
+            pageParam: {},
+            bounces: false,
+            reload: true,
+            vScrollBarEnabled: false,
+            hScrollBarEnabled: false,
+            animation: {
+                type: "none",
+                subType: "from_right",
+                duration: 300
+            }
+        });
+    }
+
+    // 上一章
+    function getPrev() {
+      var history = $api.getStorage('history');
+      // alert('fs://' + history.book_id + '_' + history.prevChapter + '.txt');
+      ajaxhistory(history.prevChapter);
+      if(history.prevChapter == ""){
+        alert("已经是第一页")
+      }else{
+        //初始请求数据
+        vm.filepath = 'fs://' + history.book_id + '_' + history.prevChapter + '.txt';
+        initload(history.book_id,history.prevChapter);
+      }
+    }
+
+    // 下一章
+    function getNext() {
+      var history = $api.getStorage('history');
+      if(history.nextChapter == ""){
+        alert("已经最后一页")
+      }else{
+        //初始请求数据
+        // alert('fs://' + history.book_id + '_' + history.nextChapter + '.txt');
+        vm.filepath = 'fs://' + history.book_id + '_' + history.nextChapter + '.txt';
+        initload(history.book_id,history.nextChapter);
+      }
+    }
+
+    //阅读历史
+    function ajaxhistory(bookid,chapterid,chapter_name,bookname,progress,price) {
+        var progress = 0;
+        indexSetting.bookReader.getProgress({
+            filePath: 'fs://' + indexSetting.book_id + '_' + chapterid + '.txt'
+        }, function(ret, err) {
+            if (ret.status) {
+                progress = ret.progress;
+            }
+
+            var history = $api.getStorage('history');
+            if (history) {
+                var isthebook = false;
+                for (var i = 0, len = history.data.length; i < len; i++) {
+                    if (history.data[i].book_id == indexSetting.book_id) {
+                        isthebook = true;
+                        history.data[i].colum_id = chapterid;//章节id
+                        history.data[i].zhangjie = chapter_name;//章节名
+                        history.data[i].subject = bookname; //书名
+                        history.data[i].progress = progress;//章节进度
+                        history.data[i].price = price; //章节价格
+                    }
+                }
+
+                $api.setStorage('history', history);
+            }
+            var newhistory = {};
+            newhistory.image = thebook.image; //书的图片
+            newhistory.book_name = thebook.book_name; //书名
+            newhistory.book_id = indexSetting.book_id; //书的id
+            newhistory.colums = 2;
+            newhistory.zhangjie = chapter_name;
+            newhistory.colum_id = chapterid;
+            newhistory.subject = bookname;
+            newhistory.progress = progress;
+            newhistory.price = indexSetting.price;
+            if(!history || isthebook === false)
+             {
+               if(!history){
+                 $api.setStorage('history', {
+                   data: [newhistory]
+                 });
+               }else{
+                 history.data.push(newhistory);
+                 $api.setStorage('history', history);
+               }
+            }
+        });
+    }
+  </script>
+  </html>

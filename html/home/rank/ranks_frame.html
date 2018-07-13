@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+  <html>
+  <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+      <title>title</title>
+      <link rel="stylesheet" type="text/css" href="../../../css/api.css"/>
+      <script type="text/javascript" src="../../../script/common.js"></script>
+      <link rel="stylesheet" type="text/css" href="../../../css/common.css"/>
+      <link rel="stylesheet" type="text/css" href="../../../css/aui.css"/>
+      <link rel="stylesheet" type="text/css" href="style.css"/>
+  </head>
+  <body>
+    <section class="book-channel">
+      <div class="aui-bar aui-bar-btn" id="ranks">
+            <div class="aui-bar-btn-item" id="rexiao">热销榜</div>
+            <div class="aui-bar-btn-item" id="dianji">点击榜</div>
+            <div class="aui-bar-btn-item" id="xinshu">新书榜</div>
+            <div class="aui-bar-btn-item" id="wanben">完本榜</div>
+      </div>
+      <div class="have-line-block" v-for="i in dataLists" >
+        <div class="aui-row-padded" @click="toDetails(i.book_id)">
+          <div class="aui-col-xs-3">
+            <img :src='i.cover' class='book-img'></image>
+          </div>
+          <div class="aui-col-xs-9">
+            <div class="book-name">{{i.short_name}}</div>
+            <div class="book-intro aui-ellipsis-2">{{i.intro}}</div>
+            <div class="book-author"><i class="aui-iconfont aui-icon-my"></i> {{i.author_name}}
+              <span class="book-tag book-wordnum pull-right">{{i.word_count}}字</span>
+              <span class="book-tag book-state pull-right">{{i.status==1?'连载中':'已完结'}}</span>
+              <span class="book-tag book-cate pull-right">{{i.cate_name}}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </body>
+  <script type="text/javascript" src="../../../script/api.js"></script>
+  <script type="text/javascript" src="../../../script/aui-tab.js"></script>
+  <script type="text/javascript" src="../../../script/vue.min.js"></script>
+  <script type="text/javascript" src="../../../script/aui-toast.js"></script>
+  <script type="text/javascript" src="../../../script/aui-scroll.js"></script>
+  <script type="text/javascript" src="../../../script/aui-dialog.js"></script>
+
+  <script type="text/javascript">
+      apiready = function(){
+        var pageParam=api.pageParam;
+        initTab(pageParam.type);
+        initload();
+      };
+      var vm=new Vue({
+          el:".book-channel",
+          data:{
+            dataLists: []
+          },
+          mounted: function () {
+
+          },
+          methods:{
+            toDetails:function(id){
+                openbook(id);
+            },
+          },
+      });
+      function openbook(book_id) {
+          api.openWin({
+              name: 'book_' + book_id,
+              url: 'bookdetail.html',
+              rect: {
+                  x: 0,
+                  y: 0,
+                  w: api.winWidth,
+                  h: api.winHeight
+              },
+              bgColor: "#ffffff",
+              pageParam: {
+                  bookid: book_id
+              },
+              useWKWebView:true,
+              historyGestureEnabled:true,
+              bounces: false,
+              reload: true,
+              vScrollBarEnabled: true,
+              hScrollBarEnabled: false,
+              animation: {
+                  type: "push",
+                  subType: "from_right",
+                  duration: 300
+              }
+          });
+      }
+      //  初始化
+      function initload() {
+          var toast = new auiToast({});
+        toast.loading({
+            title:"loading...",
+            duration:2000
+        })
+        // 获取排行数据
+          api.ajax({
+              url: "https://www.luluxs8.com/novel/v2/new-book-recommend.php",
+              method: 'get'
+          }, function(ret, err) {
+              if (ret) {
+                if(ret.code==200){
+                  vm.dataLists=ret.data;
+                }
+                  toast.hide();
+              } else {
+                  toast.fail({
+                      title: err.msg,
+                      duration: 2000
+                  });
+              }
+          });
+      }
+
+      function initTab(type){
+        var tab = new auiTab({
+          element:document.getElementById("ranks"),
+          index:type,
+          repeatClick:false
+        },function(ret){
+          switch (ret.index) {
+              case 1:
+                  break;
+              case 2:
+                  break;
+              case 3:
+                  break;
+              case 4:
+                  break;
+          }
+        });
+      }
+  </script>
+  </html>

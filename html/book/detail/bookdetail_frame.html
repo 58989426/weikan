@@ -4,104 +4,12 @@
       <meta charset="utf-8">
       <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
       <title>title</title>
-      <link rel="stylesheet" type="text/css" href="../../css/api.css"/>
-      <script type="text/javascript" src="../../script/common.js"></script>
+      <link rel="stylesheet" type="text/css" href="../../../css/api.css"/>
+      <script type="text/javascript" src="../../../script/common.js"></script>
 
-      <link rel="stylesheet" type="text/css" href="../../css/common.css"/>
-      <link rel="stylesheet" type="text/css" href="../../css/aui.css"/>
-      <style>
-        body{
-          background: #fff;
-        }
-        .space{
-          height: 1rem;
-        }
-       .bg {
-
-           height:145px;
-           position: relative;
-           top: -5px
-       }
-       .bg-blur {
-           width: 104%;
-           left: -2%;
-           background-size:150% 150%;
-           background-repeat: no-repeat;
-           background-position: center;
-           -webkit-filter: blur(15px) contrast(30%);
-           -moz-filter: blur(15px) contrast(30%);
-           -o-filter: blur(15px) contrast(30%);
-           -ms-filter: blur(15px) contrast(30%);
-           filter: blur(15px) contrast(30%);
-       }
-       .book-detail {
-         position: absolute;
-         top: 10px;
-         left: 15px;
-         color: white;
-         clear: both;
-       }
-       .book-detail div{
-         color: white;
-       }
-       .book-detail p{
-         color: white;
-         margin: 0.3rem 0;
-       }
-       .book-intro{
-         font-size: 14px;
-         padding: 0 15px;
-         color: #4c4c4c;
-         overflow: hidden;
-       }
-       .chapter{
-         padding: 0 15px;
-         overflow: hidden;
-       }
-       .chapter p{
-         margin: 0.2rem 0;
-       }
-       .new{
-         background: #ff3955;
-         border-radius: 20px;
-         padding: 1px 8px;
-         color: white;
-         font-size: 12px;
-       }
-       .to-more{
-         text-align: center;
-         color: grey;
-         height: 50px;
-         line-height: 50px;
-         font-size: 0.7rem;
-       }
-       .head-img{
-         width: 2.5rem;
-         height: 2.5rem;
-         border-radius: 50%;
-       }
-       .chapter .have-line-block {
-          margin: 0;
-          height: auto;
-          border-bottom: 1px solid #f1f1f1;
-          overflow: hidden;
-        }
-        .chapter-menu{
-          margin: 0 15px;
-          padding: 10px 0;
-          border-top: 1px solid #f1f1f1;
-        }
-        .chapter-menu .title{
-          font-weight: bold;
-        }
-        .chapter-menu .pull-right{
-          font-size: 14px;
-          color: gray;
-        }
-        .aui-iconfont{
-          font-weight: bold;
-        }
-      </style>
+      <link rel="stylesheet" type="text/css" href="../../../css/common.css"/>
+      <link rel="stylesheet" type="text/css" href="../../../css/aui.css"/>
+      <link rel="stylesheet" type="text/css" href="style.css"/>
   </head>
   <body>
     <div id="book-detail" v-if="bookInfo">
@@ -166,12 +74,12 @@
       </div>
     </div>
   </body>
-  <script type="text/javascript" src="../../script/api.js"></script>
-  <script type="text/javascript" src="../../script/aui-tab.js"></script>
-  <script type="text/javascript" src="../../script/vue.min.js"></script>
-  <script type="text/javascript" src="../../script/aui-toast.js"></script>
-  <script type="text/javascript" src="../../script/aui-scroll.js"></script>
-  <script type="text/javascript" src="../../script/aui-dialog.js"></script>
+  <script type="text/javascript" src="../../../script/api.js"></script>
+  <script type="text/javascript" src="../../../script/aui-tab.js"></script>
+  <script type="text/javascript" src="../../../script/vue.min.js"></script>
+  <script type="text/javascript" src="../../../script/aui-toast.js"></script>
+  <script type="text/javascript" src="../../../script/aui-scroll.js"></script>
+  <script type="text/javascript" src="../../../script/aui-dialog.js"></script>
 
   <script type="text/javascript">
 
@@ -226,13 +134,13 @@
               content:"这本书真的太棒了！！！超乎我的想象！你值得拥有！"
             },
             {
-              headimg:"../../image/liulangnan.png",
+              headimg:"../../../image/liulangnan.png",
               name:"微笑天使",
               date:"2018-07-05",
               content:"哇卡卡卡卡卡卡卡是的富士康"
             },
             {
-              headimg:"../../image/liulangnan.png",
+              headimg:"../../../image/liulangnan.png",
               name:"微笑天使",
               date:"2018-07-05",
               content:"嘻嘻嘻嘻嘻嘻，太阳当空照，花儿对我笑，小鸟说，这书好，真的真的非常好~"
@@ -245,7 +153,7 @@
               toChapter:function(){
                 api.openWin({
                     name: 'chapterMenu',
-                    url: 'chapterMenu.html',
+                    url: '../chapter/chapterMenu.html',
                     pageParam: {bookid: vm.bookInfo.id}
                   });
               }

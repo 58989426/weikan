@@ -1,0 +1,45 @@
+body{
+  background: #fff;
+}
+.shanxuan{
+  position: absolute;
+  right: 1rem;
+  top: 0.25rem;
+  font-size: 10px;
+  color: #ff3955;
+  text-align: center;
+}
+.shanxuan-word{
+  position: relative;
+  top: -5px;
+}
+.all-words{
+  background: #fff;
+  width: 90%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 99;
+}
+.all-title{
+  border-bottom: 1px solid #f1f1f1;
+  font-size: 12px;
+  font-weight: bold;
+}
+.tags{
+  display: flex;
+  flex-wrap: wrap;
+}
+.tag{
+  display: inline-block;
+  padding: 0.05rem 0.7rem;
+  margin-top: 0.5rem;
+  font-size: 12px;
+  color: grey;
+}
+.tag_choose{
+  border: 1px solid #ff3955;
+  border-radius: 15px;
+  color: #ff3955;
+}

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+  <html>
+  <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+      <title>title</title>
+      <link rel="stylesheet" type="text/css" href="../../../css/api.css"/>
+      <script type="text/javascript" src="../../../script/common.js"></script>
+      <link rel="stylesheet" type="text/css" href="../../../css/common.css"/>
+      <link rel="stylesheet" type="text/css" href="../../../css/aui.css"/>
+      <style>
+        body{
+          background: #fff;
+          overflow-x: hidden;
+        }
+        .aui-bar-nav {
+          background-color: #ff3955;
+        }
+        .iconfont {
+          color: #ff3955;
+        }
+        .read-now{
+          font-size: 18px;
+        }
+      </style>
+  </head>
+  <body>
+    <div id="book-detail">
+      <header class="aui-bar aui-bar-nav" id="header">
+          <a class="aui-pull-left aui-btn" tapmode onclick="back()">
+              <span class="aui-iconfont aui-icon-left"></span>
+          </a>
+          <div class="aui-title" id="title">书籍详情</div>
+          <a class="aui-pull-right aui-btn" tapmode onclick="openSharebox()">
+              <span class="aui-iconfont aui-icon-share"></span>
+          </a>
+      </header>
+
+      <footer class="aui-bar aui-bar-tab" id="footer">
+      	<div class="aui-bar-tab-item" tapmode >
+      		<i class="iconfont icon-dashang1"></i>
+      		<div class="aui-bar-tab-label">打赏本书</div>
+      	</div>
+      	<div class="aui-bar-tab-item" tapmode style="background: #ff3955;color: white;" onclick="toRead()">
+      		<div class="aui-bar-tab-label read-now">立即阅读</div>
+      	</div>
+      	<div class="aui-bar-tab-item" tapmode onclick="addstore()">
+           <i class="iconfont icon-jiarushujia"></i>
+      		<div class="aui-bar-tab-label" id="addstore">加入书架</div>
+      	</div>
+      </footer>
+    </div>
+  </body>
+  <script type="text/javascript" src="../../../script/api.js"></script>
+  <script type="text/javascript">
+      var indexSetting = {};
+      var downintval = 0;
+      var thebook = {};
+      // $api.rmStorage('localstore')
+      if ($api.getStorage('localstore')) {
+          indexSetting.localstore = $api.getStorage('localstore');
+
+      } else {
+          indexSetting.localstore = {
+              data: []
+          };
+      }
+
+      apiready = function(){
+        var pageParam=api.pageParam;
+        openFrame("bookdetail_frame",'bookdetail_frame.html',pageParam);
+        indexSetting.bookid = api.pageParam.bookid ? api.pageParam.bookid : 0;
+        if (isinstore(indexSetting.bookid)) {
+            $api.text($api.byId('addstore'), '已加入书架');
+        }
+        thebook = $api.strToJson($api.getStorage('book_'+api.pageParam.bookid));
+        thebook.check=false;
+      };
+
+      //打开阅读页
+      function toRead(){
+          var bookinfo=JSON.parse($api.getStorage('book_'+api.pageParam.bookid));
+          api.openWin({
+              name: 'read',
+              url: '../content/read.html',
+              pageParam: bookinfo
+            });
+      }
+
+      //判断此本书是否在本地书架
+      function isinstore(book_id) {
+          if (indexSetting.localstore && $api.isArray(indexSetting.localstore.data)) {
+              for (var i = 0, len = indexSetting.localstore.data.length; i < len; i++) {
+                  if (indexSetting.localstore.data[i].id == book_id) {
+                      return true;
+                  }
+              }
+              return false;
+          } else {
+              return false;
+          }
+      }
+
+      //加入书架
+      function addstore() {
+          // 待同步服务器
+          if (!isinstore(indexSetting.bookid)) {
+              indexSetting.localstore = $api.getStorage('localstore');
+              if (indexSetting.localstore && indexSetting.localstore.data) {
+                  indexSetting.localstore.data.push(thebook)
+                  $api.setStorage('localstore', indexSetting.localstore);
+              } else {
+                  indexSetting.localstore = {
+                      data: [thebook]
+                  }
+                  $api.setStorage('localstore', indexSetting.localstore);
+              }
+
+              //此处应对接后端接口将书架内容存储进数据库备份
+
+              $api.text($api.byId('addstore'), '已加入书架');
+              // api.execScript({
+              //     name: 'root',
+              //     frameName: 'store',
+              //     script: 'api.refreshHeaderLoading()'
+              // });
+          } else {
+              $api.text($api.byId('addstore'), '已加入书架');
+          }
+      }
+  </script>
+  </html>

@@ -1,0 +1,151 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../../../css/aui.css" />
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+</head>
+<body>
+  <div id="readSet">
+    <header class="aui-bar aui-bar-nav" id="header">
+        <a class="aui-pull-left aui-btn" @click.stop="readback" tapmode>
+            <span class="aui-iconfont aui-icon-left"></span>
+        </a>
+        <!-- <a class="aui-pull-right aui-btn" tapmode onclick="openSharebox()">
+            <span class="aui-iconfont aui-icon-share"></span>
+        </a> -->
+        <div class="aui-title" id="title"></div>
+    </header>
+    <div class="aui-mask aui-mask-in" @click="closeSet"></div>
+    <div class="set-all" v-show="showSet">
+      <!-- 文字设置 -->
+         <div class="read-set-font control_btn">
+             <div class="display_box font_size_set font-set-box">
+                 <div class="font_size_reduce  font-set" @click="setFont(-1)"><span>- A</span></div>
+                 <div class="font_size_add font-set" @click="setFont(1)"><span>+ A</span></div>
+             </div>
+         </div>
+         <!-- 肤色设置 -->
+         <div id="readSetSkin" class="read-set-skin ">
+             <div class="control_btn">
+                 <ul class="display_box fuse" style="display: flex">
+                    <li v-for="item in bgArr" :style="'background:'+item" @click="setBg(item)" :class="curBg==item?'active':''"></li>
+                 </ul>
+             </div>
+         </div>
+    </div>
+    <footer class="aui-bar aui-bar-tab " id="footer">
+        <div class="aui-bar-tab-item" tapmode @click="">
+            <i class="aui-iconfont aui-icon-menu"></i>
+            <div class="aui-bar-tab-label">目录</div>
+        </div>
+        <div class="aui-bar-tab-item" tapmode @click="showSet=!showSet">
+            <i class="aui-iconfont aui-icon-gear" ></i>
+            <div class="aui-bar-tab-label">设置</div>
+        </div>
+        <div class="aui-bar-tab-item" tapmode @click="setNight">
+            <i class="iconfont" :class="ifyejian?'icon-rijianmoshi':'icon-yejianmoshi'"></i>
+            <div class="aui-bar-tab-label">{{ifyejian?'日':'夜'}}间</div>
+        </div>
+        <div class="aui-bar-tab-item" tapmode >
+            <i class="aui-iconfont aui-icon-like"></i>
+            <div class="aui-bar-tab-label">收藏</div>
+        </div>
+    </footer>
+  </div>
+</body>
+<script type="text/javascript" src="../../../script/api.js"></script>
+<script type="text/javascript" src="../../../script/aui-toast.js"></script>
+<script type="text/javascript" src="../../../script/aui-range.js"></script>
+<script type="text/javascript" src="../../../script/vue.min.js"></script>
+<script type="text/javascript">
+  var toast = new auiToast({});
+  var indexSetting = $api.getStorage('indexSetting');
+
+
+  apiready = function() {
+    vm.ifyejian = ($api.getStorage('yejianmoshi') > 0) ? true:false;
+  }
+
+  var vm=new Vue({
+      el:"#readSet",
+      data:{
+          showSet:false,
+          ifyejian:null,
+          bgArr:["#f7e3c2","#cad9e8","#d1edd1","#FCEFFF"],
+          curBg:indexSetting.bg,
+      },
+      mounted: function () {
+
+      },
+      methods:{
+          // 关闭菜单页
+          closeSet:function(){
+              vm.showSet=false;
+              api.closeFrame();
+          },
+          // 关闭阅读页
+          readback:function(){
+            api.setFullScreen({
+                fullScreen: false
+            });
+            api.execScript({
+                name: 'read',
+                script: 'api.closeWin()'
+            });
+            api.closeFrame();
+          },
+          //去往目录
+          toChapterMenu:function(){
+
+          },
+          //打开设置
+          openSetFont:function(){
+
+          },
+          //设置字号
+          setFont:function(num){
+            if (num > 0) {
+              indexSetting.fontsize=indexSetting.fontsize+1;
+              $api.setStorage('indexSetting',indexSetting);
+                api.execScript({
+                    name: 'read',
+                    script: 'indexSetting.fontsize = indexSetting.fontsize+1;indexSetting.bookReader.setValue({textStyle: {size: indexSetting.fontsize+1,color: indexSetting.color}}, function(ret, err) {});'
+                });
+            } else {
+              indexSetting.fontsize=indexSetting.fontsize-1;
+              $api.setStorage('indexSetting',indexSetting);
+                api.execScript({
+                    name: 'read',
+                    script: 'indexSetting.fontsize = indexSetting.fontsize-1;indexSetting.bookReader.setValue({textStyle: {size: indexSetting.fontsize-1,color: indexSetting.color}}, function(ret, err) {});'
+                });
+            }
+          },
+          //设置背景
+          setBg:function(type){
+            indexSetting.color = "#333";
+            indexSetting.bg = type;
+            vm.curBg = type;
+            $api.setStorage('indexSetting',indexSetting);
+            api.execScript({
+                name: 'read',
+                script: 'setTimeout(function(){indexSetting.bookReader.setValue({bg: $api.getStorage("indexSetting").bg,textStyle: {color: $api.getStorage("indexSetting").color}}, function(ret, err) {});},100);'
+            });
+          },
+          //设置夜间/日间模式
+          setNight:function(){
+            vm.ifyejian=!vm.ifyejian;
+            $api.setStorage('yejianmoshi',vm.ifyejian?1:0);
+            api.execScript({
+                name: 'read',
+                script: 'indexSetting.bg = ($api.getStorage("yejianmoshi") > 0) ? "#212121" : $api.getStorage("indexSetting").bg;indexSetting.color = ($api.getStorage("yejianmoshi") > 0) ? "#eee" : "#333";setTimeout(function(){indexSetting.bookReader.setValue({bg: indexSetting.bg,textStyle: {color: indexSetting.color}}, function(ret, err) {});},100);'
+            });
+          }
+      },
+  });
+
+</script>
+</html>

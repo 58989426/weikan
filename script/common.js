@@ -58,6 +58,7 @@ function openFrame(name, url, pageParam,isBounces) {
 		pageParam: pageParam,
 		bounces: isBounces ? isBounces:true,
 		slidBackEnabled: 'false',
+    reload:true,
 		rect: {
 			x: 0,
 			y: headerPos.h,

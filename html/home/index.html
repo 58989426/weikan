@@ -141,38 +141,7 @@
   <script type="text/javascript" src="../../script/aui-dialog.js"></script>
 
   <script type="text/javascript">
-      // toast.loading({
-      //     title:"loading...",
-      //     duration:2000
-      // })
-      // var indexSetting = $api.getStorage('appinfo');
-      // indexSetting.userinfo = $api.getStorage('userinfo');
-      // indexSetting.loading = false;
-      // indexSetting.current = 1;
-      // indexSetting.total = 2;
-      // indexSetting.startindex = 0;
-      // if ($api.getStorage('localstore')) {
-      //     indexSetting.localstore = $api.getStorage('localstore');
-      // } else {
-      //     // indexSetting.localstore = {
-      //     //     data: []
-      //     // };
-      // }
       apiready = function(){
-        // $api.fixStatusBar($api.dom('header'));
-        // api.parseTapmode();
-        // if (api.statusBarAppearance) {
-        //     if (api.systemType == 'android') {
-        //         indexSetting.statbar = 25;
-        //     } else {
-        //         indexSetting.statbar = 20;
-        //     }
-        //     api.setStatusBarStyle({
-        //         style: 'dark'
-        //     });
-        // } else {
-        //     indexSetting.statbar = 0;
-        // }
         initload();
       };
       var vm=new Vue({
@@ -314,14 +283,14 @@
               openChat:function(item){
                 api.openWin({
                     name: 'ranks',
-                    url: 'ranks.html',
+                    url: './rank/ranks.html',
                     pageParam: {type: item}
                   });
               },
               toDetails:function(item){
                 api.openWin({
                     name: 'bookdetail',
-                    url: 'bookdetail.html',
+                    url: '../book/detail/bookdetail.html',
                     pageParam: {bookid: item}
                   });
               },

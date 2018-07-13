@@ -1,0 +1,31 @@
+body{
+  background: #fff
+}
+.aui-grid .aui-iconfont {
+  color: #ff3955;
+}
+.aui-grid [class*=aui-col-] {
+  padding: 0.5rem 0;
+}
+.aui-grid .aui-iconfont {
+  font-size: 1.2rem;
+}
+.style1.aui-row-padded {
+  margin-left: -0.3rem;
+  margin-right: -0.3rem;
+}
+.style1.aui-row-padded [class*=aui-col-] {
+  padding: 0.3rem;
+}
+.aui-bar-btn {
+  min-height: 1.4rem;
+}
+.aui-bar-btn-item.aui-active {
+  background-color: #ff3955;
+  color: #ffffff;
+}
+.aui-bar-btn-item {
+    line-height: 1.4rem;
+    border-color: #ff3955;
+    font-size: 12px;
+}

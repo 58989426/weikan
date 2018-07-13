@@ -4,14 +4,26 @@
     <meta charset="utf-8">
     <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
     <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
-    <title>AUI快速完成布局</title>
-    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <title>个人中心</title>
+    <link rel="stylesheet" type="text/css" href="../../css/aui.css" />
     <style type="text/css">
         .text-white {
             color: #ffffff !important;
         }
         .aui-grid [class*=aui-col-] {
             padding: 0.75rem 0;
+        }
+        .aui-bg-info {
+            background-color: #ff3955 !important;
+        }
+        .aui-list .aui-list-item.exit-item{
+          padding-left: 0;
+        }
+        .exit-login{
+            line-height: 2.2rem;
+            width: 100%;
+            text-align: center;
+            color: #ff3955;
         }
     </style>
 </head>
@@ -22,7 +34,7 @@
             <div class="aui-list-item aui-list-item-middle">
                 <div class="aui-media-list-item-inner ">
                     <div class="aui-list-item-media" style="width:3rem;">
-                        <img src="../image/demo1.png" class="aui-img-round" >
+                        <img src="../../image/demo1.png" class="aui-img-round" >
                     </div>
                     <div class="aui-list-item-inner aui-list-item-arrow">
                         <div class="aui-list-item-text text-white aui-font-size-18">38dd4ef6d</div>
@@ -36,17 +48,13 @@
     </section>
     <section class="aui-content aui-grid aui-margin-b-15">
         <div class="aui-row">
-            <div class="aui-col-xs-4 aui-border-r">
-                <big class="aui-text-warning">0.00<small> 元</small></big>
-                <div class="aui-gird-lable aui-font-size-12">余额</div>
+            <div class="aui-col-xs-6 aui-border-r">
+                <big class="aui-text-warning">52<small> 个</small></big>
+                <div class="aui-gird-lable aui-font-size-12">书币</div>
             </div>
-            <div class="aui-col-xs-4 aui-border-r">
-                <big class="aui-text-danger">0.00<small> 个</small></big>
-                <div class="aui-gird-lable aui-font-size-12">优惠</div>
-            </div>
-            <div class="aui-col-xs-4">
-                <big class="aui-text-success">0.00<small> 分</small></big>
-                <div class="aui-gird-lable aui-font-size-12">积分</div>
+            <div class="aui-col-xs-6 aui-border-r">
+                <big class="aui-text-danger">1<small> 张</small></big>
+                <div class="aui-gird-lable aui-font-size-12">书券</div>
             </div>
         </div>
     </section>
@@ -57,7 +65,7 @@
                     <i class="aui-iconfont aui-icon-location aui-text-info"></i>
                 </div>
                 <div class="aui-list-item-inner aui-list-item-arrow">
-                    <div class="aui-list-item-title">收货地址</div>
+                    <div class="aui-list-item-title">充值记录</div>
                 </div>
             </li>
             <li class="aui-list-item">
@@ -65,7 +73,7 @@
                     <i class="aui-iconfont aui-icon-like aui-text-danger"></i>
                 </div>
                 <div class="aui-list-item-inner aui-list-item-arrow">
-                    <div class="aui-list-item-title">我的收藏</div>
+                    <div class="aui-list-item-title">消费记录</div>
                 </div>
             </li>
             <li class="aui-list-item">
@@ -73,18 +81,17 @@
                     <i class="aui-iconfont aui-icon-image aui-text-info"></i>
                 </div>
                 <div class="aui-list-item-inner aui-list-item-arrow">
-                    <div class="aui-list-item-title">美食相册</div>
+                    <div class="aui-list-item-title">打赏记录</div>
                 </div>
             </li>
         </ul>
-        <ul class="aui-list aui-list-in">
+        <ul class="aui-list aui-list-in aui-margin-b-15">
             <li class="aui-list-item">
                 <div class="aui-list-item-label-icon">
                     <i class="aui-iconfont aui-icon-cart aui-text-info"></i>
                 </div>
                 <div class="aui-list-item-inner aui-list-item-arrow">
-                    <div class="aui-list-item-title">积分商城</div>
-                    <div class="aui-list-item-right">0元好物在这里</div>
+                    <div class="aui-list-item-title">求书反馈</div>
                 </div>
             </li>
             <li class="aui-list-item">
@@ -92,34 +99,41 @@
                     <i class="aui-iconfont aui-icon-cert aui-text-warning"></i>
                 </div>
                 <div class="aui-list-item-inner aui-list-item-arrow">
-                    <div class="aui-list-item-title">会员卡</div>
+                    <div class="aui-list-item-title">会员</div>
                     <div class="aui-list-item-right">未开通</div>
                 </div>
             </li>
         </ul>
+        <ul class="aui-list aui-list-in">
+            <li class="aui-list-item exit-item">
+               <div class="exit-login">退出<div>
+            </li>
+        </ul>
     </section>
-    <footer class="aui-bar aui-bar-tab">
-        <div class="aui-bar-tab-item">
-            <i class="aui-iconfont aui-icon-paper"></i>
-            <div class="aui-bar-tab-label">外卖</div>
-        </div>
-        <div class="aui-bar-tab-item">
-            <i class="aui-iconfont aui-icon-menu"></i>
-            <div class="aui-bar-tab-label">订单</div>
-        </div>
-        <div class="aui-bar-tab-item">
-            <i class="aui-iconfont aui-icon-location"></i>
-            <div class="aui-bar-tab-label">发现</div>
-        </div>
-        <div class="aui-bar-tab-item aui-active">
-            <i class="aui-iconfont aui-icon-my"></i>
-            <div class="aui-bar-tab-label">我的</div>
-        </div>
-    </footer>
 </body>
-<script type="text/javascript" src="../script/api.js" ></script>
+<script type="text/javascript" src="../../script/api.js" ></script>
+<script type="text/javascript" src="../../script/aui-dialog.js"></script>
 <script type="text/javascript">
     apiready = function () {
+      tixinglogin();
+      return false;
+    }
+    function tixinglogin() {
+        // 未在登录且绑定状态则进行提醒
+        var dialog = new auiDialog({})
+        dialog.alert({
+            title: '请登录',
+            msg: '未登录请先登录！',
+            buttons: ['取消', '去登录']
+        }, function(ret) {
+            if (ret) {
+                if (ret.buttonIndex == 2) {
+                    openwin('login', {
+                            from: "mine",
+                    })
+                }
+            }
+        })
     }
 </script>
 </html>

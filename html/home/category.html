@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+  <html>
+  <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+      <title>title</title>
+      <link rel="stylesheet" type="text/css" href="../../css/api.css"/>
+      <script type="text/javascript" src="../../script/common.js"></script>
+
+      <link rel="stylesheet" type="text/css" href="../../css/common.css"/>
+      <link rel="stylesheet" type="text/css" href="../../css/aui.css"/>
+      <style>
+        body{background: #fff}
+        .book-channel {
+            margin: 1rem 0 0;
+        }
+        .channel__header {
+            padding-left: 0.5rem;
+        }
+        .book-back {
+            overflow: hidden;
+            background: #fff5f8;
+        }
+
+        .book-li-msg {
+            float: left;
+            width: 50%;
+            overflow: hidden;
+        }
+        .book-sort {
+          position: relative;
+          display: block;
+          overflow: hidden;
+          padding: .75rem 0;
+          height: 3.85rem;
+        }
+        .book-pic {
+          font-size: 0;
+          float: left;
+          width: 2rem;
+          height: 2.5rem;
+          margin-right: .75rem;
+          margin-left: 0.5rem;
+        }
+        img {
+            display: inline-block;
+        }
+        .book-cell {
+            overflow: hidden;
+            display: inline-block;
+        }
+        .book-title-x {
+            overflow: hidden;
+        }
+        .book-title {
+          font-size: 0.68rem;
+          line-height: 1.1;
+          margin-top: 0.5rem;
+          font-weight: bold;
+        }
+        .book-tags {
+          font-size: .5rem;
+          margin: .48rem 0;
+          line-height: .75rem;
+          color: grey;
+        }
+        em {
+            font-style: normal;
+        }
+      </style>
+  </head>
+  <body>
+    <section class="category">
+      <div  class="book-channel"  v-for="item in dataLists">
+          <div class="channel__header">
+              <div class="header__left">{{item.title}}</div>
+          </div>
+        <div>
+          <ol class="book-ol book-ol-normal">
+            <li class="book-li-msg" v-for="(i,index) in item.list" :class="index%4==1 || index%4==0 ?'book-back':''">
+                <div class="book-sort" @click="toDetails(i)">
+                    <img :src="i.typeimg" class="book-pic" alt="i.typename">
+                    <div class="book-cell">
+                        <div class="book-title-x">
+                            <h4 class="book-title">{{i.typename}}</h4>
+                        </div>
+                        <p class="book-tags">
+                            <em>{{i.typenum}}本</em>
+                        </p>
+                    </div>
+                </div>
+            </li>
+          </ol>
+        </div>
+      </div>
+    </section>
+  </body>
+  <script type="text/javascript" src="../../script/api.js"></script>
+  <script type="text/javascript" src="../../script/vue.min.js"></script>
+  <script type="text/javascript" src="../../script/underscore.js"></script>
+  <script type="text/javascript">
+      apiready = function(){
+
+      };
+      var vm=new Vue({
+          el:".category",
+          data:{
+            edit:false,
+            dataLists:[{
+              title:"女生频道",
+              list:[
+                {
+                  typeid:1, //类型id
+                  typeimg:"https://www.luoshenread.com/imagedata/2018/03/08/5aa0b568b507e781870629.jpg",//类型图片
+                  typename:"古代言情",  //类型名称
+                  typenum:"44664" //类型本书
+                },
+                {
+                  typeid:1, //类型id
+                  typeimg:"https://www.luoshenread.com/imagedata/2018/03/08/5aa0b2e6bcc0a386608779.jpg",//类型图片
+                  typename:"仙侠情缘",  //类型名称
+                  typenum:"44664" //类型本书
+                },
+                {
+                  typeid:1, //类型id
+                  typeimg:"https://www.luoshenread.com/imagedata/2018/03/08/5aa0b531e73c2314218691.jpg",//类型图片
+                  typename:"现代言情",  //类型名称
+                  typenum:"44664" //类型本书
+                },
+                {
+                  typeid:1, //类型id
+                  typeimg:"https://www.luoshenread.com/imagedata/2018/04/04/5ac498d5c69f5051550610.jpg",//类型图片
+                  typename:"浪漫青春",  //类型名称
+                  typenum:"44664" //类型本书
+               },
+               {
+                 typeid:1, //类型id
+                 typeimg:"https://www.luoshenread.com/imagedata/2018/03/08/5aa0a653e338d698205473.jpg",//类型图片
+                 typename:"玄幻言情",  //类型名称
+                 typenum:"44664" //类型本书
+               },
+               {
+                 typeid:1, //类型id
+                 typeimg:"https://www.luoshenread.com/imagedata/2018/03/08/5aa0ad6ec7c27095433727.jpg",//类型图片
+                 typename:"短篇小说",  //类型名称
+                 typenum:"44664" //类型本书
+               }
+             ]
+            },
+            {
+              title:"男生频道",
+              list:[
+                {
+                  typeid:1, //类型id
+                  typeimg:"https://www.luoshenread.com/imagedata/2018/03/08/5aa0a653e338d698205473.jpg",//类型图片
+                  typename:"玄幻",  //类型名称
+                  typenum:"44664" //类型本书
+                },
+                {
+                  typeid:1, //类型id
+                  typeimg:"https://www.luoshenread.com/imagedata/2018/03/08/5aa0ad6ec7c27095433727.jpg",//类型图片
+                  typename:"奇幻",  //类型名称
+                  typenum:"44664" //类型本书
+                },
+                {
+                  typeid:1, //类型id
+                  typeimg:"https://www.luoshenread.com/imagedata/2018/04/04/5ac498d5c69f5051550610.jpg",//类型图片
+                  typename:"武侠",  //类型名称
+                  typenum:"44664" //类型本书
+                },
+                {
+                  typeid:1, //类型id
+                  typeimg:"https://www.luoshenread.com/imagedata/2018/03/08/5aa0b531e73c2314218691.jpg",//类型图片
+                  typename:"仙侠",  //类型名称
+                  typenum:"44664" //类型本书
+                },
+                {
+                  typeid:1, //类型id
+                  typeimg:"https://www.luoshenread.com/imagedata/2018/03/08/5aa0a653e338d698205473.jpg",//类型图片
+                  typename:"都市",  //类型名称
+                  typenum:"44664" //类型本书
+                },
+                {
+                  typeid:1, //类型id
+                  typeimg:"https://www.luoshenread.com/imagedata/2018/03/08/5aa0ad6ec7c27095433727.jpg",//类型图片
+                  typename:"现实",  //类型名称
+                  typenum:"44664" //类型本书
+                },
+              ]
+            }
+          ]
+          },
+          mounted: function () {
+
+          },
+          methods:{
+            toDetails:function(item){
+              api.openWin({
+                  name: 'category',
+                  url: './category/category.html',
+                  pageParam: {typeid: item.typeid,typename:item.typename}
+                });
+            },
+          },
+      });
+  </script>
+  </html>

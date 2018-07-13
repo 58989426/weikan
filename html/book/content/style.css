@@ -1,0 +1,65 @@
+body {
+    background: none !important;
+}
+.aui-bar-nav,.aui-bar-tab,.set-all {
+    background-color: rgba(0, 0, 0, 0.9);
+    color: #fff;
+}
+.aui-mask {
+    background: rgba(0, 0, 0, .2);
+    z-index: -1;
+}
+.set-all{
+  width: 100%;
+  height: 120px;
+  position: fixed;
+  top: auto;
+  bottom: 50px;
+  table-layout: fixed;
+  border-bottom: 1px solid #757575;
+}
+.display_box {
+  display: flex;
+}
+.control_btn ul li {
+  flex: 1;
+  height: 1.5rem;
+  margin: 5px;
+}
+.control_bg_on {
+  outline: 1px solid red !important;
+}
+.font-set-box {
+  display: flex !important;
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: -ms-flex;
+}
+.font-set-box .font-set {
+  width: 50px;
+  flex: 0.5;
+  text-align: center;
+  height: 3rem;
+  line-height: 2rem;
+  padding: 0.5rem;
+  border-radius: 2px;
+  margin-top: 0.3rem;
+}
+.font-set-box .font-set span {
+  border: 1px solid #fff;
+  width: 5rem;
+  display: inline-block;
+  height: 2rem;
+  line-height: 2rem;
+  border-radius: 5px;
+}
+.active{
+  outline: 1px solid red;
+}
+.active::after{
+  content: "✔";
+  color: red;
+  position: relative;
+  left: 42%;
+  top: 0.2rem;
+}
