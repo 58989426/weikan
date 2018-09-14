@@ -482,7 +482,7 @@
             console.warn('$api.fixStatusBar Function need el param, el param must be DOM Element');
             return 0;
         }
-        el.style.paddingTop = api.safeArea.top + 'px';
+        // el.style.paddingTop = api.safeArea.top + 'px';
         return el.offsetHeight;
     };
     u.fixTabBar = function(el){

@@ -94,7 +94,7 @@
             });
             api.execScript({
                 name: 'read',
-                script: 'api.closeWin()'
+                script: 'indexSetting.bookReader.close(function(ret, err) {});api.closeWin()'
             });
             api.closeFrame();
           },

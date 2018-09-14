@@ -53,7 +53,16 @@ chapterInfo = {
 	"content": "<p>我将自己脱得精光，卖力的，用所有顾修年喜欢的方式去讨好他，希望他会因此放弃娶另一个女人。<\/p>"
 }
 
-//打开的书的历史记录
-history = {
-
-}
+//历史记录
+history = [
+  {
+    id:"31",//书籍id
+    img:"https:\\www.luluxs8.com\imagedata\2018\06\19\5b2881fb080e6881647238.jpg",//书籍图片
+    book_name:"",//书籍名
+    shortIntro:"简介",//书籍简介
+    author:"作者",//书籍作者
+    read_chapter_id:"1",//阅读到的章节id
+    progress:0,//阅读到的章节进度
+    price:"12",//阅读到的章节价格
+  }
+]

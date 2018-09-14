@@ -29,8 +29,8 @@
   <body>
     <div id="read">
       <div id="metainfo">
-        <span id="bookname" class="z">dd</span>
-        <span id="subject" class="y"></span>
+        <span id="bookname" class="z">书名</span>
+        <span id="subject" class="y">章节名</span>
       </div>
     </div>
   </body>
@@ -55,10 +55,21 @@
                         fullScreen: true
                     });
                     vm.bookinfo=api.pageParam;
+                    // $api.rmStorage('history');
+                    api.addEventListener({
+                        name: 'keyback'
+                    }, function(ret, err) {
+                        if (ret) {
+                        	api.setFullScreen({
+                                fullScreen: false
+                            });
+                            var thebook = $api.getStorage('thebook');
+                            ajaxhistory(thebook.chapter_id, thebook.chapter_name,thebook.price);
+                            back();
+                        }
+                    });
+
                     //判断localstorage里是否有阅读页设置  若没有则设置初始值
-                    // $api.rmStorage('indexSetting');
-                    // $api.rmStorage('yejianmoshi');
-                    $api.rmStorage('history');
                     if($api.getStorage('indexSetting') == undefined){
                       indexSetting = {};
                       indexSetting.fontsize = 16;
@@ -74,15 +85,11 @@
                     indexSetting.bookReader = api.require('bookReader');
                     indexSetting.fs = api.require('fs');
                     indexSetting.book_id = vm.bookinfo.id;
+                    indexSetting.bookinfo = vm.bookinfo;
 
-                    // $api.text($api.byId("bookname"),' ['+vm.bookinfo.name+']');
-                    // $api.css($api.byId("metainfo"),'background:'+indexSetting.bg);
-
-                    //初始请求数据
-                    // ajaxhistory(vm.bookinfo.id,vm.bookinfo.read_chapter_id);
-
-                    vm.filepath = 'fs://' + vm.bookinfo.id + '_' + vm.bookinfo.read_chapter_id + '.txt';
-                    initload(vm.bookinfo.id,vm.bookinfo.read_chapter_id);
+                    //初始获取章节信息
+                    vm.filepath = 'fs://' + indexSetting.bookinfo.id + '_' + indexSetting.bookinfo.read_chapter_id + '.txt';
+                    getData(indexSetting.bookinfo.id,indexSetting.bookinfo.read_chapter_id,0);
                   };
           },
           methods:{
@@ -90,37 +97,56 @@
           },
       });
 
-      // 初始化判断文件
-      function initload(bookid,chapterid) {
-        var filepath=vm.filepath;
-        //判断文件是否存在
-        indexSetting.fs.exist({
-            path: filepath
-        }, function(retes, erres) {
-          	if(!retes.exist) {
-                //如果不存在就获取数据然后创建文件
-                getData(bookid,chapterid);
-            }else{
-                openbook(filepath,0);
-            }
-            // ajaxhistory(bookid,chapterid)
-        }
-      );
-    }
 
     //请求接口获取数据
-    function getData(bookid,chapterid){
+    function getData(bookid,chapterid,progress){
+        toast.loading({
+            title:"loading...",
+            duration:2000
+        })
         api.ajax({
              url: "https://www.luluxs8.com/novel/v2/Chapter/ChapterInfo.php?bookId="+bookid+"&chapterId="+chapterid,
              method: 'get',
          }, function(ret, err) {
               if(ret.code==200){
-                createBookFile(ret.data.content);
-                $api.setStorage('history', ret.data);
+                //如果请求成功 进行初始化判断操作
+                initload(ret.data.content,progress);
+                $api.setStorage('thebook',ret.data);
+                var thebook = $api.getStorage('thebook');
+                ajaxhistory(thebook.chapter_id, thebook.chapter_name,thebook.price);
+                // $api.text($api.byId("bookname"), indexSetting.bookinfo.name);
+                // $api.text($api.byId("subject"), ret.data.chapter_name);
+              }else {
+                alert("章节信息有误！")
               }
          }
        );
     }
+    // 判断本章章节文件是否存在
+    function initload(content,progress) {
+        var filepath=vm.filepath;
+        indexSetting.fs.exist({
+            path: filepath
+        }, function(retes, erres) {
+          	if(!retes.exist) {
+                //如果不存在就创建文件
+                createBookFile(content);
+            }else{
+                // indexSetting.fs.remove({
+                //     path: filepath
+                // }, function(ret, err) {
+                //     if (ret.status) {
+                //         createBookFile(content);
+                //     } else {
+                //         alert(JSON.stringify(err));
+                //     }
+                // });
+                //如果存在就打开文件
+                openbook(filepath,progress);
+            }
+          }
+        );
+      }
     //创建文件
     function createBookFile(data){
       indexSetting.fs.createFile({
@@ -162,12 +188,8 @@
         }
       )
     }
-
     //打开阅读器
     function openbook(filepath,progress){
-      toast.loading({
-        title:"loading..."
-      });
       //加载阅读器
       var config = {
           filePath: vm.filepath,
@@ -193,10 +215,18 @@
                       break;
                   case 'page_begin':
                       //上一章
+                      toast.loading({
+                          title:"loading...",
+                          duration:2000
+                      })
                       getPrev();
                       break;
                   case 'page_end':
                       //下一章
+                      toast.loading({
+                          title:"loading...",
+                          duration:2000
+                      })
                       getNext();
                       break;
                   default:
@@ -206,7 +236,14 @@
               alert(JSON.stringify(err));
           }
       })
-  }
+      // indexSetting.bookReader.getProgress({
+      //     filePath: vm.filepath
+      // }, function(ret, err) {
+      //   if (ret.status) {
+      //       alert(ret.progress);
+      //   }
+      // });
+    }
     //打开阅读页设置
     function toggleset() {
         api.openFrame({
@@ -233,34 +270,32 @@
 
     // 上一章
     function getPrev() {
-      var history = $api.getStorage('history');
-      // alert('fs://' + history.book_id + '_' + history.prevChapter + '.txt');
-      ajaxhistory(history.prevChapter);
-      if(history.prevChapter == ""){
+      var thebook = $api.getStorage('thebook');
+      if(thebook.prevChapter == ""){
         alert("已经是第一页")
       }else{
-        //初始请求数据
-        vm.filepath = 'fs://' + history.book_id + '_' + history.prevChapter + '.txt';
-        initload(history.book_id,history.prevChapter);
+        //请求数据
+        vm.filepath = 'fs://' + thebook.book_id + '_' + thebook.prevChapter + '.txt';
+        getData(thebook.book_id,thebook.prevChapter,100);
       }
     }
 
     // 下一章
     function getNext() {
-      var history = $api.getStorage('history');
-      if(history.nextChapter == ""){
+      var thebook = $api.getStorage('thebook');
+      if(thebook.nextChapter == ""){
         alert("已经最后一页")
       }else{
-        //初始请求数据
-        // alert('fs://' + history.book_id + '_' + history.nextChapter + '.txt');
-        vm.filepath = 'fs://' + history.book_id + '_' + history.nextChapter + '.txt';
-        initload(history.book_id,history.nextChapter);
+        //请求数据
+        vm.filepath = 'fs://' + thebook.book_id + '_' + thebook.nextChapter + '.txt';
+        getData(thebook.book_id,thebook.nextChapter,0);
       }
     }
 
     //阅读历史
-    function ajaxhistory(bookid,chapterid,chapter_name,bookname,progress,price) {
+    function ajaxhistory(chapterid,chapter_name,price) {
         var progress = 0;
+        var thebook = $api.getStorage('thebook');
         indexSetting.bookReader.getProgress({
             filePath: 'fs://' + indexSetting.book_id + '_' + chapterid + '.txt'
         }, function(ret, err) {
@@ -271,36 +306,37 @@
             var history = $api.getStorage('history');
             if (history) {
                 var isthebook = false;
+                //判断历史记录里面有没有这本书的记录
                 for (var i = 0, len = history.data.length; i < len; i++) {
+                    //如果有  就更新这本书的历史记录
                     if (history.data[i].book_id == indexSetting.book_id) {
                         isthebook = true;
-                        history.data[i].colum_id = chapterid;//章节id
-                        history.data[i].zhangjie = chapter_name;//章节名
-                        history.data[i].subject = bookname; //书名
+                        history.data[i].chapter_id = chapterid;//章节id
+                        history.data[i].chapter_name = chapter_name;//章节名
                         history.data[i].progress = progress;//章节进度
                         history.data[i].price = price; //章节价格
                     }
                 }
-
                 $api.setStorage('history', history);
             }
             var newhistory = {};
-            newhistory.image = thebook.image; //书的图片
-            newhistory.book_name = thebook.book_name; //书名
-            newhistory.book_id = indexSetting.book_id; //书的id
-            newhistory.colums = 2;
-            newhistory.zhangjie = chapter_name;
-            newhistory.colum_id = chapterid;
-            newhistory.subject = bookname;
-            newhistory.progress = progress;
-            newhistory.price = indexSetting.price;
-            if(!history || isthebook === false)
+            newhistory.id = thebook.id; //书的id
+            newhistory.img = thebook.img; //书的图片
+            newhistory.book_name = thebook.name; //书名
+            newhistory.chapter_id = chapterid;  //章节id
+            newhistory.chapter_name = chapter_name; //章节名称
+            newhistory.progress = progress;  //章节进度
+            newhistory.price = price;  //章节价格
+
+            if(!history || isthebook === false) //如果没有历史记录 或者 没有这本书的历史记录
              {
                if(!history){
+                 //如果没有历史记录  就新建历史记录
                  $api.setStorage('history', {
                    data: [newhistory]
                  });
                }else{
+                 //如果有历史记录 但没有这本书的历史记录  就将这本书的历史记录添加进去
                  history.data.push(newhistory);
                  $api.setStorage('history', history);
                }

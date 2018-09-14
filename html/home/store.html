@@ -78,7 +78,7 @@
           <div class="item-book-intro aui-ellipsis-1">{{item.shortIntro}}</div>
         </div>
         <div class="aui-col-xs-4">
-          <div class="book-add" >
+          <div class="book-add" @click="addmore">
             <i class="aui-iconfont aui-icon-plus"></i>
             <div class="item-book-name" style="text-align:center;color: #ff3955;">添加小说</div>
           </div>
@@ -163,6 +163,18 @@
                   pageParam: {type: item}
                 });
             },
+            addmore:function(){
+              api.execScript({
+                  name: 'root',
+                  script: 'navbottom(2);'
+              });
+              api.openFrame({
+                  name: 'index',
+                  url: 'index.html',
+                  pageParam: {},
+              })
+              api.closeFrame();
+            }
           },
       });
   </script>

@@ -6,21 +6,20 @@
     <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
     <link rel="stylesheet" type="text/css" href="../../../css/aui.css" />
     <style>
-    .aui-bar-nav {
-        background-color: #ff3955;
-    }
+      .aui-bar-nav {
+          background-color: #ff3955;
+      }
     </style>
 </head>
 <body>
     <header class="aui-bar aui-bar-nav" id="aui-header">
-        <a class="aui-btn aui-pull-left" tapmode onclick="back()">
+        <a class="aui-btn aui-pull-left" tapmode onclick="closeWin()">
             <span class="aui-iconfont aui-icon-left"></span>
         </a>
-        <div class="aui-title">注册并登录</div>
+        <div class="aui-title">个人资料</div>
     </header>
 </body>
 <script type="text/javascript" src="../../../script/api.js"></script>
-<script type="text/javascript" src="../../../script/common.js"></script>
 <script type="text/javascript">
     apiready = function(){
         api.parseTapmode();
@@ -29,17 +28,20 @@
         var headerPos = $api.offset(header);
         var body_h = $api.offset($api.dom('body')).h;
         api.openFrame({
-            name: 'login_frame',
-            url: 'login_frame.html',
+            name: 'edituser_frame',
+            url: 'edituser_frame.html',
             bounces: true,
             rect: {
                 x: 0,
                 y: headerPos.h,
                 w: 'auto',
                 h: 'auto'
-            },
-            pageParam: api.pageParam,
+            }
         })
     };
+    function closeWin(){
+        api.closeWin({
+        });
+    }
 </script>
 </html>

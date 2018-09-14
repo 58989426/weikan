@@ -18,6 +18,7 @@
         }
         .aui-bg-info {
             background-color: #ff3955 !important;
+            overflow: hidden !important;
         }
         .aui-list .aui-list-item.exit-item{
           padding-left: 0;
@@ -31,7 +32,7 @@
         .aui-list .aui-list-item:active {
              background: none;
         }
-        .user-info {
+        /*.user-info {
             width: 150%;
             position: relative;
             left: -25%;
@@ -40,45 +41,50 @@
             border-bottom-right-radius: 50%;
             padding-bottom: 1.5rem;
             overflow-x: hidden;
-        }
+        }*/
         .bg-white {
             background-color: #ffffff;
+        }
+        .aui-list-item-right .aui-btn-danger{
+          border-radius: 25px;
+          padding: 0 0.7rem;
+          background-color: #ff3955 !important;
         }
     </style>
 </head>
 <body>
+  <div id="mine">
     <section class="bg-white">
-      <div class="aui-list aui-media-list aui-list-noborder aui-bg-info user-info" tapmode onclick="toLogin()">
+      <div class="aui-list aui-media-list aui-list-noborder aui-bg-info user-info" tapmode @click="toNextPage('edituser')">
           <div class="aui-list-item aui-list-item-middle">
               <div class="aui-media-list-item-inner ">
                   <div class="aui-list-item-media" style="width:3rem;">
-                      <img src="../../image/demo1.png" class="aui-img-round" >
+                      <img :src="userinfo.headimg" class="aui-img-round">
                   </div>
                   <div class="aui-list-item-inner">
-                      <div class="aui-list-item-text text-white aui-font-size-18">38dd4ef6d</div>
+                      <div class="aui-list-item-text text-white aui-font-size-18">{{userinfo.name}}</div>
                       <div class="aui-list-item-text text-white">
-                         <div><i class="aui-iconfont aui-icon-mobile aui-font-size-14"></i>152****0989</div>
+                         <div><i class="aui-iconfont aui-icon-mobile aui-font-size-14"></i>{{userinfo.phone}}</div>
                       </div>
                   </div>
               </div>
           </div>
       </div>
-      <section class="aui-content aui-grid aui-margin-b-15">
-          <div class="aui-row">
-              <div class="aui-col-xs-6 aui-border-r" tapmode onclick="toRecharge()">
-                  <big class="aui-text-warning">52<small> 个</small></big>
-                  <div class="aui-gird-lable aui-font-size-12">书币</div>
-              </div>
-              <div class="aui-col-xs-6 aui-border-r">
-                  <big class="aui-text-danger">1<small> 张</small></big>
-                  <div class="aui-gird-lable aui-font-size-12">书券</div>
-              </div>
-          </div>
-      </section>
+    <ul class="aui-list aui-list-in aui-margin-b-15">
+        <li class="aui-list-item" style="height:3rem">
+            <div class="aui-list-item-label-icon">
+                <i class="aui-iconfont aui-icon-cert aui-text-danger"></i>
+            </div>
+            <div class="aui-list-item-inner">
+                <div class="aui-list-item-title"><span class="aui-text-warning">{{userinfo.coin}}</span> 书币/<span class="aui-text-danger">{{userinfo.voucher}}</span> 书券</div>
+                <div class="aui-list-item-right" tapmode @click="toNextPage('recharge')"><div class="aui-btn aui-btn-danger aui-btn-sm">充值</div></div>
+            </div>
+        </li>
+    </ul>
     </section>
     <section class="aui-content">
         <ul class="aui-list aui-list-in aui-margin-b-15">
-            <li class="aui-list-item" tapmode onclick="toRecord(1,'充值记录')">
+            <li class="aui-list-item" tapmode @click="toNextPage('record',1,'充值记录')">
                 <div class="aui-list-item-label-icon">
                     <i class="aui-iconfont aui-icon-location aui-text-info"></i>
                 </div>
@@ -86,7 +92,7 @@
                     <div class="aui-list-item-title">充值记录</div>
                 </div>
             </li>
-            <li class="aui-list-item" tapmode onclick="toRecord(2,'消费记录')">
+            <li class="aui-list-item" tapmode @click="toNextPage('record',2,'消费记录')">
                 <div class="aui-list-item-label-icon">
                     <i class="aui-iconfont aui-icon-like aui-text-danger"></i>
                 </div>
@@ -94,7 +100,7 @@
                     <div class="aui-list-item-title">消费记录</div>
                 </div>
             </li>
-            <li class="aui-list-item" tapmode onclick="toRecord(3,'打赏记录')">
+            <li class="aui-list-item" tapmode @click="toNextPage('record',3,'打赏记录')">
                 <div class="aui-list-item-label-icon">
                     <i class="aui-iconfont aui-icon-image aui-text-info"></i>
                 </div>
@@ -104,7 +110,7 @@
             </li>
         </ul>
         <ul class="aui-list aui-list-in aui-margin-b-15">
-            <li class="aui-list-item" tapmode onclick="toFeddback()">
+            <li class="aui-list-item" tapmode @click="toNextPage('feedback')">
                 <div class="aui-list-item-label-icon">
                     <i class="aui-iconfont aui-icon-cart aui-text-info"></i>
                 </div>
@@ -112,7 +118,7 @@
                     <div class="aui-list-item-title">求书反馈</div>
                 </div>
             </li>
-            <li class="aui-list-item" tapmode onclick="toFeddback()">
+            <li class="aui-list-item" tapmode @click="toNextPage('recharge')">
                 <div class="aui-list-item-label-icon">
                     <i class="aui-iconfont aui-icon-cert aui-text-warning"></i>
                 </div>
@@ -124,61 +130,93 @@
         </ul>
         <ul class="aui-list aui-list-in">
             <li class="aui-list-item exit-item">
-               <div class="exit-login">退出<div>
+               <div class="exit-login" @click="exitlogin">
+                 <span v-if="isLogin">退出登陆</span><span v-else>登陆个人账户</span><div>
             </li>
         </ul>
     </section>
+  </div>
 </body>
 <script type="text/javascript" src="../../script/api.js" ></script>
+<script type="text/javascript" src="../../script/common.js" ></script>
+<script type="text/javascript" src="../../script/vue.min.js" ></script>
 <script type="text/javascript" src="../../script/aui-dialog.js"></script>
 <script type="text/javascript">
     apiready = function () {
-      return false;
-    }
-
-    function toNextPage(name,type,title){
-      var url="../user/"+name+"/"+name+".html";
-      var pageParam={};
-      if(type){
-        pageParam={type: type,title:title}
+      if($api.getStorage('userinfo')){
+        vm.userinfo=$api.getStorage('userinfo')
+        vm.isLogin=true;
       }
-      api.openWin({
-          name: name,
-          url: url,
-          pageParam: pageParam
-        });
     }
+    var vm=new Vue({
+        el:"#mine",
+        data:{
+          phone:"",//手机
+          code:"",//验证码
+          isLogin:false,
+          userinfo:{
+            name:"未登录",
+            headimg:"../../image/demo1.png",
+            phone:"未绑定",
+            isvip:false, //是否是会员
+            coin:0, //书币
+            voucher:0, //书券
+          }
+        },
+        mounted: function () {
 
-    function toLogin(){
+        },
+        methods:{
+            exitlogin:function(){
+                if(vm.isLogin){
+                  api.confirm({
+                      title: '退出登录',
+                      msg: '您确定退出当前账户吗？',
+                      buttons:[ '确定', '取消']
+                  },function(ret,err){
+                      if(ret.buttonIndex == 1){
+                        alert("退出成功");
+                        $api.rmStorage('userinfo');
+                        vm.userinfo={
+                          name:"未登录",
+                          headimg:"../../image/demo1.png",
+                          phone:"未登录",
+                          isvip:false, //是否是会员
+                          coin:0, //书币
+                          voucher:0, //书券
+                        };
+                        vm.isLogin=false;
+                      }
+                  });
+              }else{
+                toLogin('mine');
+              }
+            },
+            toNextPage:function(name,type,title){
+              if(vm.isLogin){
+                var url="../user/"+name+"/"+name+".html";
+                var pageParam={};
+                if(type){
+                  pageParam={type: type,title:title}
+                }
+                api.openWin({
+                    name: name,
+                    url: url,
+                    pageParam: pageParam
+                  });
+              }else{
+                  toLogin(name);
+              }
+            },
+        },
+    });
+
+    function toLogin(from){
       api.openWin({
           name: 'login',
           url: '../user/login/login.html',
-          pageParam: {}
+          pageParam: {from:from}
         });
     }
-
-    function toRecord(type,title){
-      api.openWin({
-          name: 'record',
-          url: '../user/record/record.html',
-          pageParam: {type: type,title:title}
-        });
-    }
-    function toFeddback(){
-      api.openWin({
-          name: 'feedback',
-          url: '../user/feedback/feedback.html',
-          pageParam: {}
-        });
-    }
-    function toRecharge(){
-      api.openWin({
-          name: 'recharge',
-          url: '../user/recharge/recharge.html',
-          pageParam: {}
-        });
-    }
-
-
 </script>
 </html>

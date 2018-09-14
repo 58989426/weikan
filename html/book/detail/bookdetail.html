@@ -37,7 +37,7 @@
       </header>
 
       <footer class="aui-bar aui-bar-tab" id="footer">
-      	<div class="aui-bar-tab-item" tapmode >
+      	<div class="aui-bar-tab-item" tapmode onclick="reward()">
       		<i class="iconfont icon-dashang1"></i>
       		<div class="aui-bar-tab-label">打赏本书</div>
       	</div>
@@ -77,13 +77,21 @@
         thebook.check=false;
       };
 
+      function reward(){
+        alert("暂未开放，敬请期待")
+      }
       //打开阅读页
       function toRead(){
           var bookinfo=JSON.parse($api.getStorage('book_'+api.pageParam.bookid));
           api.openWin({
               name: 'read',
               url: '../content/read.html',
-              pageParam: bookinfo
+              pageParam: bookinfo,
+              animation:{
+                type:"push",                //动画类型（详见动画类型常量）
+                subType:"from_right",       //动画子类型（详见动画子类型常量）
+                duration:500                //动画过渡时间，默认300毫秒
+              }
             });
       }
 
