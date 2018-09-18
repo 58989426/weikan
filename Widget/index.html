@@ -1,0 +1,158 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>Hello APP</title>
+    <link rel="stylesheet" type="text/css" href="./css/api.css" />
+    <link rel="stylesheet" type="text/css" href="./css/aui.css"/>
+    <link rel="stylesheet" type="text/css" href="./css/common.css"/>
+    <style type="text/css">
+        html,
+        body {
+            height: 100%;
+        }
+        .aui-bar-tab .aui-active {
+            color: #ff3955;
+        }
+        .aui-bar-nav .aui-btn.aui-btn-outlined {
+            border: none;
+         }
+        .aui-bar-nav {
+            background-color: #ff3955;
+        }
+        .aui-bar-tab {
+            border-top: 1px solid #f1f1f1;
+        }
+    </style>
+</head>
+<body class="wrap">
+    <header class="aui-bar aui-bar-nav">
+    <!-- <div class="aui-pull-left aui-btn aui-btn-outlined">
+      <span class="aui-iconfont aui-icon-menu"></span>
+    </div> -->
+    <div class="aui-title">微看小说</div>
+    <div class="aui-pull-right aui-btn aui-btn-outlined">
+      <span class="aui-iconfont aui-icon-search" tapmode onclick="openSearch()"></span>
+    </div>
+    </header>
+    <footer class="aui-bar aui-bar-tab" id="footer">
+    	<div class="aui-bar-tab-item aui-active" tapmode id="tabbookstore">
+    		<i class="aui-iconfont aui-icon-star"></i>
+    		<div class="aui-bar-tab-label">书架</div>
+    	</div>
+    	<div class="aui-bar-tab-item" tapmode id="tabbookku">
+    		<i class="aui-iconfont aui-icon-home"></i>
+    		<div class="aui-bar-tab-label">书城</div>
+    	</div>
+    	<div class="aui-bar-tab-item" tapmode id="tabbookcates">
+    		<i class="aui-iconfont aui-icon-menu"></i>
+    		<div class="aui-bar-tab-label">分类</div>
+    	</div>
+    	<div class="aui-bar-tab-item" tapmode id="tabmine">
+    		<i class="aui-iconfont aui-icon-my"></i>
+    		<div class="aui-bar-tab-label">我的</div>
+    	</div>
+    </footer>
+</body>
+<script type="text/javascript" src="./script/api.js"></script>
+<script type="text/javascript" src="./script/common.js"></script>
+<script type="text/javascript" src="./script/aui-tab.js"></script>
+<script type="text/javascript" src="./script/aui-dialog.js"></script>
+<script type="text/javascript">
+    apiready = function() {
+        fix_android_ios('#ff3955');
+
+        $api.setStorage('nvtabbar', 'jingxuan');
+        $api.rmStorage('nvtabbar');
+
+        openframe('index');
+        navbottom(2);
+
+        api.addEventListener({
+            name: 'keyback'
+        }, function(ret, err) {
+            api.historyBack({}, function(ret, err) {
+                if (!ret.status) {
+                    api.closeWin();
+                }
+            });
+        });
+    };
+
+    function openframe(name,ifbounces) {
+      var header = $api.dom('header'); // 获取 header 标签元素
+      var footer = $api.dom('footer'); // 获取 footer 标签元素
+
+      // 1.修复开启沉浸式效果带来的顶部Header与手机状态栏重合的问题，最新api.js方法已支持适配iPhoneX；
+      // 2.默认已开启了沉浸式效果 config.xml中 <preference name="statusBarAppearance" value="true"/>
+      // 3.沉浸式效果适配支持iOS7+，Android4.4+以上版本
+      var headerH = $api.fixStatusBar(header);
+      // 最新api.js为了适配iPhoneX增加的方法，修复底部Footer部分与iPhoneX的底部虚拟横条键重叠的问题；
+      var footerH = $api.fixTabBar(footer);
+        api.openFrame({
+            name: name,
+            url: 'html/home/' + name + '.html',
+            rect: {
+                marginTop: headerH, // main页面距离win顶部的高度
+                marginBottom: footerH, // main页面距离win底部的高度
+                x: 0,
+                y: 0,
+                w: api.winWidth,
+                h: api.winHeight - 50
+            },
+            progress: {
+                type: "page"
+            },
+            bgColor: "#ffffff",
+            reload: false,
+            bounces: ifbounces?ifbounces:true,
+            vScrollBarEnabled: false,
+            hScrollBarEnabled: false,
+            animation: {
+                type: "none",
+                subType: "from_right",
+                duration: 300
+            }
+        });
+    }
+
+
+    function navbottom(index) {
+        var tab = new auiTab({
+            element: document.getElementById("footer"),
+            index: index,
+            repeatClick: false
+        }, function(ret) {
+            switch (ret.index) {
+                case 1:
+                    $api.text($api.dom(".aui-title"), "我的书架");
+                    openframe('store');
+                    break;
+                case 2:
+                    $api.text($api.dom(".aui-title"), "微看小说");
+                    openframe('index');
+                    break;
+                case 3:
+                    $api.text($api.dom(".aui-title"), "分类");
+                    openframe('category');
+                    break;
+                case 4:
+                    $api.text($api.dom(".aui-title"), "个人中心");
+                    openframe('mine',false);
+                    break;
+            }
+        });
+    }
+
+    function openSearch(){
+      api.openWin({
+          name: 'search',
+          url: './html/home/search/search.html',
+          pageParam: {}
+        });
+    }
+</script>
+
+</html>
