@@ -6,6 +6,7 @@
       <title>title</title>
       <link rel="stylesheet" type="text/css" href="../../../css/api.css"/>
       <script type="text/javascript" src="../../../script/common.js"></script>
+        <script type="text/javascript" src="../../../script/vue.min.js"></script>
       <link rel="stylesheet" type="text/css" href="../../../css/common.css"/>
       <link rel="stylesheet" type="text/css" href="../../../css/aui.css"/>
       <style>
@@ -46,7 +47,7 @@
       	</div>
       	<div class="aui-bar-tab-item" tapmode onclick="addstore()">
            <i class="iconfont icon-jiarushujia"></i>
-      		<div class="aui-bar-tab-label" id="addstore">加入书架</div>
+      		<div class="aui-bar-tab-label" id="addstore">{{flag ?'移出书架':'加入书架'}}</div>
       	</div>
       </footer>
     </div>
@@ -56,6 +57,14 @@
       var indexSetting = {};
       var downintval = 0;
       var thebook = {};
+      var vm=new Vue({
+          el:"#addstore",
+          data:{
+             flag:null,
+             bid:"",
+             uid:""
+          }
+      });
       // $api.rmStorage('localstore')
       if ($api.getStorage('localstore')) {
           indexSetting.localstore = $api.getStorage('localstore');
@@ -68,13 +77,23 @@
 
       apiready = function(){
         var pageParam=api.pageParam;
+        vm.bid = pageParam.bookid
+        //alert(JSON.stringify(pageParam))
         openFrame("bookdetail_frame",'bookdetail_frame.html',pageParam);
         indexSetting.bookid = api.pageParam.bookid ? api.pageParam.bookid : 0;
-        if (isinstore(indexSetting.bookid)) {
-            $api.text($api.byId('addstore'), '已加入书架');
-        }
+        // if (isinstore(indexSetting.bookid)) {
+        //     $api.text($api.byId('addstore'), '已加入书架');
+        // }
         thebook = $api.strToJson($api.getStorage('book_'+api.pageParam.bookid));
-        thebook.check=false;
+        //thebook.check=false;
+        //alert(JSON.stringify(thebook.id))
+        if ($api.getStorage("userinfo")) {
+          vm.uid =  $api.getStorage("userinfo").uid
+          initload(thebook.id)
+        } else {
+
+        }
+      //  initload(thebook.id)
       };
 
       function reward(){
@@ -94,47 +113,83 @@
               }
             });
       }
-
-      //判断此本书是否在本地书架
-      function isinstore(book_id) {
-          if (indexSetting.localstore && $api.isArray(indexSetting.localstore.data)) {
-              for (var i = 0, len = indexSetting.localstore.data.length; i < len; i++) {
-                  if (indexSetting.localstore.data[i].id == book_id) {
-                      return true;
-                  }
-              }
-              return false;
-          } else {
-              return false;
-          }
-      }
-
+      // //判断此本书是否在本地书架
+      // function isinstore(book_id) {
+      //     if (indexSetting.localstore && $api.isArray(indexSetting.localstore.data)) {
+      //         for (var i = 0, len = indexSetting.localstore.data.length; i < len; i++) {
+      //             if (indexSetting.localstore.data[i].id == book_id) {
+      //                 return true;
+      //             }
+      //         }
+      //         return false;
+      //     } else {
+      //         return false;
+      //     }
+      // }
+      // if ($api.getStorage("userinfo")) {
+      //     vm.uid =  $api.getStorage("userinfo").uid
+      // } else {
+      //     let uid = false
+      // }
+      //let uid =  $api.getStorage("userinfo").uid
+      //let bid = vm.bid
       //加入书架
       function addstore() {
-          // 待同步服务器
-          if (!isinstore(indexSetting.bookid)) {
-              indexSetting.localstore = $api.getStorage('localstore');
-              if (indexSetting.localstore && indexSetting.localstore.data) {
-                  indexSetting.localstore.data.push(thebook)
-                  $api.setStorage('localstore', indexSetting.localstore);
+        // alert(uid)
+        if (vm.uid !== "") {
+          api.ajax({
+              url: "http://www.w.iwekan.com/App/Book/Book/addBookShelf?uid="+vm.uid+"&bid="+vm.bid,
+              method: 'get'
+          }, function(ret, err) {
+              if (ret) {
+                if(ret.code == 200){
+                  //alert(JSON.stringify(ret))
+                  //  window.location.reload()
+                   alert(ret.message)
+                   initload(vm.bid)
+                  window.location.reload()
+                }
               } else {
-                  indexSetting.localstore = {
-                      data: [thebook]
-                  }
-                  $api.setStorage('localstore', indexSetting.localstore);
+
               }
-
-              //此处应对接后端接口将书架内容存储进数据库备份
-
-              $api.text($api.byId('addstore'), '已加入书架');
-              // api.execScript({
-              //     name: 'root',
-              //     frameName: 'store',
-              //     script: 'api.refreshHeaderLoading()'
-              // });
-          } else {
-              $api.text($api.byId('addstore'), '已加入书架');
-          }
+          });
+        } else {
+            alert("未登录")
+        }
       }
+      function initload(bookid) {
+        // 获取书籍信息
+          api.ajax({
+              url: "http://www.w.iwekan.com/App/Home/Index/details?id="+bookid+"&uid="+vm.uid,
+              method: 'get'
+          }, function(ret, err) {
+              if (ret) {
+                if(ret.code==200){
+                  //alert(JSON.stringify(ret))
+                  vm.flag=ret.data.books.bookshelf
+                }
+                //$api.setStorage('book_'+bid, JSON.stringify(vm.bookInfo));
+              } else {
+              }
+          });
+      }
+
+      // function cancle(){
+      //     let arr = []
+      //     arr.push(bid)
+      //   api.ajax({
+      //       url: "http://www.w.iwekan.com//App/Book/User/getBookShelf?uid="+uid+"&bid="+arr,
+      //       method: 'post'
+      //   }, function(ret, err) {
+      //       if (ret) {
+      //         if(ret.code == 200){
+      //           alert("移除书架成功")
+      //         }
+      //       } else {
+      //           alert("ssssssssssssss")
+      //       }
+      //   });
+      // }
+
   </script>
   </html>

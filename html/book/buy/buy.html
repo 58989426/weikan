@@ -8,31 +8,37 @@
       <link rel="stylesheet" type="text/css" href="../../../css/common.css"/>
       <link rel="stylesheet" type="text/css" href="../../../css/aui.css"/>
       <style>
-      .aui-bar-nav {
-          background-color: #ff3955;
-      }
+        body{background: #fff;}
+        body {
+            background: #FFFfee;
+        }
+        #metainfo {position:fixed;bottom:0;left:0;right:0;clear:both;height: 20px}
+        #metainfo > span{
+          display: inline-block;
+          width:48%;
+          overflow:hidden;
+          white-space:nowrap;
+          font-size:14px;
+          color:#333;
+          text-overflow: ellipsis;
+        }
+        #metainfo .z{float:left;margin-left: 3px;}
+        #metainfo .y {float:right;text-align: right;margin-right: 3px;}
       </style>
   </head>
   <body>
-      <header class="aui-bar aui-bar-nav" id="header">
-          <a class="aui-pull-left aui-btn" tapmode onclick="back()">
-              <span class="aui-iconfont aui-icon-left"></span>
-          </a>
-          <div class="aui-title" id="title"></div>
-      </header>
+    <div id="read">
+      <div id="metainfo">
+        <span id="bookname" class="z">书名</span>
+        <span id="subject" class="y">章节名</span>
+      </div>
+    </div>
   </body>
   <script type="text/javascript" src="../../../script/api.js"></script>
   <script type="text/javascript" src="../../../script/common.js"></script>
   <script type="text/javascript" src="../../../script/vue.min.js"></script>
   <script type="text/javascript" src="../../../script/aui-toast.js"></script>
-  <script type="text/javascript" src="../../../script/aui-scroll.js"></script>
-  <script type="text/javascript" src="../../../script/aui-dialog.js "></script>
-
   <script type="text/javascript">
-      apiready = function(){
-          var pageParam=api.pageParam;
-          $api.text($api.byId("title"),pageParam.typename);
-          openFrame("category_frame",'category_frame.html',pageParam);
-      };
+      var toast = new auiToast({});
   </script>
   </html>

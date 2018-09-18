@@ -6,7 +6,6 @@
       <title>title</title>
       <link rel="stylesheet" type="text/css" href="../../css/api.css"/>
       <script type="text/javascript" src="../../script/common.js"></script>
-
       <link rel="stylesheet" type="text/css" href="../../css/common.css"/>
       <link rel="stylesheet" type="text/css" href="../../css/aui.css"/>
       <style>
@@ -61,21 +60,22 @@
       </style>
   </head>
   <body>
+
+
     <section class="book-channel">
       <div>
         <div @click="editChange" class="aui-pull-left"><span class="aui-iconfont aui-icon-edit"></span> {{edit?'取消':'编辑'}}</div>
         <div v-show="edit" @click="deleteCollection" class="aui-pull-right"><span class="aui-iconfont aui-icon-trash"></span> 删除</div>
       </div>
       <div class="aui-row-padded style1 aui-clearfix">
-        <div class="aui-col-xs-4" v-for="item in dataLists">
+        <div class="aui-col-xs-4" v-for="(item,index) in dataLists" @click="toRead(index)">
           <div class="list_bg_content" >
-            <img :src='item.img' class='book-img'></img>
+            <img :src='item.cover' class='book-img'></img>
             <div class="list_bg" @click.stop="check(item)" v-show="edit">
                 <i class="iconfont  icon_check" :class="item.check?'icon-gouquan':'icon-iconheji_huabanfuben-'"></i>
             </div>
           </div>
-          <div class="item-book-name aui-ellipsis-2">{{item.name}}</div>
-          <div class="item-book-intro aui-ellipsis-1">{{item.shortIntro}}</div>
+          <div class="item-book-name aui-ellipsis-2">{{item.short_name}}</div>
         </div>
         <div class="aui-col-xs-4">
           <div class="book-add" @click="addmore">
@@ -91,29 +91,61 @@
   <script type="text/javascript" src="../../script/underscore.js"></script>
   <script type="text/javascript">
       var indexSetting = {};
-
-      if ($api.getStorage('localstore')) {
-          indexSetting.localstore = $api.getStorage('localstore');
-
-      } else {
-          indexSetting.localstore = {
-              data: []
-          };
-      }
       apiready = function(){
+        if ($api.getStorage('userinfo')) {
+            //indexSetting.localstore = $api.getStorage('localstore');
+            let uid = $api.getStorage('userinfo').uid
+             //alert(uid)
+            api.ajax({
+                url: "http://www.w.iwekan.com//App/Book/User/getBookShelf?uid="+uid,
+                method: 'get'
+            }, function(ret, err) {
+                if (ret) {
+                  if(ret.code == 200){
+                    //alert(JSON.stringify(ret.data))
+                    vm.dataLists = ret.data
+                  }
+                } else {
+
+                }
+            });
+        } else {
+            alert("请登录")
+        }
+          // initload()
 
       };
       var vm=new Vue({
           el:".book-channel",
           data:{
             edit:false,
-            dataLists:indexSetting.localstore.data,
-            deleteList:[]
+            // dataLists:indexSetting.localstore.data,
+            dataLists:null,
+            deleteList:[],
+            bookinfo:{
+              id:"",
+              chapter_id:""
+            }
           },
           mounted: function () {
-
+              // alert(JSON.stringify($api.getStorage('localstore')))
           },
           methods:{
+            toRead:function (index){
+              //console.log(JSON.stringify(vm.dataLists[index]))
+              vm.bookinfo.id = vm.dataLists[index].book_id
+              vm.bookinfo.chapter_id = vm.dataLists[index].chapter_id
+                api.openWin({
+                    name: 'read',
+                    url: '../book/content/read.html',
+                    pageParam: vm.bookinfo,
+                    animation:{
+                      type:"push",
+                      subType:"from_right",
+                      duration:500
+                    }
+                  });
+            },
             //编辑或取消
             editChange:function () {
               vm.edit = !vm.edit;
@@ -126,36 +158,53 @@
             },
             //选中或取消
             check:function (item) {
+              //alert(JSON.stringify(item))
                 item.check=!item.check;
+                //alert(item.book_id)
+                vm.deleteList.push(item.book_id)
             },
             // 删除
             deleteCollection:function () {
-      				//得到选择要删除的数据集合
-      				vm.deleteList = _.map(
-      					_.filter(vm.dataLists, function(item){
-      							return item.check;
-      						}),
-      					function (i) {
-      						return i.id;
-      					});
-
-      				if(vm.deleteList.length>0){
-      					//调用删除接口
-      					var parmes={id:vm.deleteList};
-
-                // //还原初始值
-                // vm.edit=false;
-                // vm.deleteList=[];
-                // //去掉已被删除的数据
-                // vm.dataLists=_.filter(vm.dataLists,
-                //   function(item){
-                //     return !item.check;
-                //   })
-
-      				}else{
-      					alert('您还未选中小说！');
-      				}
+              var arr = []
+              vm.deleteList.forEach(function(curr){
+        				if (arr.indexOf(curr)=== -1) {
+        					arr.push(Number(curr))
+        				}
+        			})
+              vm.deleteList = arr
+              //alert(JSON.stringify(arr))
+              this.del()
+              window.location.reload()
             },
+
+            del:function(){
+              if ($api.getStorage('userinfo')) {
+                let uid = $api.getStorage('userinfo').uid
+                 //alert(uid+"+"+arr)
+                api.ajax({
+                    url: "http://www.w.iwekan.com/App/Book/User/deleteBookShelf",
+                    method: 'post',
+                    data: {
+                      values: {
+                        uid:uid,
+                        bid:vm.deleteList
+                        }
+                     }
+                }, function(ret, err) {
+                    if (ret) {
+                      if(ret.code == 200){
+                        //alert("删除成功")
+                        //vm.dataLists = ret.data
+                        //alert(JSON.stringify(ret))
+                      }
+                    } else {
+
+                    }
+                });
+              }
+            },
+
+
             toDetails:function(item){
               api.openWin({
                   name: 'bookdetails',

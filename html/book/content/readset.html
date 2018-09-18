@@ -38,7 +38,7 @@
          </div>
     </div>
     <footer class="aui-bar aui-bar-tab " id="footer">
-        <div class="aui-bar-tab-item" tapmode @click="">
+        <div class="aui-bar-tab-item" tapmode @click="toChapterMenu()">
             <i class="aui-iconfont aui-icon-menu"></i>
             <div class="aui-bar-tab-label">目录</div>
         </div>
@@ -65,9 +65,9 @@
   var toast = new auiToast({});
   var indexSetting = $api.getStorage('indexSetting');
 
-
   apiready = function() {
     vm.ifyejian = ($api.getStorage('yejianmoshi') > 0) ? true:false;
+    vm.bookInfo=api.pageParam.bookinfo
   }
 
   var vm=new Vue({
@@ -77,6 +77,7 @@
           ifyejian:null,
           bgArr:["#f7e3c2","#cad9e8","#d1edd1","#FCEFFF"],
           curBg:indexSetting.bg,
+          bookInfo:""
       },
       mounted: function () {
 
@@ -100,7 +101,11 @@
           },
           //去往目录
           toChapterMenu:function(){
-
+            api.openWin({
+                name: 'chapterMenu',
+                url: '../chapter/chapterMenu.html',
+                pageParam: {bookid: vm.bookInfo.id}
+              });
           },
           //打开设置
           openSetFont:function(){

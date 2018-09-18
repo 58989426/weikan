@@ -6,36 +6,39 @@
       <title>title</title>
       <link rel="stylesheet" type="text/css" href="../../../css/api.css"/>
       <script type="text/javascript" src="../../../script/common.js"></script>
-
       <link rel="stylesheet" type="text/css" href="../../../css/common.css"/>
       <link rel="stylesheet" type="text/css" href="../../../css/aui.css"/>
       <link rel="stylesheet" type="text/css" href="style.css"/>
   </head>
   <body>
     <div id="book-detail" v-if="bookInfo">
+
       <div style="height:135px;overflow:hidden">
-        <div class="bg bg-blur" :style="'background: url('+bookInfo.img+')'"></div>
+        <div class="bg bg-blur" :style="'background: url('+bookInfo.cover+')'"></div>
         <div class="book-detail">
           <div class="aui-row-padded">
-            <div class="aui-col-xs-3">
-              <img :src='bookInfo.img' class='book-img'></img>
+            <div class="aui-col-xs-4">
+              <img :src='bookInfo.cover' class='book-img'></img>
             </div>
-            <div class="aui-col-xs-9">
-              <div class="book-name">{{bookInfo.name}}</div>
-              <p>{{bookInfo.author}}</p>
-              <p>{{bookInfo.label}}</p>
-              <p>{{bookInfo.wordNum}}字 | {{bookInfo.status==1?'连载中':'已完结'}}</p>
+            <div class="aui-col-xs-8">
+              <div class="book-name">{{bookInfo.short_name}}</div>
+              <p>{{bookInfo.username}}</p>
+              <p>{{bookInfo.cate_name}}</p>
+              <p>{{bookInfo.word_count}} | {{bookInfo.status}}</p>
             </div>
           </div>
         </div>
       </div>
       <!-- 简介 -->
       <div class="book-intro">
-        <div :class="showAll?'':'cut-4'">{{bookInfo.shortIntro}}</div>
+        <div :class="showAll?'':'cut-4'">{{bookInfo.intro}}</div>
         <p class="pull-right" @click="showAll=!showAll">{{showAll?'收起':'展开'}} <i class="aui-iconfont" :class="showAll?'aui-icon-top':'aui-icon-down'"></i></p>
       </div>
+
+
       <div class="chapter-menu" @click="toChapter()">
-        <span class="title">目录</span><span class="pull-right">更新至{{bookInfo.last_chapter_name}}<i class="aui-iconfont aui-icon-right"></i></span>
+        <!-- <span class="title">目录</span><span class="pull-right">更新至{{bookInfo.chapter_name}}<i class="aui-iconfont aui-icon-right"></i></span> -->
+        <span class="title">目录</span><span class="pull-right">更新至  第一章 大家好<i class="aui-iconfont aui-icon-right"></i></span>
       </div>
       <div class="space"></div>
       <!-- 同类精品 -->
@@ -44,10 +47,10 @@
             <div class="header__left">同类精品</div>
         </div>
         <div class="aui-row-padded style1">
-          <div class="aui-col-xs-3" tapmode @click="toDetails(i.id)" v-for="i in dataLists">
-            <img :src='i.img' class='book-img'></img>
-            <div class="item-book-name aui-ellipsis-2">{{i.name}}</div>
-            <div class="item-book-intro aui-ellipsis-1">{{i.intro}}</div>
+          <div class="aui-col-xs-3" tapmode @click="toDetails(i.book_id)" v-for="i in dataLists">
+            <img :src='i.path' class='book-img'></img>
+            <!-- <div class="item-book-name aui-ellipsis-2">{{i.book_name}}</div> -->
+            <div class="item-book-intro aui-ellipsis-1" >{{i.book_name}}</div>
           </div>
         </div>
       </div>
@@ -61,16 +64,17 @@
         <div class="have-line-block" v-for="i in rewardList">
           <div class="aui-row-padded">
             <div class="aui-col-xs-2">
-              <img :src='i.headimg' class="head-img"></img>
+              <img :src='i.headerimg' class="head-img"></img>
             </div>
             <div class="aui-col-xs-10">
-              <p>{{i.name}}<p>
-              <p>{{i.date}}<p>
+              <p>{{i.username}}<p>
+              <p>{{i.addtime}}<p>
               <p class="aui-ellipsis-2">{{i.content}}</p>
             </div>
           </div>
         </div>
-        <div class="to-more">查看更多<i class="aui-iconfont aui-icon-down"></i></div>
+        <div v-if="flag" class="to-more" @click="tomore">查看更多<i class="aui-iconfont aui-icon-down"></i></div>
+        <div v-if="!flag" class="to-more" @click="retur">收起评论<i class="aui-iconfont aui-icon-top"></i></div>
       </div>
     </div>
   </body>
@@ -91,60 +95,12 @@
       var vm=new Vue({
           el:"#book-detail",
           data:{
-            bookInfo:null,
-            dataLists: [
-              {
-                id: 1,
-                img: "https://www.luoshenread.com/imagedata/2018/03/08/5aa0b1fc25db6083195196.jpg",
-                name: "毒辣小娇妻",
-                author: "杀生丸",
-                cate: "现代言情",
-                intro: "毒辣！小娇妻速度士大夫速的“说法是发顺丰石帆胜丰石帆胜丰士大夫方式发”射点发射点度",
-              },
-              {
-                id: 2,
-                img: "https://www.luoshenread.com/imagedata/2018/03/08/5aa0b568b507e781870629.jpg",
-                name: "腹黑总裁不好惹",
-                author: "杀生丸",
-                cate: "现代言情",
-                intro: "毒辣！小娇妻速度士大夫速的“说法是发顺丰石帆胜丰石帆胜丰士大夫方式发”射点发射点度",
-              },
-              {
-                id: 3,
-                img: "https://www.luoshenread.com/imagedata/2018/03/30/5abdf72cbc688411422990.jpg",
-                name: "恶魔的千日情人",
-                author: "杀生丸",
-                cate: "现代言情",
-                intro: "毒辣！小娇妻速度士大夫速的“说法是发顺丰石帆胜丰石帆胜丰士大夫方式发”射点发射点度",
-              },
-              {
-                id: 4,
-                img: "https://www.luoshenread.com/imagedata/2018/04/17/5ad56d18343c0671096362.jpg",
-                name: "毒辣小娇妻",
-                author: "杀生丸",
-                cate: "现代言情",
-                intro: "毒辣！小娇妻速度士大夫速的“说法是发顺丰石帆胜丰石帆胜丰士大夫方式发”射点发射点度",
-              }
-            ],
+            bookInfo:"",
+            dataLists: [],
             showAll:false,
-            rewardList:[{
-              headimg:"../../image/liulangnan.png",
-              name:"微笑天使",
-              date:"2018-07-05",
-              content:"这本书真的太棒了！！！超乎我的想象！你值得拥有！"
-            },
-            {
-              headimg:"../../../image/liulangnan.png",
-              name:"微笑天使",
-              date:"2018-07-05",
-              content:"哇卡卡卡卡卡卡卡是的富士康"
-            },
-            {
-              headimg:"../../../image/liulangnan.png",
-              name:"微笑天使",
-              date:"2018-07-05",
-              content:"嘻嘻嘻嘻嘻嘻，太阳当空照，花儿对我笑，小鸟说，这书好，真的真的非常好~"
-            }]
+            tmp:[],
+            rewardList:[],
+            flag:true
           },
           mounted: function () {
 
@@ -163,12 +119,29 @@
                     url: '../../user/comment/comment.html',
                     pageParam: {bookid: vm.bookInfo.id}
                   });
+              },
+              toDetails:function(item){
+                //console.log(window.document.location.href);
+                api.openWin({
+                    name: 'bookdetail',
+                    url: '../../book/detail/bookdetail.html',
+                    pageParam: {bookid: item}
+                  });
+              },
+              tomore(){
+                vm.rewardList = vm.tmp
+                vm.flag = false
+              },
+              retur(){
+                vm.rewardList = vm.tmp.slice(0,3)
+                vm.flag = true
               }
           },
       });
 
       //  初始化
       function initload(bookid) {
+        // alert(bookid)
           var toast = new auiToast({});
         toast.loading({
             title:"loading...",
@@ -176,15 +149,18 @@
         })
         // 获取书籍信息
           api.ajax({
-              url: "https://www.luluxs8.com/novel/v2/BookInfo.php?bookId="+bookid,
+              url: "http://www.w.iwekan.com/App/Home/Index/details?id="+bookid,
               method: 'get'
           }, function(ret, err) {
               if (ret) {
+                // alert(JSON.stringify(ret.data.comment.lists))
                 if(ret.code==200){
-                  vm.bookInfo=ret.data;
+                  vm.bookInfo=ret.data.books;
+                  vm.dataLists=ret.data.groom
+                  vm.tmp=ret.data.comment.lists
+                  vm.rewardList=ret.data.comment.lists.slice(0,3)
                 }
                 $api.setStorage('book_'+bookid, JSON.stringify(vm.bookInfo));
-
                 toast.hide();
               } else {
                   toast.fail({

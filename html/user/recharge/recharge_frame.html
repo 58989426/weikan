@@ -10,18 +10,40 @@
       <link rel="stylesheet" type="text/css" href="../../../css/aui.css"/>
       <link rel="stylesheet" type="text/css" href="style.css"/>
   </head>
+  <style>
+  .login-img{
+    width: 50px;
+    margin: auto;
+  }
+
+  </style>
   <body>
     <div id="recharge" class="aui-content-padded">
       <ul class="recharge_list rech_lists">
-          <li v-for="(item,index) in rechargeList" :class="current==index?'recharge_list_on':''">
+          <li v-for="(item,index) in rechargeList" :class="current==index?'recharge_list_on':''" @click="select(index)">
             <p class="amount">￥{{item.amount}}</p>
-            <p>{{item.balance}}书币</p>
-            <p>赠送{{item.zs_balance}}书券</p>
-            <span class="hot" v-if="item.hot">热</span>
+            <p v-if="type == 1">{{item.balance}}书币</p>
+            <p  v-if="type == 1">赠送{{item.zs_balance}}书券</p>
+            <p v-if="type == 2">{{item.month_num}}月</p>
+            <p  v-if="type == 2">{{item.title}}</p>
+            <span class="hot" v-if="item.is_hot">热</span>
           </li>
      </ul>
+
+     <!-- <div class="paytype">
+
+     </div> -->
+     <div class="aui-grid" style="background: none;">
+         <div class="aui-row">
+             <div class="aui-col-xs-6" v-for="(item,index) in paytype"  @click="sep(index,item.tp)">
+                 <img :src="item.img" class="login-img"/>
+                 <p class="aui-margin-t-10" :style="num == index? 'color:#f00': ''">{{item.type}}</p>
+             </div>
+         </div>
+     </div>
+
      <section class="aui-padded-10 aui-clearfix">
-         <div class="aui-btn aui-btn-block aui-btn-info aui-btn-sm" tapmode>立即充值</div>
+         <div class="aui-btn aui-btn-block aui-btn-info aui-btn-sm" tapmode @click=pay()>立即充值</div>
      </section>
     </div>
     <div class="space"></div>
@@ -40,45 +62,210 @@
   <script type="text/javascript">
       apiready = function(){
         var pageParam=api.pageParam;
+        //alert(JSON.stringify(pageParam))
+        let type = pageParam.type
+        vm.type = type
+        initload(type)
       };
       var vm=new Vue({
           el:"#recharge",
           data:{
             current:1,
-            rechargeList: [
-                {
-                  amount:1,
-                  balance:100,
-                  zs_balance:10,
-                  hot:false
-                },
-                {
-                  amount:10,
-                  balance:1000,
-                  zs_balance:100,
-                  hot:true
-                },
-                {
-                  amount:50,
-                  balance:5000,
-                  zs_balance:500,
-                  hot:false
-                },
-                {
-                  amount:100,
-                  balance:10000,
-                  zs_balance:1000,
-                  hot:true
-                }
-            ],
+            rechargeList: [],
             showtype:1,
+            type:"",
+            num:0,
+            paytype:[
+              {
+                img:"../../../image/share/wx.png",
+                type:"微信",
+                tp:1
+              },
+              {
+                img:"../../../image/share/ali.png",
+                type:"支付宝",
+                tp:2
+              }
+            ],
+            tp:1
           },
           mounted: function () {
 
           },
           methods:{
+              select:function (index) {
+                vm.current = index
+                console.log(index);
+              },
+              sep(index,tp){
+                vm.num = index
+                vm.tp = tp
+                console.log(tp)
+              },
 
-          },
+
+              pay:function (){
+
+                let uid = $api.getStorage('userinfo').uid
+                if (vm.tp == 1) {
+                  //微信
+                  api.ajax({
+                      url: "http://www.w.iwekan.com/App/Book/Pay/WxPay",
+                      method: 'post',
+                      data:{
+                        values:{
+                          ord_type:vm.type,
+                          data_type:vm.current,
+                          uid:uid
+                        }
+                      }
+                  }, function(ret, err) {
+                      if (ret) {
+                        if(ret.code==200){
+                          console.log("sssssssss");
+                            // console.log(JSON.stringify(ret.data))
+                           var wxPay = api.require('wxPay');
+                             wxPay.payOrder({
+                               apiKey: ret.data.appid,
+                               orderId:  ret.data.prepayid,
+                               mchId:  ret.data.partnerid,
+                               nonceStr:  ret.data.noncestr,
+                               timeStamp:  ret.data.timestamp,
+                               package: "Sign=WXPay",
+                               sign:  ret.data.sign
+                             }, function(ret, err) {
+                               if (ret.status) {
+                                   //支付成功
+                                   alert("支付成功")
+                               } else {
+                                   alert("支付失败");
+                               }
+                             });
+                        }else {
+                          console.log("dddddddd");
+                        }
+
+                      } else {
+
+                      }
+                  });
+
+
+
+                  // api.ajax({
+                  //     url: "http://www.w.iwekan.com/App/Book/Pay/CreatUnifiedOrder",
+                  //     method: 'post',
+                  //     data:{
+                  //       values:{
+                  //         ord_type:vm.type,
+                  //         data_type:vm.current,
+                  //         uid:uid
+                  //       }
+                  //     }
+                  // }, function(ret, err) {
+                  //     if (ret) {
+                  //       if(ret.code == 200){
+                  //         //alert("创建订单成功")
+                  //         let rid = ret.data.rid
+                  //         api.ajax({
+                  //             url: "http://www.w.iwekan.com/App/Book/Pay/WxPay",
+                  //             method: 'post',
+                  //             data:{
+                  //               values:{
+                  //                 rid:rid
+                  //               }
+                  //             }
+                  //         }, function(ret, err) {
+                  //             if (ret) {
+                  //               if(ret.code == 200){
+                  //                 //alert(JSON.stringify(ret.data))
+                  //                 var wxPay = api.require('wxPay');
+                  //                   wxPay.payOrder({
+                  //                     apiKey: ret.data.appid,
+                  //                     orderId:  ret.data.prepayid,
+                  //                     mchId:  ret.data.partnerid,
+                  //                     nonceStr:  ret.data.noncestr,
+                  //                     timeStamp:  ret.data.timestamp,
+                  //                     package: "Sign=WXPay",
+                  //                     sign:  ret.data.sign
+                  //                   }, function(ret, err) {
+                  //                     if (ret.status) {
+                  //                         //支付成功
+                  //                         alert("支付成功")
+                  //                     } else {
+                  //                         alert("支付失败");
+                  //                     }
+                  //                   });
+                  //               }
+                  //
+                  //
+                  //             } else {
+                  //               //支付宝
+                  //
+                  //             }
+                  //         });
+                  //       }
+                  //     } else {
+                  //         alret("创建订单失败")
+                  //     }
+                  // });
+
+
+
+                } else {
+                    //支付宝
+                    api.ajax({
+                        url: "http://www.w.iwekan.com/App/Book/Pay/AliPay",
+                        method: 'post',
+                        data:{
+                          values:{
+                            ord_type:vm.type,
+                            data_type:vm.current,
+                            uid:uid
+                          }
+                        }
+                    }, function(ret, err) {
+
+                        if (ret) {
+                          if(ret.code==200){
+                            // console.log((JSON.stringify(ret.data)).split("&"))
+                            var aliPay = api.require('aliPay');
+                          aliPay.payOrder({
+                              orderInfo:ret.data
+                          }, function(ret, err) {
+                              api.alert({
+                                  title: '支付结果',
+                                  msg: ret.code,
+                                  buttons: ['确定']
+                              });
+                          });
+
+                          }
+
+                        } else {
+                          //console.log(JSON.stringify(err));
+                        }
+                    });
+                }
+
+              }
+          }
       });
+
+      function initload(type){
+
+        api.ajax({
+            url: "http://www.w.iwekan.com/App/Book/Recharge/config_lists?type="+type,
+            method: 'get',
+        }, function(ret, err) {
+            if (ret) {
+              if(ret.code == 200){
+                vm.rechargeList = ret.data
+              }
+            } else {
+
+            }
+        });
+      }
   </script>
   </html>

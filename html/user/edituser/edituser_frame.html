@@ -27,7 +27,7 @@
             </div>
             <div class="aui-list-item-inner">
                 <div class="aui-list-item-title">昵称</div>
-                <div class="aui-list-item-right" >{{userinfo.name}}</div>
+                <div class="aui-list-item-right" >{{userinfo.nicker}}</div>
             </div>
         </li>
         <li class="aui-list-item" style="height:3rem">
@@ -36,8 +36,8 @@
             </div>
             <div class="aui-list-item-inner">
                 <div class="aui-list-item-title">手机</div>
-                <div class="aui-list-item-right"  v-if="userinfo.phone==''">绑定</div>
-                <div class="aui-list-item-right" v-else>{{userinfo.phone}}</div>
+                <div class="aui-list-item-right"  v-if="userinfo.tel == ''">绑定</div>
+                <div class="aui-list-item-right" v-else>{{userinfo.tel}}</div>
             </div>
         </li>
     </ul>
@@ -48,10 +48,10 @@
 <script type="text/javascript" src="../../../script/aui-toast.js"></script>
 <script type="text/javascript" src="../../../script/aui-dialog.js"></script>
 <script type="text/javascript" src="../../../script/aui-actionsheet.js"></script>
-
 <script type="text/javascript">
     apiready = function(){
         vm.userinfo=$api.getStorage('userinfo')
+        //console.log(JSON.stringify(vm.userinfo));
     };
     var vm=new Vue({
         el:"#edituser",
@@ -76,6 +76,9 @@
             }
         });
     }
+    // function(getPicture){
+    //
+    // }
     function getPicture(sourceType) {
     if(sourceType==1){ // 拍照
         //获取一张图片

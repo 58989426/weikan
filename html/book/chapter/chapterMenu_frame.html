@@ -13,13 +13,13 @@
   <body>
     <div id="chapter-menu">
         <div class="title">
-          共 {{chapterinfo.total}} 章
+          共 {{chapterinfo.cCount}} 章
           <span class="aui-pull-right" @click="orderChange">
-            <i class="iconfont icon-order-left"  ></i> {{orderType==1?'正序':'倒序'}}
+            <i class="iconfont icon-order-left"  ></i> {{orderType=="asc" ?'正序':'倒序'}}
           </span>
         </div>
         <div style="margin-top: 35px">
-          <div class="chapter" v-for="item in chapterinfo.data">
+          <div class="chapter" v-for="item in chapterinfo.lists"  @click="toRead(item.book_id,item.chapter_id)">
           {{item.chapter_name}} <span class="pull-right"><i class="aui-iconfont aui-icon-lock" v-if="item.is_vip==1"></i></span>
           </div>
           <div class="chapter" style="text-align:center;color: gainsboro;" v-if="nodata">
@@ -43,7 +43,7 @@
           listen:true, //是否监听滚动高度，开启后将实时返回滚动高度
           distance:200 //判断到达底部的距离，isToBottom为true
       },function(ret){
-         console.log(ret)
+        // console.log(ret)
          if(ret.scrollTop>api.frameHeight){
            vm.showTop=true;
          }else{
@@ -55,7 +55,7 @@
       apiready = function(){
         var bookid=api.pageParam.bookid;
         vm.bookid=bookid;
-        initload();
+        initload(bookid);
         // 下拉刷新
         api.setRefreshHeaderInfo({
             visible: true,
@@ -65,15 +65,17 @@
             textUp: '松开刷新...',
             showTime: true
         }, function(ret, err) {
-            initload();
+            initload(bookid);
             api.refreshHeaderLoadDone();
         });
         // 上拉加载
         api.addEventListener({
       		name: 'scrolltobottom',
       	}, function(ret, err) {
-      		 if(vm.chapterinfo.page<vm.chapterinfo.pageCount){
-             loadMore(bookid,vm.chapterinfo.page+1);
+      		//  if(vm.chapterinfo.page<vm.chapterinfo.pageCount){
+             if(vm.chapterinfo.is_nextPage == 1){
+               vm.page++
+             loadMore(bookid,vm.page);
            }else {
               vm.nodata=true;
            }
@@ -84,8 +86,12 @@
           el:"#chapter-menu",
           data:{
               chapterinfo:{},
+              bookinfo:{
+                id:"",
+                chapter_id:""
+              },
               nodata:false,
-              orderType:0,
+              orderType:"asc",
               bookid:0,
               page:1,
               showTop:false,
@@ -95,7 +101,7 @@
           },
           methods:{
             orderChange:function(){
-              vm.orderType=vm.orderType==1?0:1;
+              vm.orderType = vm.orderType=="asc"?"desc":"asc";
               initload();
             },
             toTop:function(){
@@ -103,18 +109,35 @@
             }
           },
       });
-
+      //打开阅读页
+      function toRead(bid,cid){
+          //var bookinfo=JSON.parse($api.getStorage('book_'+api.pageParam.bookid));
+          vm.bookinfo.id = bid
+          vm.bookinfo.chapter_id = cid
+          api.openWin({
+              name: 'read',
+              url: '../content/read.html',
+              pageParam: vm.bookinfo,
+              animation:{
+                type:"push",                //动画类型（详见动画类型常量）
+                subType:"from_right",       //动画子类型（详见动画子类型常量）
+                duration:500                //动画过渡时间，默认300毫秒
+              }
+            });
+      }
       //  初始化
-      function initload() {
+      function initload(bookid) {
           toast.loading({
               title:"loading...",
               duration:2000
           })
         // 获取章节信息
+
           api.ajax({
-              url: "https://www.luluxs8.com/novel/v2/Chapter/ChapterList.php?bookId="+vm.bookid+"&order="+vm.orderType,
+              url: "http://www.w.iwekan.com/App/Home/Index/Catalog?id="+bookid+"&page="+vm.page+"&order="+vm.orderType,
               method: 'get'
           }, function(ret, err) {
+            //alert(JSON.stringify(ret));
               if (ret) {
                 if(ret.code==200){
                   vm.chapterinfo=ret.data;
@@ -131,12 +154,13 @@
 
       function loadMore(bookid,page){
         api.ajax({
-            url: "https://www.luluxs8.com/novel/v2/Chapter/ChapterList.php?bookId="+vm.bookid+"&order="+vm.orderType+"&page="+page,
+
+            url: "http://www.w.iwekan.com/App/Home/Index/Catalog?id="+vm.bookid+"&page="+page+"&order="+vm.orderType,
             method: 'get'
         }, function(ret, err) {
             if (ret) {
               if(ret.code==200){
-                vm.chapterinfo.data=vm.chapterinfo.data.concat(ret.data.data)
+                vm.chapterinfo.lists=vm.chapterinfo.lists.concat(ret.data.lists)
                 vm.chapterinfo.page=ret.data.page;
               }
             } else {

@@ -19,26 +19,26 @@
       </div>
       <section class="aui-content-padded" v-show="showtype==1">
         <div class="aui-card-list">
-            <div class="aui-card-list-content-padded">
-                <p><span class="gray-word">订单编号：</span> 111</p>
-                <p><span class="gray-word">充值金额：</span> 100</p>
+            <div class="aui-card-list-content-padded" v-for="(i,index) in czlist">
+                <p><span class="gray-word">订单编号：</span> {{i.amount}}</p>
+                <p><span class="gray-word">充值金额：</span> {{i.amount}}元</p>
                 <p><span class="gray-word">充值内容：</span> 1000书币</p>
-                <p>2018-05-21 11:30</p>
+                <p><span class="gray-word">充值时间：</span>{{i.createtime}}</p>
             </div>
         </div>
       </section>
       <section class="aui-content-padded" v-show="showtype==2">
         <div class="aui-card-list">
-            <div class="aui-card-list-content-padded">
-                <p><span class="gray-word">消费编号：</span> 222</p>
-                <p><span class="gray-word">消费金额：</span> 100</p>
+            <div class="aui-card-list-content-padded" v-for="(i,index) in xflist">
+                <p><span class="gray-word">消费编号：</span> {{i.id}}</p>
+                <p><span class="gray-word">消费金额：</span> {{i.price}}</p>
                 <p><span class="gray-word">消费类型：</span> 购买《扶摇皇后》</p>
-                <p>2018-05-21 11:30</p>
+                <p><span class="gray-word">消费时间：</span>{{i.create_time}}</p>
             </div>
         </div>
       </section>
       <section class="aui-content-padded" v-show="showtype==3">
-        <div class="aui-card-list">
+        <div class="aui-card-list" v-if="false">
             <div class="aui-card-list-content-padded">
                 <p><span class="gray-word">打赏对象：</span>《魔道祖师》</p>
                 <p><span class="gray-word">打赏物资：</span> 游艇1个</p>
@@ -56,16 +56,21 @@
   <script type="text/javascript" src="../../../script/aui-dialog.js"></script>
 
   <script type="text/javascript">
+      var toast = new auiToast({});
       apiready = function(){
+      var uid =  $api.getStorage("userinfo").name
         var pageParam=api.pageParam;
         initTab(pageParam.type);
-        initload();
+        vm.showtype = pageParam.type
+        initload(uid);
       };
       var vm=new Vue({
           el:".book-channel",
           data:{
             dataLists: [],
             showtype:1,
+            czlist:[],
+            xflist:[]
           },
           mounted: function () {
 
@@ -76,22 +81,18 @@
       });
 
       //  初始化
-      function initload() {
-        var toast = new auiToast({});
-        // toast.loading({
-        //     title:"loading...",
-        //     duration:2000
-        // })
-        // 获取排行数据
+      function initload(uid) {
+
+        // 充值记录
           api.ajax({
-              url: "https://www.luluxs8.com/novel/v2/new-book-recommend.php",
+              url: "http://www.w.iwekan.com/App/Book/User/consumption_record?uid="+uid,
               method: 'get'
           }, function(ret, err) {
               if (ret) {
                 if(ret.code==200){
-                  vm.dataLists=ret.data;
+                //alert(JSON.stringify(ret))
+                vm.xflist=ret.data
                 }
-                  toast.hide();
               } else {
                   toast.fail({
                       title: err.msg,
@@ -99,6 +100,24 @@
                   });
               }
           });
+
+          // 消费记录
+            api.ajax({
+                url: "http://www.w.iwekan.com/App/Book/User/recharge_record?uid="+uid,
+                method: 'get'
+            }, function(ret, err) {
+                if (ret) {
+                  if(ret.code==200){
+                  //alert(JSON.stringify(ret))
+                  vm.czlist=ret.data
+                  }
+                } else {
+                    toast.fail({
+                        title: err.msg,
+                        duration: 2000
+                    });
+                }
+            });
       }
 
       function initTab(type){

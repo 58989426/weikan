@@ -48,7 +48,7 @@
       <div id="aui-slide3">
           <div class="aui-slide-wrap" >
               <div class="aui-slide-node bg-dark" v-for="item in banner"  tapmode  @click="toDetails(item.book_id)">
-                  <img :src="item.image" />
+                  <img :src="item.path" />
               </div>
           </div>
           <div class="aui-slide-page-wrap"><!--分页容器--></div>
@@ -56,8 +56,7 @@
       <!-- 菜单 -->
       <section class="aui-grid">
         <div class="aui-row">
-          <div class="aui-col-xs-3" v-for="item in menu"  tapmode  @click="openChat(item.type)">
-            <!-- <i class="aui-iconfont " :class="item.icon"></i> -->
+          <div class="aui-col-xs-3" v-for="item in menu"  tapmode  @click="openChat(item.type,item.type1)">
             <img :src="item.img" class="menu-img" />
             <div class="aui-grid-label">{{item.name}}</div>
           </div>
@@ -68,39 +67,57 @@
         <div class="space"></div>
         <div class="book-channel">
           <div class="channel__header">
-              <div class="header__left">{{item.title}}</div>
+              <div class="header__left">{{item.class_name}}</div>
               <div class="header__right">查看更多<i class="aui-iconfont aui-icon-right"></i></div>
           </div>
-          <div class="aui-row-padded style1" v-if="item.type==1">
-            <div class="aui-col-xs-3" tapmode @click="toDetails(i.id)" v-for="i in item.dataLists">
-              <img :src='i.img' class='book-img'></img>
-              <div class="item-book-name aui-ellipsis-2">{{i.name}}</div>
-              <div class="item-book-intro aui-ellipsis-1">{{i.intro}}</div>
+          <!-- -->
+          <div class="aui-row-padded style1"   v-if="item.type == 1">
+            <div class="aui-col-xs-3" tapmode @click="toDetails(i.book_id)" v-for="i in item.books">
+              <img :src='i.cover' class='book-img'></img>
+              <div class="item-book-name aui-ellipsis-2" style="text-align:center;">{{i.short_name}}</div>
             </div>
           </div>
           <!-- 一排一本书样式 -->
-          <div class="have-line-block" v-for="i in item.dataLists" v-if="item.type==2">
-            <div class="aui-row-padded" @click="toDetails(i.id)">
+          <div class="have-line-block" v-for="i in item.books" v-if="item.type==2">
+            <div class="aui-row-padded" @click="toDetails(i.book_id)">
               <div class="aui-col-xs-3">
-                <img :src='i.img' class='book-img'></image>
+                <img :src='i.cover' class='book-img'></image>
               </div>
               <div class="aui-col-xs-9">
-                <div class="book-name">{{i.name}}</div>
+                <div class="book-name">{{i.short_name}}</div>
                 <div class="book-intro aui-ellipsis-2">{{i.intro}}</div>
                 <div class="book-author"><i class="aui-iconfont aui-icon-my"></i> {{i.author}}
                   <span class="book-tag book-wordnum pull-right">{{i.words}}</span>
-                  <span class="book-tag book-state pull-right">{{i.status}}</span>
-                  <span class="book-tag book-cate pull-right">{{i.cate}}</span>
+                  <span class="book-tag book-state pull-right">{{i.status == 2?"连载":"完结"}}</span>
+                  <span class="book-tag book-cate pull-right">{{i.cate_name}}</span>
                 </div>
               </div>
+            </div>
+          </div>
+
+          <!--  333333333-->
+          <div class="aui-row-padded style1"   v-if="item.type == 3">
+            <div class="aui-col-xs-3" tapmode @click="toDetails(i.book_id)" v-for="i in item.books">
+              <img :src='i.cover' class='book-img'></img>
+              <div class="item-book-name aui-ellipsis-2">{{i.book_name}}</div>
+              <div class="item-book-intro aui-ellipsis-1">{{i.author_name}}</div>
+            </div>
+          </div>
+          <!--  444444-->
+
+          <div class="aui-row-padded style1"   v-if="item.type == 4">
+            <div class="aui-col-xs-3" tapmode @click="toDetails(i.book_id)" v-for="i in item.books">
+              <img :src='i.cover' class='book-img'></img>
+              <div class="item-book-name aui-ellipsis-2">{{i.book_name}}</div>
+              <div class="item-book-intro aui-ellipsis-1">{{i.author_name}}</div>
             </div>
           </div>
         </div>
       </section>
       <div class="space"></div>
       <!-- 排行推荐 -->
-      <section class="book-channel">
-        <!--每个样式的头部-->
+      <!-- <section class="book-channel">
+
         <div class="channel__header">
             <div class="header__left">排行推荐</div>
             <div class="header__right">查看更多<i class="aui-iconfont aui-icon-right"></i></div>
@@ -112,28 +129,18 @@
               <div class="aui-bar-btn-item">完本榜</div>
         </div>
         <div class="aui-row-padded style1">
-          <div class="aui-col-xs-3">
-            <image src='https://www.luoshenread.com/imagedata/2018/03/08/5aa0b568b507e781870629.jpg' class='book-img'></image>
-            <div class="item-book-name aui-ellipsis-2">娇蛮弃妃：毒辣小娇妻</div>
-            <div class="item-book-intro aui-ellipsis-1">毒辣小娇妻水电费防守打法</div>
+          <div class="aui-col-xs-3" v-for="item in tj">
+            <image src='item.cover' class='book-img'></image>
+            <div class="item-book-name aui-ellipsis-2">{{item.book_name}}</div>
+            <div class="item-book-intro aui-ellipsis-1">{{item.intro}}</div>
           </div>
           <div class="aui-col-xs-3">
             <image src='https://www.luoshenread.com/imagedata/2018/03/08/5aa0b2e6bcc0a386608779.jpg' class='book-img'></image>
             <div class="item-book-name aui-ellipsis-2">腹黑：腹黑总裁不好惹</div>
             <div class="item-book-intro aui-ellipsis-1">毒辣小娇胜多负少的 妻</div>
           </div>
-          <div class="aui-col-xs-3">
-            <image src='https://www.luoshenread.com/imagedata/2018/03/08/5aa0b531e73c2314218691.jpg' class='book-img'></image>
-            <div class="item-book-name aui-ellipsis-2">言情之恶魔的千日情人</div>
-            <div class="item-book-intro aui-ellipsis-1">毒地方斯蒂芬辣小娇妻</div>
-          </div>
-          <div class="aui-col-xs-3">
-            <image src='https://www.luoshenread.com/imagedata/2018/04/04/5ac498d5c69f5051550610.jpg' class='book-img'></image>
-            <div class="item-book-name aui-ellipsis-2">重生：首长大热夜夜宠</div>
-            <div class="item-book-intro aui-ellipsis-1">毒辣东方闪电胜多负少小娇妻</div>
-          </div>
         </div>
-      </section>
+      </section> -->
     </div>
   </body>
   <script type="text/javascript" src="../../script/api.js"></script>
@@ -149,6 +156,8 @@
       apiready = function(){
         initload();
       };
+
+
       var vm=new Vue({
           el:"#book-index",
           data:{
@@ -158,132 +167,29 @@
                 type:1,
                 icon:"aui-icon-home",
                 img:"../../image/my-icon/ranks.png",
-                name:"排行榜"
+                name:"热销榜"
               },
               {
                 type:2,
                 icon:"aui-icon-star",
                 img:"../../image/my-icon/free.png",
-                name:"免费"
+                name:"点击榜"
               },
               {
                 type:3,
                 icon:" aui-icon-map",
                 img:"../../image/my-icon/new.png",
-                name:"新书"
+                name:"新书榜"
               },
               {
                 type:4,
                 icon:"aui-icon-calendar",
                 img:"../../image/my-icon/wanben.png",
-                name:"完本"
+                name:"完本榜"
               }
             ],
-            indexLists: [
-              {
-                title: "本周最热",
-                type: 1,
-                dataLists: [{
-                    id: 1,
-                    img: "https://www.luoshenread.com/imagedata/2018/03/08/5aa0b1fc25db6083195196.jpg",
-                    name: "毒辣小娇妻",
-                    author: "杀生丸",
-                    cate: "现代言情",
-                    intro: "毒辣！小娇妻速度士大夫速的“说法是发顺丰石帆胜丰石帆胜丰士大夫方式发”射点发射点度",
-                  },
-                  {
-                    id: 2,
-                    img: "https://www.luoshenread.com/imagedata/2018/03/08/5aa0b568b507e781870629.jpg",
-                    name: "腹黑总裁不好惹",
-                    author: "杀生丸",
-                    cate: "现代言情",
-                    intro: "毒辣！小娇妻速度士大夫速的“说法是发顺丰石帆胜丰石帆胜丰士大夫方式发”射点发射点度",
-                  },
-                  {
-                    id: 3,
-                    img: "https://www.luoshenread.com/imagedata/2018/03/30/5abdf72cbc688411422990.jpg",
-                    name: "恶魔的千日情人",
-                    author: "杀生丸",
-                    cate: "现代言情",
-                    intro: "毒辣！小娇妻速度士大夫速的“说法是发顺丰石帆胜丰石帆胜丰士大夫方式发”射点发射点度",
-                  },
-                  {
-                    id: 4,
-                    img: "https://www.luoshenread.com/imagedata/2018/04/17/5ad56d18343c0671096362.jpg",
-                    name: "毒辣小娇妻",
-                    author: "杀生丸",
-                    cate: "现代言情",
-                    intro: "毒辣！小娇妻速度士大夫速的“说法是发顺丰石帆胜丰石帆胜丰士大夫方式发”射点发射点度",
-                  }
-                ]
-              },
-              {
-                  title: "新书抢先", //区块标题
-                  type: 2, //区块样式
-                  dataLists: [ //区块内漫画列表
-                    {
-                      id: 1, //id
-                      img: "https://www.luoshenread.com/imagedata/2018/03/08/5aa0b568b507e781870629.jpg", //图片
-                      name: "毒辣小娇妻", //名字
-                      author: "杀生丸",
-                      cate: "现代言情",
-                      intro: "毒辣！小娇妻速度士大夫速的“说法是发顺丰石帆胜丰石帆胜丰士大夫方式发”射点发射点度",
-                      status:"连载中",
-                      words:"23.7万字"
-                    },
-                    {
-                      id: 2,
-                      img: "https://www.luoshenread.com/imagedata/2018/03/08/5aa0b2e6bcc0a386608779.jpg",
-                      name: "腹黑总裁不好惹",
-                      author: "杀生丸",
-                      cate: "现代言情",
-                      intro: "毒辣！小娇妻速度士大夫速的“说法是发顺丰石帆胜丰石帆胜丰士大夫方式发”射点发射点度",
-                      status:"连载中",
-                      words:"23.7万字"
-                    },
-                    {
-                      id: 3,
-                      img: "https://www.luoshenread.com/imagedata/2018/03/08/5aa0b531e73c2314218691.jpg",
-                      name: "恶魔的千日情人",
-                      author: "杀生丸",
-                      cate: "现代言情",
-                      intro: "毒辣！小娇妻速度士大夫速的“说法是发顺丰石帆胜丰石帆胜丰士大夫方式发”射点发射点度",
-                      status:"连载中",
-                      words:"23.7万字"
-                    },
-                    {
-                      id: 4,
-                      img: "https://www.luoshenread.com/imagedata/2018/04/04/5ac498d5c69f5051550610.jpg",
-                      name: "毒辣小娇妻",
-                      author: "杀生丸",
-                      cate: "现代言情",
-                      intro: "毒辣！小娇妻速度士大夫速的“说法是发顺丰石帆胜丰石帆胜丰士大夫方式发”射点发射点度",
-                      status:"连载中",
-                      words:"23.7万字"
-                    },
-                    {
-                      id: 5,
-                      img: "https://www.luoshenread.com/imagedata/2018/03/08/5aa0a653e338d698205473.jpg",
-                      name: "毒辣小娇妻",
-                      author: "杀生丸",
-                      cate: "现代言情",
-                      intro: "毒辣！小娇妻速度士大夫速的“说法是发顺丰石帆胜丰石帆胜丰士大夫方式发”射点发射点度",
-                      status:"连载中",
-                      words:"23.7万字"
-                    },
-                    {
-                      id: 6,
-                      img: "https://www.luoshenread.com/imagedata/2018/03/08/5aa0ad6ec7c27095433727.jpg",
-                      name: "毒辣小娇妻",
-                      author: "杀生丸",
-                      cate: "现代言情",
-                      intro: "毒辣！小娇妻速度士大夫速的“说法是发顺丰石帆胜丰石帆胜丰士大夫方式发”射点发射点度",
-                      status:"连载中",
-                      words:"23.7万字"
-                    },
-                  ]
-                },
-            ]
+            tj:[],
+            indexLists: []
           },
           mounted: function () {
 
@@ -305,7 +211,6 @@
               },
           },
       });
-
       //  初始化
       function initload() {
           var toast = new auiToast({});
@@ -315,12 +220,15 @@
         })
         // 获取banner数据
           api.ajax({
-              url: "https://www.luluxs8.com/novel/v2/Slide.php",
+              url: "http://www.w.iwekan.com/App/Home/Index/index",
               method: 'get'
           }, function(ret, err) {
               if (ret) {
-                if(ret.code==200){
-                  vm.banner=ret.data;
+                if(ret.code == 200){
+                  vm.banner=ret.data.banner;
+                //  alert(JSON.stringify(ret.data))
+                  vm.indexLists=ret.data.blocks;
+                  vm.tj=ret.data.blocks[3].books
                   setTimeout(function(){
                     //初始化轮播
                     var slide = new auiSlide({

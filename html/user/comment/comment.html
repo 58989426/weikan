@@ -22,6 +22,7 @@
 <script type="text/javascript" src="../../../script/api.js"></script>
 <script type="text/javascript">
     apiready = function(){
+      var pageParam=api.pageParam;
         api.parseTapmode();
         var header = $api.byId('aui-header');
         $api.fixStatusBar(header);
@@ -36,7 +37,8 @@
                 y: headerPos.h,
                 w: 'auto',
                 h: 'auto'
-            }
+            },
+            pageParam
         })
     };
     function closeWin(){

@@ -55,16 +55,17 @@
 <body>
   <div id="mine">
     <section class="bg-white">
-      <div class="aui-list aui-media-list aui-list-noborder aui-bg-info user-info" tapmode @click="toNextPage('edituser')">
+      <div class="aui-list aui-media-list aui-list-noborder aui-bg-info user-info" >
+                                                                                  <!-- tapmode @click="toNextPage('edituser')"       -->
           <div class="aui-list-item aui-list-item-middle">
               <div class="aui-media-list-item-inner ">
                   <div class="aui-list-item-media" style="width:3rem;">
-                      <img :src="userinfo.headimg" class="aui-img-round">
+                      <img :src="userinfo.headerimg" class="aui-img-round">
                   </div>
                   <div class="aui-list-item-inner">
-                      <div class="aui-list-item-text text-white aui-font-size-18">{{userinfo.name}}</div>
+                      <div class="aui-list-item-text text-white aui-font-size-18">{{userinfo.nicker}}</div>
                       <div class="aui-list-item-text text-white">
-                         <div><i class="aui-iconfont aui-icon-mobile aui-font-size-14"></i>{{userinfo.phone}}</div>
+                         <div><i v-if="isLogin" class="aui-iconfont aui-icon-mobile aui-font-size-14"></i>{{userinfo.tel}}</div>
                       </div>
                   </div>
               </div>
@@ -76,8 +77,8 @@
                 <i class="aui-iconfont aui-icon-cert aui-text-danger"></i>
             </div>
             <div class="aui-list-item-inner">
-                <div class="aui-list-item-title"><span class="aui-text-warning">{{userinfo.coin}}</span> 书币/<span class="aui-text-danger">{{userinfo.voucher}}</span> 书券</div>
-                <div class="aui-list-item-right" tapmode @click="toNextPage('recharge')"><div class="aui-btn aui-btn-danger aui-btn-sm">充值</div></div>
+                <div class="aui-list-item-title"><span class="aui-text-warning">{{userinfo.amount}}</span> 书币/<span class="aui-text-danger">{{userinfo.bookcoin}}</span> 书券</div>
+                <div class="aui-list-item-right" tapmode @click="toNextPage('recharge',1)"><div class="aui-btn aui-btn-danger aui-btn-sm">充值</div></div>
             </div>
         </li>
     </ul>
@@ -110,7 +111,8 @@
             </li>
         </ul>
         <ul class="aui-list aui-list-in aui-margin-b-15">
-            <li class="aui-list-item" tapmode @click="toNextPage('feedback')">
+            <li class="aui-list-item" tapmode >
+              <!-- @click="toNextPage('feedback')" -->
                 <div class="aui-list-item-label-icon">
                     <i class="aui-iconfont aui-icon-cart aui-text-info"></i>
                 </div>
@@ -118,13 +120,13 @@
                     <div class="aui-list-item-title">求书反馈</div>
                 </div>
             </li>
-            <li class="aui-list-item" tapmode @click="toNextPage('recharge')">
+            <li class="aui-list-item" tapmode @click="toNextPage('recharge',2)">
                 <div class="aui-list-item-label-icon">
                     <i class="aui-iconfont aui-icon-cert aui-text-warning"></i>
                 </div>
                 <div class="aui-list-item-inner aui-list-item-arrow">
                     <div class="aui-list-item-title">会员</div>
-                    <div class="aui-list-item-right">未开通</div>
+                    <div class="aui-list-item-right" v-if="isLogin">{{userinfo.is_vip == 0 ? '未开通' : '已开通'}}</div>
                 </div>
             </li>
         </ul>
@@ -146,6 +148,7 @@
       if($api.getStorage('userinfo')){
         vm.userinfo=$api.getStorage('userinfo')
         vm.isLogin=true;
+        //alert(JSON.stringify($api.getStorage('userinfo')))
       }
     }
     var vm=new Vue({
@@ -154,14 +157,7 @@
           phone:"",//手机
           code:"",//验证码
           isLogin:false,
-          userinfo:{
-            name:"未登录",
-            headimg:"../../image/demo1.png",
-            phone:"未绑定",
-            isvip:false, //是否是会员
-            coin:0, //书币
-            voucher:0, //书券
-          }
+          userinfo:{}
         },
         mounted: function () {
 
@@ -178,12 +174,11 @@
                         alert("退出成功");
                         $api.rmStorage('userinfo');
                         vm.userinfo={
-                          name:"未登录",
-                          headimg:"../../image/demo1.png",
-                          phone:"未登录",
+                          nicker:"未登录",
+                          headerimg:"../../image/demo1.png",
                           isvip:false, //是否是会员
-                          coin:0, //书币
-                          voucher:0, //书券
+                          amount:0, //书币
+                          bookcoin:0, //书券
                         };
                         vm.isLogin=false;
                       }

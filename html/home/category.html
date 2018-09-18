@@ -71,123 +71,53 @@
   </head>
   <body>
     <section class="category">
-      <div  class="book-channel"  v-for="item in dataLists">
-          <div class="channel__header">
+
+      <!-- <div  class="book-channel"  v-for="item in dataLists"> -->
+          <!-- <div class="channel__header">
               <div class="header__left">{{item.title}}</div>
-          </div>
+          </div> -->
         <div>
           <ol class="book-ol book-ol-normal">
-            <li class="book-li-msg" v-for="(i,index) in item.list" :class="index%4==1 || index%4==0 ?'book-back':''">
+            <li class="book-li-msg" v-for="(i,index) in dataLists" :class="index%4==1 || index%4==0 ?'book-back':''">
                 <div class="book-sort" @click="toDetails(i)">
-                    <img :src="i.typeimg" class="book-pic" alt="i.typename">
+                  <!-- i -->
+                    <img src="https://www.luoshenread.com/imagedata/2018/03/08/5aa0b568b507e781870629.jpg" class="book-pic" alt="i.cate_name">
                     <div class="book-cell">
                         <div class="book-title-x">
-                            <h4 class="book-title">{{i.typename}}</h4>
+                            <h4 class="book-title">{{i.cate_name}}</h4>
                         </div>
                         <p class="book-tags">
-                            <em>{{i.typenum}}本</em>
+                            <em>{{i.book_number}}本</em>
                         </p>
                     </div>
                 </div>
             </li>
           </ol>
         </div>
-      </div>
+      <!-- </div> -->
+
+
     </section>
   </body>
   <script type="text/javascript" src="../../script/api.js"></script>
   <script type="text/javascript" src="../../script/vue.min.js"></script>
   <script type="text/javascript" src="../../script/underscore.js"></script>
+  <script type="text/javascript" src="../../script/aui-toast.js"></script>
   <script type="text/javascript">
       apiready = function(){
-
+          initload()
       };
       var vm=new Vue({
           el:".category",
           data:{
             edit:false,
-            dataLists:[{
-              title:"女生频道",
-              list:[
-                {
-                  typeid:1, //类型id
-                  typeimg:"https://www.luoshenread.com/imagedata/2018/03/08/5aa0b568b507e781870629.jpg",//类型图片
-                  typename:"古代言情",  //类型名称
-                  typenum:"44664" //类型本书
-                },
-                {
-                  typeid:1, //类型id
-                  typeimg:"https://www.luoshenread.com/imagedata/2018/03/08/5aa0b2e6bcc0a386608779.jpg",//类型图片
-                  typename:"仙侠情缘",  //类型名称
-                  typenum:"44664" //类型本书
-                },
-                {
-                  typeid:1, //类型id
-                  typeimg:"https://www.luoshenread.com/imagedata/2018/03/08/5aa0b531e73c2314218691.jpg",//类型图片
-                  typename:"现代言情",  //类型名称
-                  typenum:"44664" //类型本书
-                },
-                {
-                  typeid:1, //类型id
-                  typeimg:"https://www.luoshenread.com/imagedata/2018/04/04/5ac498d5c69f5051550610.jpg",//类型图片
-                  typename:"浪漫青春",  //类型名称
-                  typenum:"44664" //类型本书
-               },
-               {
-                 typeid:1, //类型id
-                 typeimg:"https://www.luoshenread.com/imagedata/2018/03/08/5aa0a653e338d698205473.jpg",//类型图片
-                 typename:"玄幻言情",  //类型名称
-                 typenum:"44664" //类型本书
-               },
-               {
-                 typeid:1, //类型id
-                 typeimg:"https://www.luoshenread.com/imagedata/2018/03/08/5aa0ad6ec7c27095433727.jpg",//类型图片
-                 typename:"短篇小说",  //类型名称
-                 typenum:"44664" //类型本书
-               }
-             ]
-            },
-            {
-              title:"男生频道",
-              list:[
-                {
-                  typeid:1, //类型id
-                  typeimg:"https://www.luoshenread.com/imagedata/2018/03/08/5aa0a653e338d698205473.jpg",//类型图片
-                  typename:"玄幻",  //类型名称
-                  typenum:"44664" //类型本书
-                },
-                {
-                  typeid:1, //类型id
-                  typeimg:"https://www.luoshenread.com/imagedata/2018/03/08/5aa0ad6ec7c27095433727.jpg",//类型图片
-                  typename:"奇幻",  //类型名称
-                  typenum:"44664" //类型本书
-                },
-                {
-                  typeid:1, //类型id
-                  typeimg:"https://www.luoshenread.com/imagedata/2018/04/04/5ac498d5c69f5051550610.jpg",//类型图片
-                  typename:"武侠",  //类型名称
-                  typenum:"44664" //类型本书
-                },
-                {
-                  typeid:1, //类型id
-                  typeimg:"https://www.luoshenread.com/imagedata/2018/03/08/5aa0b531e73c2314218691.jpg",//类型图片
-                  typename:"仙侠",  //类型名称
-                  typenum:"44664" //类型本书
-                },
-                {
-                  typeid:1, //类型id
-                  typeimg:"https://www.luoshenread.com/imagedata/2018/03/08/5aa0a653e338d698205473.jpg",//类型图片
-                  typename:"都市",  //类型名称
-                  typenum:"44664" //类型本书
-                },
-                {
-                  typeid:1, //类型id
-                  typeimg:"https://www.luoshenread.com/imagedata/2018/03/08/5aa0ad6ec7c27095433727.jpg",//类型图片
-                  typename:"现实",  //类型名称
-                  typenum:"44664" //类型本书
-                },
-              ]
-            }
+            dataLists:[
+              //   {
+              //     typeid:1, //类型id
+              //     typeimg:"https://www.luoshenread.com/imagedata/2018/03/08/5aa0b568b507e781870629.jpg",//类型图片
+              //     typename:"古代言情",  //类型名称
+              //     typenum:"44664" //类型本书
+              //   },
           ]
           },
           mounted: function () {
@@ -198,10 +128,40 @@
               api.openWin({
                   name: 'category',
                   url: './category/category.html',
-                  pageParam: {typeid: item.typeid,typename:item.typename}
+                  pageParam: {
+                    typeid: item.cate_id,
+                    typename:item.cate_name
+                  }
                 });
             },
           },
       });
+
+      //  初始化
+      function initload() {
+        var toast = new auiToast({});
+        toast.loading({
+            title:"loading...",
+            duration:2000
+        })
+        // 获取banner数据
+          api.ajax({
+              url: "http://www.w.iwekan.com/App/Book/Book/Cate_list",
+              method: 'get'
+          }, function(ret, err) {
+              if (ret) {
+                //alert(JSON.stringify(ret.data))
+                if(ret.code == 200){
+                  vm.dataLists = ret.data
+                }
+                  toast.hide();
+              } else {
+                  toast.fail({
+                      title: err.msg,
+                      duration: 2000
+                  });
+              }
+          });
+      }
   </script>
   </html>

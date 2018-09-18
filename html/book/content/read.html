@@ -28,9 +28,13 @@
   </head>
   <body>
     <div id="read">
-      <div id="metainfo">
+      <div id="metainfo" v-if="flag">
         <span id="bookname" class="z">书名</span>
         <span id="subject" class="y">章节名</span>
+      </div>
+
+      <div class="gm">
+
       </div>
     </div>
   </body>
@@ -48,6 +52,8 @@
             bookinfo:{},
             chapterInfo:{},
             filepath:null,
+            flag:null,
+            cprice:null
           },
           mounted: function () {
                   apiready = function(){
@@ -55,6 +61,7 @@
                         fullScreen: true
                     });
                     vm.bookinfo=api.pageParam;
+                    //alert(JSON.stringify(api.pageParam))
                     // $api.rmStorage('history');
                     api.addEventListener({
                         name: 'keyback'
@@ -86,10 +93,10 @@
                     indexSetting.fs = api.require('fs');
                     indexSetting.book_id = vm.bookinfo.id;
                     indexSetting.bookinfo = vm.bookinfo;
-
                     //初始获取章节信息
                     vm.filepath = 'fs://' + indexSetting.bookinfo.id + '_' + indexSetting.bookinfo.read_chapter_id + '.txt';
-                    getData(indexSetting.bookinfo.id,indexSetting.bookinfo.read_chapter_id,0);
+                    // getData(indexSetting.bookinfo.id,indexSetting.bookinfo.chapter_id);
+                    getData(vm.bookinfo.id,vm.bookinfo.chapter_id);
                   };
           },
           methods:{
@@ -97,33 +104,141 @@
           },
       });
 
-
     //请求接口获取数据
-    function getData(bookid,chapterid,progress){
-        toast.loading({
-            title:"loading...",
-            duration:2000
-        })
+    function getData(bookid,chapterid){
+        // toast.loading({
+        //     title:"loading...",
+        //     duration:2000
+        // })
+        let uid
+        if ($api.getStorage('userinfo')) {
+          uid = $api.getStorage('userinfo').uid
+        }
+
         api.ajax({
-             url: "https://www.luluxs8.com/novel/v2/Chapter/ChapterInfo.php?bookId="+bookid+"&chapterId="+chapterid,
+             url: "http://www.w.iwekan.com/App/Book/Book/readBooks?bid="+bookid+"&cid="+chapterid+"&uid="+uid,
+            // url: "http://www.w.iwekan.com/App/Book/Book/readBooks?bid="+8+"&cid="+82,
              method: 'get',
          }, function(ret, err) {
               if(ret.code==200){
+                //alert(JSON.stringify(ret.data))
                 //如果请求成功 进行初始化判断操作
-                initload(ret.data.content,progress);
+                vm.flag =true
+                initload(ret.data.content);
                 $api.setStorage('thebook',ret.data);
                 var thebook = $api.getStorage('thebook');
                 ajaxhistory(thebook.chapter_id, thebook.chapter_name,thebook.price);
-                // $api.text($api.byId("bookname"), indexSetting.bookinfo.name);
-                // $api.text($api.byId("subject"), ret.data.chapter_name);
+                $api.text($api.byId("bookname"), indexSetting.bookinfo.name);
+                $api.text($api.byId("subject"), ret.data.chapter_name);
               }else {
-                alert("章节信息有误！")
+                vm.flag = false
+                  // alert(vm.bookinfo.chapter_id++)
+                  let thebook = $api.getStorage('thebook');
+                  if (!vm.flag ) {
+                      let uid
+                      if ($api.getStorage('userinfo')) {
+                        uid = $api.getStorage('userinfo').uid
+                        api.ajax({
+                            url: "http://www.w.iwekan.com/App/Home/Buy/getPrice?bid="+vm.bookinfo.id+"&cid="+thebook.next +"&uid="+uid,
+                            method: 'get'
+                        }, (ret, err) =>{
+                            if (ret) {
+                              if(ret.code == 200){
+                                var dialogBox = api.require('dialogBox');
+                                dialogBox.alert({
+                                    texts: {
+                                        title: '当前章节需要购买',
+                                        content: '本章价格'+ret.data.price+'书币',
+                                        leftBtnTitle: '取消',
+                                        rightBtnTitle: '购买'
+                                    },
+                                    styles: {
+                                        bg: '#fff',
+                                        w: 300,
+                                        title: {
+                                            marginT: 20,
+                                            icon: 'widget://res/gou.png',
+                                            iconSize: 40,
+                                            titleSize: 14,
+                                            titleColor: '#000'
+                                        },
+                                        content: {
+                                            color: '#000',
+                                            size: 14
+                                        },
+                                        left: {
+                                            marginB: 7,
+                                            marginL: 20,
+                                            w: 130,
+                                            h: 35,
+                                            corner: 2,
+                                            bg: '#ccc',
+                                            size: 12
+                                        },
+                                        right: {
+                                            marginB: 7,
+                                            marginL: 10,
+                                            w: 130,
+                                            h: 35,
+                                            corner: 2,
+                                            bg: '#ccc',
+                                            size: 12
+                                        }
+                                    }
+                                }, (ret)=> {
+                                    if (ret.eventType == 'left') {
+                                        var dialogBox = api.require('dialogBox');
+                                        dialogBox.close({
+                                            dialogName: 'alert'
+                                        });
+                                    }else{
+                                    //  alert(vm.bookinfo.id+"+"+thebook.next+"+"+uid)
+                                    var dialogBox = api.require('dialogBox');
+                                    dialogBox.close({
+                                        dialogName: 'alert'
+                                    });
+                                      api.ajax({
+                                          url: "http://www.w.iwekan.com/App/Home/Buy/PutIn?bid="+vm.bookinfo.id+"&cid="+thebook.next +"&uid="+uid,
+                                          method: 'get'
+                                      }, function(ret, err) {
+                                          if (ret) {
+                                            if(ret.code == 200){
+                                              vm.filepath = 'fs://' + thebook.bookid + '_' + thebook.next + '.txt';
+                                              getData(thebook.bookid,thebook.next);
+                                            } else {
+                                                alert("余额不足，请到充值页面充值")
+                                                api.openWin({
+                                                    name: 'login',
+                                                    url: '../../user/recharge/recharge.html',
+                                                    pageParam: {type:1}
+                                                  });
+                                            }
+
+                                          }
+                                      });
+                                    }
+                                });
+                              }
+                            } else {
+
+                            }
+                        });
+
+                      }else {
+                        alert("登录后解锁章节")
+                      }
+                  }else{
+                    //请求数据
+                    vm.filepath = 'fs://' + thebook.bookid + '_' + thebook.next + '.txt';
+                    getData(thebook.bookid,thebook.next);
+                  }
+
               }
          }
        );
     }
     // 判断本章章节文件是否存在
-    function initload(content,progress) {
+    function initload(content) {
         var filepath=vm.filepath;
         indexSetting.fs.exist({
             path: filepath
@@ -132,17 +247,17 @@
                 //如果不存在就创建文件
                 createBookFile(content);
             }else{
-                // indexSetting.fs.remove({
-                //     path: filepath
-                // }, function(ret, err) {
-                //     if (ret.status) {
-                //         createBookFile(content);
-                //     } else {
-                //         alert(JSON.stringify(err));
-                //     }
-                // });
+                indexSetting.fs.remove({
+                    path: filepath
+                }, function(ret, err) {
+                    if (ret.status) {
+                        createBookFile(content);
+                    } else {
+                        alert(JSON.stringify(err));
+                    }
+                });
                 //如果存在就打开文件
-                openbook(filepath,progress);
+                openbook(filepath);
             }
           }
         );
@@ -189,7 +304,7 @@
       )
     }
     //打开阅读器
-    function openbook(filepath,progress){
+    function openbook(filepat){
       //加载阅读器
       var config = {
           filePath: vm.filepath,
@@ -198,7 +313,7 @@
           h: api.winHeight,
           y: 0,
           animType: '',
-          progress:progress>0?progress:0,
+          // progress:progress>0?progress:0,
           textStyle: {
               size: indexSetting.fontsize,
               color: indexSetting.color
@@ -255,7 +370,9 @@
                 w: api.winWidth,
                 h: api.winHeight
             },
-            pageParam: {},
+            pageParam: {
+              bookinfo : vm.bookinfo
+            },
             bounces: false,
             reload: true,
             vScrollBarEnabled: false,
@@ -271,33 +388,32 @@
     // 上一章
     function getPrev() {
       var thebook = $api.getStorage('thebook');
-      if(thebook.prevChapter == ""){
+      if(thebook.last == ""){
         alert("已经是第一页")
       }else{
         //请求数据
-        vm.filepath = 'fs://' + thebook.book_id + '_' + thebook.prevChapter + '.txt';
-        getData(thebook.book_id,thebook.prevChapter,100);
+        vm.filepath = 'fs://' + thebook.bookid + '_' + thebook.last + '.txt';
+        getData(thebook.bookid,thebook.last);
       }
     }
 
     // 下一章
     function getNext() {
       var thebook = $api.getStorage('thebook');
-      if(thebook.nextChapter == ""){
+      if(thebook.next == ""){
         alert("已经最后一页")
       }else{
-        //请求数据
-        vm.filepath = 'fs://' + thebook.book_id + '_' + thebook.nextChapter + '.txt';
-        getData(thebook.book_id,thebook.nextChapter,0);
+        vm.filepath = 'fs://' + thebook.bookid + '_' + thebook.next + '.txt';
+        getData(thebook.bookid,thebook.next);
+      // }
       }
     }
 
     //阅读历史
     function ajaxhistory(chapterid,chapter_name,price) {
-        var progress = 0;
         var thebook = $api.getStorage('thebook');
         indexSetting.bookReader.getProgress({
-            filePath: 'fs://' + indexSetting.book_id + '_' + chapterid + '.txt'
+            filePath: 'fs://' + indexSetting.bookid + '_' + chapterid + '.txt'
         }, function(ret, err) {
             if (ret.status) {
                 progress = ret.progress;
@@ -309,7 +425,7 @@
                 //判断历史记录里面有没有这本书的记录
                 for (var i = 0, len = history.data.length; i < len; i++) {
                     //如果有  就更新这本书的历史记录
-                    if (history.data[i].book_id == indexSetting.book_id) {
+                    if (history.data[i].bookid == indexSetting.bookid) {
                         isthebook = true;
                         history.data[i].chapter_id = chapterid;//章节id
                         history.data[i].chapter_name = chapter_name;//章节名

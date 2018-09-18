@@ -40,15 +40,17 @@
             <div class="aui-searchbar-btn" @click="cancel">取消</div>
         </div>
       <div class="aui-padded-t-10 aui-margin-10" v-if="ifsearch">
+
+
           <div class="have-line-block" v-for="i in dataLists">
-            <div class="aui-row-padded" @click="toDetails(i.id)">
+            <div class="aui-row-padded" @click="toDetails(i.book_id)">
               <div class="aui-col-xs-3">
-                <img :src='i.img' class='book-img'></image>
+                <img :src='i.cover' class='book-img'></image>
               </div>
               <div class="aui-col-xs-9">
-                <div class="book-name">{{i.name}}</div>
+                <div class="book-name">{{i.short_name}}</div>
                 <div class="book-intro aui-ellipsis-2">{{i.intro}}</div>
-                <div class="book-author"><i class="aui-iconfont aui-icon-my"></i> {{i.author}}
+                <div class="book-author"><i class="aui-iconfont aui-icon-my"></i> {{i.author_name}}
                   <span class="book-tag book-wordnum pull-right">{{i.words}}</span>
                   <span class="book-tag book-state pull-right">{{i.status}}</span>
                   <span class="book-tag book-cate pull-right">{{i.cate}}</span>
@@ -56,6 +58,8 @@
               </div>
             </div>
           </div>
+
+
         </div>
         <div class="no_search" v-else>
             <div class="aui-padded-b-10 aui-margin-10">
@@ -93,66 +97,66 @@
             showAll:false,
             history:["扶摇","总裁","宝宝"],
             dataLists: [
-              {
-                id: 1, //id
-                img: "https://www.luoshenread.com/imagedata/2018/03/08/5aa0b568b507e781870629.jpg", //图片
-                name: "毒辣小娇妻", //名字
-                author: "杀生丸",
-                cate: "现代言情",
-                intro: "毒辣！小娇妻速度士大夫速的“说法是发顺丰石帆胜丰石帆胜丰士大夫方式发”射点发射点度",
-                status:"连载中",
-                words:"23.7万字"
-              },
-              {
-                id: 2,
-                img: "https://www.luoshenread.com/imagedata/2018/03/08/5aa0b2e6bcc0a386608779.jpg",
-                name: "腹黑总裁不好惹",
-                author: "杀生丸",
-                cate: "现代言情",
-                intro: "毒辣！小娇妻速度士大夫速的“说法是发顺丰石帆胜丰石帆胜丰士大夫方式发”射点发射点度",
-                status:"连载中",
-                words:"23.7万字"
-              },
-              {
-                id: 3,
-                img: "https://www.luoshenread.com/imagedata/2018/03/08/5aa0b531e73c2314218691.jpg",
-                name: "恶魔的千日情人",
-                author: "杀生丸",
-                cate: "现代言情",
-                intro: "毒辣！小娇妻速度士大夫速的“说法是发顺丰石帆胜丰石帆胜丰士大夫方式发”射点发射点度",
-                status:"连载中",
-                words:"23.7万字"
-              },
-              {
-                id: 4,
-                img: "https://www.luoshenread.com/imagedata/2018/04/04/5ac498d5c69f5051550610.jpg",
-                name: "毒辣小娇妻",
-                author: "杀生丸",
-                cate: "现代言情",
-                intro: "毒辣！小娇妻速度士大夫速的“说法是发顺丰石帆胜丰石帆胜丰士大夫方式发”射点发射点度",
-                status:"连载中",
-                words:"23.7万字"
-              },
-              {
-                id: 5,
-                img: "https://www.luoshenread.com/imagedata/2018/03/08/5aa0a653e338d698205473.jpg",
-                name: "毒辣小娇妻",
-                author: "杀生丸",
-                cate: "现代言情",
-                intro: "毒辣！小娇妻速度士大夫速的“说法是发顺丰石帆胜丰石帆胜丰士大夫方式发”射点发射点度",
-                status:"连载中",
-                words:"23.7万字"
-              },
-              {
-                id: 6,
-                img: "https://www.luoshenread.com/imagedata/2018/03/08/5aa0ad6ec7c27095433727.jpg",
-                name: "毒辣小娇妻",
-                author: "杀生丸",
-                cate: "现代言情",
-                intro: "毒辣！小娇妻速度士大夫速的“说法是发顺丰石帆胜丰石帆胜丰士大夫方式发”射点发射点度",
-                status:"连载中",
-                words:"23.7万字"
-              },
+              // {
+              //   id: 1, //id
+              //   img: "https://www.luoshenread.com/imagedata/2018/03/08/5aa0b568b507e781870629.jpg", //图片
+              //   name: "毒辣小娇妻", //名字
+              //   author: "杀生丸",
+              //   cate: "现代言情",
+              //   intro: "毒辣！小娇妻速度士大夫速的“说法是发顺丰石帆胜丰石帆胜丰士大夫方式发”射点发射点度",
+              //   status:"连载中",
+              //   words:"23.7万字"
+              // },
+              // {
+              //   id: 2,
+              //   img: "https://www.luoshenread.com/imagedata/2018/03/08/5aa0b2e6bcc0a386608779.jpg",
+              //   name: "腹黑总裁不好惹",
+              //   author: "杀生丸",
+              //   cate: "现代言情",
+              //   intro: "毒辣！小娇妻速度士大夫速的“说法是发顺丰石帆胜丰石帆胜丰士大夫方式发”射点发射点度",
+              //   status:"连载中",
+              //   words:"23.7万字"
+              // },
+              // {
+              //   id: 3,
+              //   img: "https://www.luoshenread.com/imagedata/2018/03/08/5aa0b531e73c2314218691.jpg",
+              //   name: "恶魔的千日情人",
+              //   author: "杀生丸",
+              //   cate: "现代言情",
+              //   intro: "毒辣！小娇妻速度士大夫速的“说法是发顺丰石帆胜丰石帆胜丰士大夫方式发”射点发射点度",
+              //   status:"连载中",
+              //   words:"23.7万字"
+              // },
+              // {
+              //   id: 4,
+              //   img: "https://www.luoshenread.com/imagedata/2018/04/04/5ac498d5c69f5051550610.jpg",
+              //   name: "毒辣小娇妻",
+              //   author: "杀生丸",
+              //   cate: "现代言情",
+              //   intro: "毒辣！小娇妻速度士大夫速的“说法是发顺丰石帆胜丰石帆胜丰士大夫方式发”射点发射点度",
+              //   status:"连载中",
+              //   words:"23.7万字"
+              // },
+              // {
+              //   id: 5,
+              //   img: "https://www.luoshenread.com/imagedata/2018/03/08/5aa0a653e338d698205473.jpg",
+              //   name: "毒辣小娇妻",
+              //   author: "杀生丸",
+              //   cate: "现代言情",
+              //   intro: "毒辣！小娇妻速度士大夫速的“说法是发顺丰石帆胜丰石帆胜丰士大夫方式发”射点发射点度",
+              //   status:"连载中",
+              //   words:"23.7万字"
+              // },
+              // {
+              //   id: 6,
+              //   img: "https://www.luoshenread.com/imagedata/2018/03/08/5aa0ad6ec7c27095433727.jpg",
+              //   name: "毒辣小娇妻",
+              //   author: "杀生丸",
+              //   cate: "现代言情",
+              //   intro: "毒辣！小娇妻速度士大夫速的“说法是发顺丰石帆胜丰石帆胜丰士大夫方式发”射点发射点度",
+              //   status:"连载中",
+              //   words:"23.7万字"
+              // },
             ]
           },
           mounted: function () {
@@ -160,7 +164,32 @@
           },
           methods:{
               searchBook:function(){
-                vm.ifsearch=true;
+                var toast = new auiToast({});
+                toast.loading({
+                    title:"loading...",
+                    duration:2000
+                })
+                // 获取banner数据
+                  api.ajax({
+                      url: "http://www.w.iwekan.com/App/Book/Book/search?search="+vm.words,
+                      method: 'get'
+                  }, function(ret, err) {
+                      if (ret) {
+                        if(ret.code == 200){
+                          vm.dataLists = ret.data.list
+                          vm.ifsearch=true;
+                        }
+                          toast.hide();
+                      } else {
+                          toast.fail({
+                              title: err.msg,
+                              duration: 2000
+                          });
+                      }
+                  });
+
+
+                // vm.ifsearch=true;
               },
               cancel:function(){
                 vm.ifsearch=false;

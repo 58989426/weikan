@@ -13,18 +13,18 @@
   <body>
     <section class="book-channel">
       <div class="aui-bar aui-bar-btn" id="ranks">
-            <div class="aui-bar-btn-item" id="rexiao">热销榜</div>
-            <div class="aui-bar-btn-item" id="dianji">点击榜</div>
-            <div class="aui-bar-btn-item" id="xinshu">新书榜</div>
-            <div class="aui-bar-btn-item" id="wanben">完本榜</div>
+            <div class="aui-bar-btn-item" @click="initload(4)" id="rexiao">热销榜</div>
+            <div class="aui-bar-btn-item" @click="initload(4)" id="dianji">点击榜</div>
+            <div class="aui-bar-btn-item" @click="initload(5)" id="xinshu">新书榜</div>
+            <div class="aui-bar-btn-item" @click="initload(6)" id="wanben">完本榜</div>
       </div>
       <div class="have-line-block" v-for="i in dataLists" >
         <div class="aui-row-padded" @click="toDetails(i.book_id)">
           <div class="aui-col-xs-3">
-            <img :src='i.cover' class='book-img'></image>
+            <img :src='i.path' class='book-img'></image>
           </div>
           <div class="aui-col-xs-9">
-            <div class="book-name">{{i.short_name}}</div>
+            <div class="book-name">{{i.book_name}}</div>
             <div class="book-intro aui-ellipsis-2">{{i.intro}}</div>
             <div class="book-author"><i class="aui-iconfont aui-icon-my"></i> {{i.author_name}}
               <span class="book-tag book-wordnum pull-right">{{i.word_count}}字</span>
@@ -46,8 +46,20 @@
   <script type="text/javascript">
       apiready = function(){
         var pageParam=api.pageParam;
+        // alert(JSON.stringify(pageParam))
+        let st = null
+        if (pageParam.type == 1) {
+            st=4
+        }
+        if (pageParam.type == 3) {
+            st=5
+        }
+        if (pageParam.type == 4) {
+            st=6
+        }
+        // alert(st)
         initTab(pageParam.type);
-        initload();
+        initload(st);
       };
       var vm=new Vue({
           el:".book-channel",
@@ -91,20 +103,20 @@
           });
       }
       //  初始化
-      function initload() {
+      function initload(st) {
           var toast = new auiToast({});
         toast.loading({
             title:"loading...",
             duration:2000
         })
-        // 获取排行数据
           api.ajax({
-              url: "https://www.luluxs8.com/novel/v2/new-book-recommend.php",
+              url: "http://www.w.iwekan.com/App/Book/Book/rank?type="+st,
               method: 'get'
           }, function(ret, err) {
               if (ret) {
                 if(ret.code==200){
-                  vm.dataLists=ret.data;
+                  // alert(JSON.stringify(ret.data))
+                   vm.dataLists=ret.data;
                 }
                   toast.hide();
               } else {
@@ -115,7 +127,6 @@
               }
           });
       }
-
       function initTab(type){
         var tab = new auiTab({
           element:document.getElementById("ranks"),
